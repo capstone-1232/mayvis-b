@@ -8,7 +8,7 @@
 </p>
 
 # mayvis-b
-Capstone dev space for Code Alpha - Carlos Louise Melchor, Ma. Angelica Cristobal, Joaquin Villaruz
+Capstone dev space for Code Alpha - Carlos Louise Melchor, 
 
 ## About Laravel
 
