@@ -29,7 +29,7 @@
                 </div>
             @endif
             <h1 class="text-5xl">
-                Mayvis Local    
+                Mayvis   
             </h1>
         </div>
     </body>
