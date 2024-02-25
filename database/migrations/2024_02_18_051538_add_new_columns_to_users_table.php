@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('job_title');
-            $table->string('profile_image');
+            $table->string('profile_image')->nullable();
             $table->longText('automated_message');
         });
     }
