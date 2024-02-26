@@ -33,4 +33,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/proposals/step1', [ProposalController::class, 'showStep1'])->name('proposals.step1');
 Route::post('/proposals/step1', [ProposalController::class, 'storeStep1'])->name('proposals.storeStep1');
 
+/* Step 2 */
+Route::get('/proposals/step2', [ProposalController::class, 'showStep2'])->name('proposals.step2');
+Route::post('/proposals/step2', [ProposalController::class, 'storeStep2'])->name('proposals.storeStep2');
+
+/* Step 3 */
+Route::get('/proposals/step3', [ProposalController::class, 'showStep3'])->name('proposals.step3');
+Route::post('/proposals/step3', [ProposalController::class, 'storeStep3'])->name('proposals.storeStep3');
+
 require __DIR__.'/auth.php';
