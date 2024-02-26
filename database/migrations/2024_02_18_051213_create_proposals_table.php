@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('proposals', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
         });
     }
 
