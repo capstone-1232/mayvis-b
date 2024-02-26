@@ -32,6 +32,9 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        /* Add the values in here if u want to edit them. */
+        $request->user()->automated_message = $request -> automated_message;
+
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

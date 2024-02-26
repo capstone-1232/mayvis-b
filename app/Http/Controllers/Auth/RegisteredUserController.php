@@ -39,6 +39,9 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'job_title' => $request->job_title,
+            'profile_image' => $request->has('profile_image') ? $request->profile_image : 'default_profile.jpg',
+            'automated_message' => $request->automated_message,
             'password' => Hash::make($request->password),
         ]);
 
