@@ -41,4 +41,14 @@ Route::post('/proposals/step2', [ProposalController::class, 'storeStep2'])->name
 Route::get('/proposals/step3', [ProposalController::class, 'showStep3'])->name('proposals.step3');
 Route::post('/proposals/step3', [ProposalController::class, 'storeStep3'])->name('proposals.storeStep3');
 
+/* Step 4 */
+Route::get('/proposals/step4', [ProposalController::class, 'showStep4'])->name('proposals.step4');
+Route::post('/proposals/step4', [ProposalController::class, 'storeStep4'])->name('proposals.storeStep4');
+
+/* Filter Products Route */
+Route::get('/filter-products', [ProposalController::class, 'filterProducts'])->name('proposals.filterProducts');
+
+/* Search Products */
+Route::get('/search-products', [ProposalController::class, 'searchProducts'])->name('proposals.searchProducts');
+
 require __DIR__.'/auth.php';
