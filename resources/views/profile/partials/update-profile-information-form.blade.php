@@ -53,6 +53,12 @@
             <x-input-error class="mt-2" :messages="$errors->get('automated_message')" />
         </div>
 
+        <div>
+            <x-input-label for="proposal_message" :value="__('Proposal Message')" />
+            <x-textarea id="proposal_message" name="proposal_message" type="text" class="mt-1 block w-full" :value="old('proposal_message', $user->proposal_message)" required autofocus autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('proposal_message')" />
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 

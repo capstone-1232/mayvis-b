@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('job_title');
             $table->string('profile_image')->nullable();
-            $table->longText('automated_message');
+            $table->longText('automated_message')->nullable();
+            $table->longText('proposal_message')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->dropColumn('job_title');
             $table->dropColumn('profile_image');
             $table->dropColumn('automated_message');
+            $table->dropColumn('proposal_message');
         });
     }
 };
