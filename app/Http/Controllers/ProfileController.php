@@ -33,7 +33,12 @@ class ProfileController extends Controller
         }
 
         /* Add the values in here if u want to edit them. */
+
+        /* Automated Personal Message */
         $request->user()->automated_message = $request -> automated_message;
+
+        /* Proposal Message */
+        $request->user()->proposal_message = $request -> proposal_message;
 
         $request->user()->save();
 

@@ -41,7 +41,7 @@
 
 
                     
-                    <a href="{{ route('proposals.step2') }}">Cancel</a>
+                    <a href="{{ route('proposals.step2') }}">Previous</a>
                     <x-primary-button class="mt-6">Next</x-primary-button>
                 </form>
             </div>

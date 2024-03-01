@@ -134,3 +134,18 @@ h3 {
 h3 span {
     color: #007bff; /* A nice blue color for the numbers */
 }
+
+/* You can find this part under step4.blade.php (error message for selected products) */
+.productserr{
+    color: red;
+}
+
+/* Product and the Delete Button */
+.product-and-delete{
+    display: flex;
+    gap: 1rem;
+}
+
+.product-and-delete button{
+    color: red;
+}

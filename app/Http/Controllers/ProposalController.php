@@ -99,7 +99,7 @@ class ProposalController extends Controller
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         
-        // Store step 2 data in session
+        // Store step 3 data in session
         session()->put('step3_data', $request->all());
 
         // Redirect to step 3
@@ -142,6 +142,76 @@ class ProposalController extends Controller
         // Assuming you want to return the same view but with filtered products based on the search term
         return view('proposals.step4', compact('products', 'categories'));
     }
+
+    public function storeStep4(Request $request){
+
+        $step1Data = session('step1_data');
+        $step2Data = session('step2_data');
+        $step3Data = session('step3_data');
+
+        $request->validate([
+            'selectedProducts' => 'required',
+        ],[
+            'selectedProducts.required' => 'You must select products in order to proceed.',
+        ]);
+
+        // Retrieve data
+        $selectedProducts = explode(',', $request->input('selectedProducts'));
+        $totalPrice = $request->input('totalPrice');
+        $recurringTotal = $request->input('recurringTotal');
+        $proposalTotal = $request->input('proposalTotal');
+
+        // Store into session
+        $request->session()->put('selectedProducts', $selectedProducts);
+        $request->session()->put('totalPrice', $totalPrice);
+        $request->session()->put('recurringTotal', $recurringTotal);
+        $request->session()->put('proposalTotal', $proposalTotal);
+
+        // Store everything in one
+        session()->put('step4_data', $request->all());
+
+        // Redirect to step 5
+        return redirect()->route('proposals.step5');
+
+    }
+
+    /* PLEASE DO NOT TOUCH THIS METHOD */
+    public function showStep5()
+    {
+        // Retrieve session data
+        $step1Data = session('step1_data');
+        $step2Data = session('step2_data');
+        $step3Data = session('step3_data');
+        $step4Data = session('step4_data'); // Retrieve the data stored in step 4
+
+        // Ensure selectedProducts is an array
+        if (isset($step4Data['selectedProducts']) && is_string($step4Data['selectedProducts'])) {
+            $selectedProductIds = explode(',', $step4Data['selectedProducts']);
+
+            // Fetch product names from the database based on the selectedProductIds
+            $productNames = Product::whereIn('id', $selectedProductIds)->pluck('product_name', 'id');
+
+            // Map the product IDs to their names
+            $selectedProductNames = array_map(function($productId) use ($productNames) {
+                // Return the product name if it exists, otherwise return a placeholder or the ID itself
+                return $productNames[$productId] ?? 'Unknown Product';
+            }, $selectedProductIds);
+
+            // Replace the product IDs in step4Data with the fetched product names
+            $step4Data['selectedProducts'] = $selectedProductNames;
+        }
+
+        // Pass the modified data to the view
+        return view('proposals.step5', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
+    }
+
+
+
+
+    public function storeStep5(){
+
+    }
+
 
     /**
      * Display the specified resource.

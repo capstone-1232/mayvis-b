@@ -51,4 +51,11 @@ Route::get('/filter-products', [ProposalController::class, 'filterProducts'])->n
 /* Search Products */
 Route::get('/search-products', [ProposalController::class, 'searchProducts'])->name('proposals.searchProducts');
 
+/* Step 5 */
+Route::get('/proposals/step5', [ProposalController::class, 'showStep5'])->name('proposals.step5');
+Route::post('/proposals/step5', [ProposalController::class, 'storeStep5'])->name('proposals.storeStep5');
+
+
+
+
 require __DIR__.'/auth.php';
