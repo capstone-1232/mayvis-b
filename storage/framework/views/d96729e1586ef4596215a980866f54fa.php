@@ -17,11 +17,118 @@
     
     <script>
         let selectedProducts = [];
-
-
         let totalPrice = 0;
+
+        // This is where the Category and search Filters are loaded
+        document.addEventListener('DOMContentLoaded', function() {
+
+
+            // SEARCH FILTER
+            const searchForm = document.getElementById('searchForm'); // Make sure to add this id to your search form
+
+            searchForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Extract the search term from the form input
+            const searchTerm = this.elements['search_term'].value;
+
+            // Use the correct route for the search AJAX request
+            const searchProductsUrl = "<?php echo e(route('proposals.searchProducts')); ?>";
+            fetch(`${searchProductsUrl}?search_term=${encodeURIComponent(searchTerm)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                const productsContainer = document.getElementById('products-container');
+                // Clear current products
+                productsContainer.innerHTML = '';
+
+                // Iterate over each product and add it to the DOM
+                data.forEach(product => {
+                    // Build your product card element string or element here
+                    const productHTML = `
+                        <div class="product-card">
+                            <div class="product-card-title">
+                                <a href="javascript:void(0);" onclick="addToContainer('${product.id}', '${product.product_name}', '${product.price}')">
+                                    ${product.product_name} - $${product.price}
+                                </a>
+                            </div>
+                            <div class="product-card-description">
+                                ${product.description}
+                            </div>
+                        </div>
+                    `;
+                    productsContainer.innerHTML += productHTML; // Append new product card
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+
+            // CATEGORY FILTER
+        const categorySelect = document.getElementById('category');
+        categorySelect.addEventListener('change', function() {
+            const categoryId = this.value;
+
+            // Route the AJAX URL
+            const filterProductsUrl = "<?php echo e(route('proposals.filterProducts')); ?>";
+
+            fetch(`${filterProductsUrl}?category_id=${categoryId}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json', // This specifies that you're expecting JSON response
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    const productsContainer = document.getElementById('products-container');
+                    // console.log('productsContainer:', productsContainer); // Check if this logs null (For Debugging Purposes -- Currently Working)
+                    // console.log('Data received:', data); // Log the received data (For Debugging Purposes -- Currently Working)
+
+                    // Clear the container before adding new content
+                    productsContainer.innerHTML = '';
+
+                    // Generate the HTML for each product and append it to the productsContainer
+                    const productsHtml = data.map(product => `
+                    <div class="product-card">
+                        <div class="product-card-title">
+                            <a href="javascript:void(0);" onclick="addToContainer('${product.id}', '${product.product_name}', '${product.price}')">
+                                ${product.product_name} - $${product.price}
+                            </a>
+                        </div>
+                        <div class="product-card-description">
+                            ${product.description}
+                        </div>
+                    </div>
+                `).join('');
+
+                    productsContainer.innerHTML = productsHtml;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
     
+        // This function will be run everytime a product is added to the products-container
         function addToContainer(productId, productName, productPrice) {
+            // Check if the product has already been selected
+            if (selectedProducts.includes(productId)) {
+                alert('This product has already been selected.'); // Alert the user or handle as you wish
+                return; // Exit the function to prevent adding the product again
+            }
+            
             const price = Number(productPrice);
             totalPrice += price;
             document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
@@ -95,19 +202,21 @@
 
                 <div class="container my-4">
                     <?php echo csrf_field(); ?>
-                    <form action="<?php echo e(route('proposals.searchProducts')); ?>" method="GET">
+                    <form id="searchForm" action="<?php echo e(route('proposals.searchProducts')); ?>" method="GET">
                         <div class="input-group">
-                            <input type="text" name="search_term" class="form-control" placeholder="Search for products..." aria-label="Search for products" aria-describedby="button-addon2">
-                            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                            <input type="text" id="search_term" class="form-control" placeholder="Search for products...">
+                            <button id="search_button" class="btn btn-outline-secondary">Search</button>
                         </div>
                     </form>
+
+                    
                 </div>
                 
                 <div class="container mt-4">
                     <?php echo csrf_field(); ?>
-                    <form action="<?php echo e(route('proposals.filterProducts')); ?>" method="GET">
+                    <form id="filterForm" action="<?php echo e(route('proposals.filterProducts')); ?>" method="GET">
                         <h2 class="mt-5">Choose a category</h2>
-                        <select name="category_id" id="category" class="form-select" required onchange="this.form.submit()">
+                        <select name="category_id" id="category" class="form-select" required>
                             <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($category->id); ?>" <?php echo e((request()->category_id == $category->id) ? 'selected' : ''); ?>>
                                     <?php echo e($category->category_name); ?>
@@ -116,7 +225,7 @@
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </form>
-                </div>
+                </div>  
 
                 <form action="<?php echo e(route('proposals.storeStep4')); ?>" method="POST">
                     <?php echo csrf_field(); ?>
@@ -128,16 +237,15 @@
                         </div>
                     <?php endif; ?>
                     
+                    <!-- Products Result Area -->
                     <div class="container mt-4">
                         <h2 class="mt-5">Choose a service</h2>
-                        <?php if(isset($products) && $products->isNotEmpty()): ?>
                             <div id="products-container">
                                 <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <div class="product-card">
                                         <div class="product-card-title">
                                             <a href="javascript:void(0);" onclick="addToContainer('<?php echo e($product->id); ?>', '<?php echo e($product->product_name); ?>', '<?php echo e($product->price); ?>')">
                                                 <?php echo e($product->product_name); ?> - $<?php echo e($product->price); ?>
-
 
                                                 
                                             </a>
@@ -148,7 +256,9 @@
                                         </div>
                                     </div>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </div>
 
+                        <!-- Totals Area -->
                                 <div id="selectedProductsContainer" class="selected-products-container">
                                     <h3>Summary:</h3>
 
@@ -164,8 +274,7 @@
                                 <div class="proposal-total">
                                     <h3>Proposal Total: $<span id="proposalTotal">0</span></h3>
                                 </div>
-                            </div>
-                        <?php endif; ?>
+                            
 
 
                         <input type="hidden" name="selectedProducts" id="selectedProducts" value="">

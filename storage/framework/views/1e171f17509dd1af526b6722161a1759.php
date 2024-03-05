@@ -66,14 +66,14 @@
                     <label for="automated_message">Automated Message</label>
                     <?php if (isset($component)) { $__componentOriginal4727f9fd7c3055c2cf9c658d89b16886 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal4727f9fd7c3055c2cf9c658d89b16886 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.textarea','data' => ['id' => 'automated_message','name' => 'automated_message','class' => 'mt-1 block w-full','value' => old('automated_message', Auth::user()->automated_message)]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.textarea','data' => ['id' => 'automated_message','name' => 'automated_message','class' => 'mt-1 block w-full','value' => ''.e(Auth::user()->automated_message).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('textarea'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'automated_message','name' => 'automated_message','class' => 'mt-1 block w-full','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('automated_message', Auth::user()->automated_message))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['id' => 'automated_message','name' => 'automated_message','class' => 'mt-1 block w-full','value' => ''.e(Auth::user()->automated_message).'']); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal4727f9fd7c3055c2cf9c658d89b16886)): ?>
 <?php $attributes = $__attributesOriginal4727f9fd7c3055c2cf9c658d89b16886; ?>
