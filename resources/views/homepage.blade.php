@@ -92,7 +92,7 @@
                          </div>
                       </a>
                       <p class="text-center fw-semibold mt-2">
-                         Need an account? <a data-toggle="tab" href="{{ route('register') }}" class="sign-up-btn">Sign Up</a>
+                         Need an account? <a data-toggle="tab" href="{{ route('users.register') }}" class="sign-up-btn">Sign Up</a>
                       </p>
                    </div>
                 </div>
