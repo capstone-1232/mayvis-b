@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\ServiceController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +33,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/proposals/step1', function () {
+        return Auth::check() ? view('proposals.step1') : redirect()->route('login');
+    })->name('proposals.step1');
+    
 });
 
 /************************************************************************************************************************************/
@@ -97,6 +103,9 @@ Route::get('/search-services', [ServiceController::class, 'searchProducts'])->na
 /* Delete Product */
 Route::delete('/services/{product}', [ServiceController::class, 'destroyProduct'])->name('services.destroyProduct');
 
+/* Filter Products Route for Services */
+Route::get('/filter-service-products', [ServiceController::class, 'filterProducts'])->name('services.filterProducts');
+
 /**************************************************************************************************************************************/
 
 /* CATEGORY AREA */
@@ -140,6 +149,7 @@ Route::delete('/clients/{client}', [ClientController::class, 'destroyClient'])->
 
 /* Search Clients in Clients Page */
 Route::get('/search-clients', [ClientController::class, 'searchClients'])->name('clients.searchClients');
+
 
 
 require __DIR__.'/auth.php';

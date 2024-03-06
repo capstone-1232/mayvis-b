@@ -15,8 +15,9 @@ class ServiceController extends Controller
      */
     public function servicesIndex()
     {   
-        $products = Product::all(); // Retrieve all products from the database
-        return view('services.servicesIndex', compact('products')); // Pass the products to the view
+        $products = Product::paginate(3); // Retrieve all products from the database
+        $categories = Category::paginate(10);
+        return view('services.servicesIndex', compact('products', 'categories')); // Pass the products/categories to the view
     }
 
     /**
@@ -63,6 +64,25 @@ class ServiceController extends Controller
          // Redirect to the services index with a success message
          return redirect()->route('servicesIndex')->with('success', 'Product created successfully.');
      }
+
+    public function filterProducts(Request $request)
+    {
+        if ($request->ajax()) {
+            $categoryId = $request->input('category_id');
+            $products = Product::where('category_id', $categoryId)->get();
+            
+            // Assuming you have the product_name and description fields on your products
+            return response()->json($products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'product_name' => $product->product_name,
+                    'price' => $product->price,
+                    'description' => $product->product_description,
+                ];
+            }));
+        }
+        
+    }
      
 
     /**
