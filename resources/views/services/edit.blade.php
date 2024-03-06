@@ -5,7 +5,7 @@
             <form action="{{ route('services.updateProduct', $product->id) }}" method="POST">
 
                 @csrf
-            @method('PUT')
+                @method('PUT')
         
                 <div class="form-group">
                     <label for="product_name">Product Name</label>
