@@ -13,12 +13,20 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function servicesIndex()
+    public function servicesIndex(Request $request)
     {   
-        $products = Product::paginate(3); // Retrieve all products from the database
-        $categories = Category::paginate(10);
-        return view('services.servicesIndex', compact('products', 'categories')); // Pass the products/categories to the view
+        $query = Product::query();
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->paginate(3);
+        $categories = Category::all(); // No need to paginate categories
+
+        return view('services.servicesIndex', compact('products', 'categories'));
     }
+
 
     /**
      * Show the form for creating a new resource.

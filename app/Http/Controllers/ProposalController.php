@@ -184,13 +184,11 @@ class ProposalController extends Controller
         // Retrieve data
         $selectedProducts = explode(',', $request->input('selectedProducts'));
         $totalPrice = $request->input('totalPrice');
-        $recurringTotal = $request->input('recurringTotal');
         $proposalTotal = $request->input('proposalTotal');
 
         // Store into session
         $request->session()->put('selectedProducts', $selectedProducts);
         $request->session()->put('totalPrice', $totalPrice);
-        $request->session()->put('recurringTotal', $recurringTotal);
         $request->session()->put('proposalTotal', $proposalTotal);
 
         // Store everything in one
@@ -204,52 +202,47 @@ class ProposalController extends Controller
     /* PLEASE DO NOT TOUCH THIS METHOD */
     public function showStep5()
     {
-
         if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
             // If step4_data is empty, redirect back to the Step 4 route
             return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
         }
-
+    
         // Retrieve session data
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data'); // Retrieve the data stored in step 4
-
+    
         // Ensure selectedProducts is an array
         if (isset($step4Data['selectedProducts']) && is_string($step4Data['selectedProducts'])) {
             $selectedProductIds = explode(',', $step4Data['selectedProducts']);
-
-            // Fetch product names and prices from the database based on the selectedProductIds
-            $products = Product::whereIn('id', $selectedProductIds)->get(['id', 'product_name', 'price']);
-
-            // Initialize an array to hold the product name and price   
+    
+            // Fetch product names, prices, and descriptions from the database based on the selectedProductIds
+            $products = Product::whereIn('id', $selectedProductIds)->get(['id', 'product_name', 'price', 'product_description']);
+    
+            // Initialize an array to hold the product name, price, and description  
             $selectedProductsInfo = [];
-
+    
             foreach ($products as $product) {
-                // Map the product ID to its name and price
+                // Map the product ID to its name, price, and description
                 $selectedProductsInfo[$product->id] = [
                     'name' => $product->product_name,
                     'price' => $product->price ?? 'No Price', // Assume price is always available but add a fallback just in case
+                    'description' => $product->product_description ?? '', // Default to empty string if description is not set
                 ];
             }
-
-            // Replace the product IDs in step4Data with the fetched product names and prices
+    
+            // Replace the product IDs in step4Data with the fetched product names, prices, and descriptions
             $step4Data['selectedProducts'] = $selectedProductsInfo;
-
+    
             // Store the modified data back into the session
             session(['step4_data' => $step4Data]);
-
         }
-
+    
         // Pass the modified data to the view
         return view('proposals.step5', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
-
     
-
-
-
     public function storeStep5(Request $request)
     {
         // Retrieve session data
@@ -257,37 +250,37 @@ class ProposalController extends Controller
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
-
+    
         // Check if we have product updates in the request
         if ($request->has('products')) {
             foreach ($request->input('products') as $productId => $productDetails) {
-                // Update the session data with new price and quantity
+                // Update the session data with new price, quantity, and description
                 if (isset($step4Data['selectedProducts'][$productId])) {
                     $step4Data['selectedProducts'][$productId]['price'] = $productDetails['price'];
                     $step4Data['selectedProducts'][$productId]['quantity'] = $productDetails['quantity'];
+                    $step4Data['selectedProducts'][$productId]['description'] = $productDetails['description'];
                 }
             }
-
+    
             // Recalculate totals based on updated prices and quantities
             $totalPrice = 0;
             foreach ($step4Data['selectedProducts'] as $product) {
                 $totalPrice += $product['price'] * $product['quantity'];
             }
             $step4Data['totalPrice'] = $totalPrice;
-            
-            // Step 4 Data is calculated with recurringtotal
-            $step4Data['proposalTotal'] = $totalPrice + $step4Data['recurringTotal'];
-
+    
+            // Proposal total is the same as total price since there's no recurring total
+            $step4Data['proposalTotal'] = $totalPrice;
+    
             // Update the session with the modified data
             session(['step4_data' => $step4Data]);
         }
-
-        // Uncomment the following line to debug the session data
-        // dd(session()->all());
-
+    
         // Redirect to the next step or another page
         return redirect()->route('proposals.step6');
     }
+    
+
 
     public function showStep6(){
 

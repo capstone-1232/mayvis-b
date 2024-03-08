@@ -2,8 +2,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
+            // Category Filter Dropdown
             const categorySelect = document.getElementById('category');
             categorySelect.addEventListener('change', function() {
+                
                 const categoryId = this.value;
                 const filterProductsUrl = "{{ route('services.filterProducts') }}"; // Make sure this route is defined in your web.php
 
@@ -25,6 +28,10 @@
                 });
             });
 
+
+   
+
+            // Search Function
             document.getElementById('searchForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 let searchTerm = document.getElementById('search_term').value;
@@ -54,7 +61,6 @@
                                     </a>
                                 </h5>
                                 <p class="card-text">${product.description || product.product_description}</p>
-                                ${product.price ? `<p class="card-text">$${product.price}</p>` : ''}
                             </div>
                         </div>
                     </div>
@@ -75,6 +81,7 @@
             <form id="filterForm" action="{{ route('services.filterProducts') }}" method="GET">
                 <h2 class="mt-2">Choose a category</h2>
                 <select name="category_id" id="category" class="form-select" required>
+                    <option value="">Select a category</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" {{ (request()->category_id == $category->id) ? 'selected' : '' }}>
                             {{ $category->category_name }}
@@ -82,7 +89,8 @@
                     @endforeach
                 </select>
             </form>
-        </div>  
+        </div>
+        
 
         <div class="container mt-2">
             <form id="searchForm" action="{{ route('services.searchProducts') }}" method="GET">
@@ -127,9 +135,10 @@
             </div>
         </div>
 
-        <div>
-            {{ $products->links() }}
+        <div id="pagination-container">
+            {{ $products->appends(['category_id' => request()->category_id])->links() }}
         </div>
+        
     </div>
 </div>
 </x-layout>
