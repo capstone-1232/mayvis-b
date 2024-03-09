@@ -156,11 +156,8 @@
 
         // This needs to be called everytime something happens within the container so our prices update.
         function updateProposalTotal() {
-            const recurringTotal = Number(document.getElementById('recurringTotal').value);
-            document.getElementById('displayRecurringTotal').textContent = recurringTotal.toFixed(2);
-            document.getElementById('formRecurringTotal').value = recurringTotal; // Update hidden field
     
-            const proposalTotal = totalPrice + recurringTotal;
+            const proposalTotal = totalPrice;
             document.getElementById('proposalTotal').textContent = proposalTotal.toFixed(2);
             document.getElementById('formProposalTotal').value = proposalTotal; // Update hidden field
         }
@@ -267,10 +264,7 @@
                                 <div class="project-total">
                                     <h3>Project Total: $<span id="totalPrice">0</span></h3>
                                 </div>
-                                <div class="recurring-total">
-                                    <h3>Recurring Total: $<span id="displayRecurringTotal">0</span></h3>
-                                    <input type="number" id="recurringTotal" placeholder="$0.00" onkeydown="return event.key !== 'Enter'" onchange="updateProposalTotal()">
-                                </div>
+                                
                                 <div class="proposal-total">
                                     <h3>Proposal Total: $<span id="proposalTotal">0</span></h3>
                                 </div>
@@ -297,7 +291,6 @@
 <?php $component = $__componentOriginal18c21970322f9e5c938bc954620c12bb; ?>
 <?php unset($__componentOriginal18c21970322f9e5c938bc954620c12bb); ?>
 <?php endif; ?>
-                        <input type="hidden" name="recurringTotal" id="formRecurringTotal" value="0">
                         <input type="hidden" name="proposalTotal" id="formProposalTotal" value="0">
                         
                         <div class="row mb-3">

@@ -3,20 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\Product;
+use App\Models\Proposal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProposalController extends Controller
 {
 
     public function showStep1()
     {
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
+        
+
         return view('proposals.step1');
     }
 
     /* Step 1 Starts Here */
     public function storeStep1(Request $request)
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Validate and store step 1 data in session
         $request->validate([
             'first_name' => 'required|max:30',
@@ -51,6 +67,12 @@ class ProposalController extends Controller
 
     public function showStep2()
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Debugging: Check the session data
         // dd(session()->all()); // This will dump and die, showing all session data
 
@@ -65,6 +87,12 @@ class ProposalController extends Controller
     }
 
     public function storeStep2(Request $request){
+        
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Validate and store step 2 data in session
         $request->validate([
             'proposal_title' => 'required|max:30',
@@ -85,6 +113,11 @@ class ProposalController extends Controller
     }
 
     public function showStep3(){
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // dd(session()->all());
         // Check if step1_data is present in the session
@@ -114,6 +147,10 @@ class ProposalController extends Controller
 
     public function showStep4()
     {
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         if (!session()->has('step3_data') || empty(session()->get('step3_data'))) {
             // If step3_data is empty, redirect back to the Step 3 route
@@ -171,6 +208,11 @@ class ProposalController extends Controller
 
     public function storeStep4(Request $request){
 
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
@@ -202,6 +244,12 @@ class ProposalController extends Controller
     /* PLEASE DO NOT TOUCH THIS METHOD */
     public function showStep5()
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
             // If step4_data is empty, redirect back to the Step 4 route
             return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
@@ -245,6 +293,12 @@ class ProposalController extends Controller
     
     public function storeStep5(Request $request)
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Retrieve session data
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
@@ -284,6 +338,11 @@ class ProposalController extends Controller
 
     public function showStep6(){
 
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
             // If step4_data is empty, redirect back to the Step 4 route
             return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
@@ -294,19 +353,24 @@ class ProposalController extends Controller
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
+
+        // dd($step4Data['selectedProducts']);
     
         // Pass the session data to the view
         return view('proposals.step6', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
 
-    public function showStep7(){
-        // Retrieve session data
-        $step1Data = session('step1_data');
-        $step2Data = session('step2_data');
-        $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
-        // Pass the session data to the view
-        return view('proposals.step7', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
+
+    public function showStep7(Request $request){
+        // Ensure the user is authenticated
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
+        // Redirect or return view with success message
+        return view('proposals.step7');
     }
+
     
 }

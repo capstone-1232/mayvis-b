@@ -89,7 +89,7 @@
                 
                 <form action="{{ route('proposals.storeStep5') }}" method="POST">
                     @csrf
-                    {{-- Your loop to display product details --}}
+                    {{-- loop to display product details --}}
                     @foreach($step4Data['selectedProducts'] as $productId => $productDetails)
                     <div id="product-{{ $productId }}">
                         {{ $productDetails['name'] }} - 

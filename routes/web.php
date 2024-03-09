@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\ServiceController;
@@ -66,6 +67,7 @@ Route::post('/proposals/step5', [ProposalController::class, 'storeStep5'])->name
 
 /* Step 6 */
 Route::get('/proposals/step6', [ProposalController::class, 'showStep6'])->name('proposals.step6');
+Route::post('/proposals/step6', [ProposalController::class, 'storeStep6'])->name('proposals.storeStep6');
 
 /* Step 6 */
 Route::get('/proposals/step7', [ProposalController::class, 'showStep7'])->name('proposals.step7');
@@ -78,6 +80,12 @@ Route::get('/search-products', [ProposalController::class, 'searchProducts'])->n
 
 /* Edit Products */
 Route::put('/update-product/{productId}', [ProposalController::class, 'updateProduct'])->name('proposals.updateProduct');
+
+
+Route::get('/proposals/success', function () {
+    return view('proposals.success');
+})->name('proposals.success');
+
 
 /************************************************************************************************************************************/
 
@@ -149,6 +157,10 @@ Route::delete('/clients/{client}', [ClientController::class, 'destroyClient'])->
 
 /* Search Clients in Clients Page */
 Route::get('/search-clients', [ClientController::class, 'searchClients'])->name('clients.searchClients');
+
+
+/* PDF AREA */
+Route::get('/session-info-pdf', [PDFController::class, 'generatePDF'])->name('session.info.pdf');
 
 
 
