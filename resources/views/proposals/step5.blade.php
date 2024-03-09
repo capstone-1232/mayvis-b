@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Proposals') }}
@@ -68,61 +68,63 @@
         }
     </script>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="p-6 mt-2 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
-                <div class="container my-4">
-                    <ul class="step-progress-bar">
-                        <li>Client</li>
-                        <li>Title</li>
-                        <li>Message</li>
-                        <li>Deliverables</li>
-                        <li>Finalize</li>
-                    </ul>
-                </div>
-
-                <div class="my-4">
-                    <div>
-                        <h1 class="text-3xl">Customize and Review</h1>
+    <div class="content">
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="p-6 mt-2 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg">
+                    <div class="container my-4">
+                        <ul class="step-progress-bar">
+                            <li>Client</li>
+                            <li>Title</li>
+                            <li>Message</li>
+                            <li>Deliverables</li>
+                            <li>Finalize</li>
+                        </ul>
                     </div>
-                </div>
-                
-                <form action="{{ route('proposals.storeStep5') }}" method="POST">
-                    @csrf
-                    {{-- loop to display product details --}}
-                    @foreach($step4Data['selectedProducts'] as $productId => $productDetails)
-                    <div id="product-{{ $productId }}">
-                        {{ $productDetails['name'] }} - 
-                        <span id="price-display-{{ $productId }}">
-                            @if($productDetails['price'] !== 'No Price')
-                                $<span id="price-value-{{ $productId }}">{{ number_format($productDetails['price'], 2) }}</span>
-                            @else
-                                Price not available
-                            @endif
-                        </span>
-                        <!-- These inputs are now part of the form submission -->
-                        <input type="number" name="products[{{ $productId }}][price]" id="price-input-{{ $productId }}" style="display:none;" value="{{ $productDetails['price'] }}" step="0.01">
-                        <span id="quantity-display-{{ $productId }}"> x <span id="quantity-value-{{ $productId }}">{{ $productDetails['quantity'] ?? 1 }}</span></span>
-                        <input type="number" name="products[{{ $productId }}][quantity]" id="quantity-input-{{ $productId }}" style="display:none;" value="{{ $productDetails['quantity'] ?? 1 }}" min="1">
-                        <br>
-                        <span id="description-display-{{ $productId }}"><span id="description-value-{{ $productId }}">{{ $productDetails['description'] ?? '' }}</span></span>
-                        <textarea name="products[{{ $productId }}][description]" id="description-input-{{ $productId }}" style="display:none;">{{ $productDetails['description'] ?? '' }}</textarea>
-                        
-                        <!-- Edit and Save buttons -->
-                        <x-primary-button type="button" onclick="editPrice('{{ $productId }}')" id="edit-button-{{ $productId }}">Edit</x-primary-button>
-                        <x-primary-button type="button" onclick="savePrice('{{ $productId }}')" id="save-button-{{ $productId }}" style="display:none;">Save</x-primary-button>
+    
+                    <div class="my-4">
+                        <div>
+                            <h1 class="text-3xl">Customize and Review</h1>
+                        </div>
                     </div>
-                    @endforeach
-
-                    {{-- Display totals and other information --}}
-                    <p>Total Price: $<span id="totalPriceDisplay">{{ number_format($step4Data['totalPrice'] ?? 0, 2, '.', ',') }}</span></p>
-                    <p>Proposal Total: $<span id="proposalTotalDisplay">{{ number_format($step4Data['proposalTotal'] ?? 0, 2, '.', ',') }}</span></p>
-
-
-                    <a href="{{ route('proposals.step4') }}" class="btn">Previous</a>
-                    <x-primary-button type="submit" class="btn btn-primary mt-6">Next</x-primary-button>
-                </form>
+                    
+                    <form action="{{ route('proposals.storeStep5') }}" method="POST">
+                        @csrf
+                        {{-- loop to display product details --}}
+                        @foreach($step4Data['selectedProducts'] as $productId => $productDetails)
+                        <div id="product-{{ $productId }}">
+                            {{ $productDetails['name'] }} - 
+                            <span id="price-display-{{ $productId }}">
+                                @if($productDetails['price'] !== 'No Price')
+                                    $<span id="price-value-{{ $productId }}">{{ number_format($productDetails['price'], 2) }}</span>
+                                @else
+                                    Price not available
+                                @endif
+                            </span>
+                            <!-- These inputs are now part of the form submission -->
+                            <input type="number" name="products[{{ $productId }}][price]" id="price-input-{{ $productId }}" style="display:none;" value="{{ $productDetails['price'] }}" step="0.01">
+                            <span id="quantity-display-{{ $productId }}"> x <span id="quantity-value-{{ $productId }}">{{ $productDetails['quantity'] ?? 1 }}</span></span>
+                            <input type="number" name="products[{{ $productId }}][quantity]" id="quantity-input-{{ $productId }}" style="display:none;" value="{{ $productDetails['quantity'] ?? 1 }}" min="1">
+                            <br>
+                            <span id="description-display-{{ $productId }}"><span id="description-value-{{ $productId }}">{{ $productDetails['description'] ?? '' }}</span></span>
+                            <textarea name="products[{{ $productId }}][description]" id="description-input-{{ $productId }}" style="display:none;">{{ $productDetails['description'] ?? '' }}</textarea>
+                            
+                            <!-- Edit and Save buttons -->
+                            <x-primary-button type="button" onclick="editPrice('{{ $productId }}')" id="edit-button-{{ $productId }}">Edit</x-primary-button>
+                            <x-primary-button type="button" onclick="savePrice('{{ $productId }}')" id="save-button-{{ $productId }}" style="display:none;">Save</x-primary-button>
+                        </div>
+                        @endforeach
+    
+                        {{-- Display totals and other information --}}
+                        <p>Total Price: $<span id="totalPriceDisplay">{{ number_format($step4Data['totalPrice'] ?? 0, 2, '.', ',') }}</span></p>
+                        <p>Proposal Total: $<span id="proposalTotalDisplay">{{ number_format($step4Data['proposalTotal'] ?? 0, 2, '.', ',') }}</span></p>
+    
+    
+                        <a href="{{ route('proposals.step4') }}" class="btn">Previous</a>
+                        <x-primary-button type="submit" class="btn btn-primary mt-6">Next</x-primary-button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-layout>

@@ -16,11 +16,17 @@ class Proposal extends Model
         'start_date',
         'client_id', // foreign key
         'user_id', // foreign key
-        'product_id' // foreign key
+        'product_id' // varchar
     ];
 
     public function products()
     {
         return $this->belongsToMany(Product::class);
     }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
 }

@@ -71,30 +71,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-success">Publishing</span></td>
-                                <td>Feb 1, 2024</td>
-                            </tr>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-warning text-dark">Ongoing</span></td>
-                                <td>Jan 30, 2024</td>
-                            </tr>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-danger">Disapproved</span></td>
-                                <td>Dec 28, 2024</td>
-                            </tr>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-warning text-dark">Ongoing</span></td>
-                                <td>Dec 24, 2024</td>
-                            </tr>
+                            @foreach ($proposals as $proposal)
+                                <tr>
+                                    <td>{{ $proposal->proposal_title }}</td>
+                                    <td>{{ $proposal->client->first_name ?? 'No Client' }}</td>
+                                    <td><span class="badge bg-success">{{ $proposal->status }}</span></td>
+                                    <td>{{ $proposal->start_date }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
