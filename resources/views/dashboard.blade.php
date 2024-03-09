@@ -74,7 +74,7 @@
                             @foreach ($proposals as $proposal)
                                 <tr>
                                     <td>{{ $proposal->proposal_title }}</td>
-                                    <td>{{ $proposal->client->first_name ?? 'No Client' }}</td>
+                                    <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                                     <td><span class="badge bg-success">{{ $proposal->status }}</span></td>
                                     <td>{{ $proposal->start_date }}</td>
                                 </tr>
