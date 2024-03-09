@@ -33,7 +33,7 @@
                 <form action="{{ route('proposals.storeStep3') }}" method="post">
                     @csrf
                     <label for="sender">Sender</label>
-                    <x-text-input type="text" name="sender" field="sender" placeholder="Staff Sender" class="w-full my-2" autocomplete="off" :value="old('sender', Auth::user()->name)"></x-text-input>
+                    <x-text-input type="text" name="sender" field="sender" placeholder="Staff Sender" class="w-full my-2" autocomplete="off" :value="old('sender', Auth::user()->first_name . ' ' . Auth::user()->last_name)"></x-text-input>
 
                     <label for="automated_message">Automated Message</label>
                     <x-textarea id="automated_message" name="automated_message" class="mt-1 block w-full" value="{{ Auth::user()->automated_message }}"></x-textarea>

@@ -47,9 +47,10 @@ class PDFController extends Controller
 
         // Prepare proposal data
         $proposalData = [
-            'created_by' => Auth::user()->name,
+            'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
             'proposal_title' => $step2Data['proposal_title'],
             'start_date' => $step2Data['start_date'],
+            'status' => 'Pending',
             'client_id' => $client->id,
             'user_id' => Auth::id(),
             'product_id' => $productIdsString,

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\LinkGenerationController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
@@ -158,10 +159,22 @@ Route::delete('/clients/{client}', [ClientController::class, 'destroyClient'])->
 /* Search Clients in Clients Page */
 Route::get('/search-clients', [ClientController::class, 'searchClients'])->name('clients.searchClients');
 
+/***************************************************************************************************************************************/
+
 
 /* PDF AREA */
 Route::get('/session-info-pdf', [PDFController::class, 'generatePDF'])->name('session.info.pdf');
 
+
+/***************************************************************************************************************************************/
+
+/* Link Generation Area */
+
+// Route to generate the link
+Route::get('/generate-link', [LinkGenerationController::class, 'generateLink'])->name('link.generate');
+
+// Route to view the information from the link
+Route::get('/view-link/{token}', [LinkGenerationController::class, 'viewLink'])->name('link.view');
 
 
 require __DIR__.'/auth.php';

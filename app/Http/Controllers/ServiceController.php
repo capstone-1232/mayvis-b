@@ -63,7 +63,7 @@ class ServiceController extends Controller
             'created_by.max' => 'Name is too long.'
         ]);
 
-        $validatedData['created_by'] = Auth::user()->name; // Set the created_by directly from the authenticated user
+        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; // Set the created_by directly from the authenticated user
 
      
          // Create a new Product instance and save it to the database

@@ -17,7 +17,7 @@
                         <img src="https://via.placeholder.com/64" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
                     <div>
-                        <h3 class="text-white fw-bold fs-5">Welcome back, <?php echo e(Auth::user()->name); ?></h3>
+                        <h3 class="text-white fw-bold fs-5">Welcome back, <?php echo e(Auth::user()->first_name); ?></h3>
                         <h4 class="fw-light fs-6 text-white"><?php echo e(Auth::user()->job_title); ?></h4>
                     </div>
                 </div>

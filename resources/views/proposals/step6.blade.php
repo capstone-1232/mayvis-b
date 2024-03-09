@@ -46,7 +46,7 @@
                 <div class="card-content">
                     <div class="content-flex">
                         <h3 class="card-title">Created By:</h3>
-                        <p class="text-gray-600">{{ Auth::user()->name ?? 'N/A' }}</p>
+                        <p class="text-gray-600">{{ Auth::user()->first_name . ' ' . Auth::user()->last_name ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
