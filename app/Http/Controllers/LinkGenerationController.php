@@ -41,6 +41,7 @@ class LinkGenerationController extends Controller
             'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
             'proposal_title' => $step2Data['proposal_title'],
             'start_date' => $step2Data['start_date'],
+            'proposal_price' => $step4Data['proposalTotal'] ? $step4Data['proposalTotal'] : "No Price",
             'status' => 'Pending',
             'client_id' => $client->id,
             'user_id' => Auth::id(),

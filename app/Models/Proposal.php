@@ -14,6 +14,7 @@ class Proposal extends Model
         'proposal_title',
         'status',
         'start_date',
+        'proposal_price',
         'client_id', // foreign key
         'user_id', // foreign key
         'product_id' // varchar
