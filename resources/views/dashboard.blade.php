@@ -83,7 +83,7 @@
                     </table>
                 </div>
                 <div class="card-footer bg-white text-center">
-                    <a href="#" class="btn btn-primary">View All</a>
+                    <a href="{{ route('storedProposals.storedProposalsIndex') }}" class="btn btn-primary">View All</a>
                 </div>
             </div>
         </div>

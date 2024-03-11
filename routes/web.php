@@ -8,6 +8,7 @@ use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\StoredProposalController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 /*
@@ -172,8 +173,18 @@ Route::get('/session-info-pdf', [PDFController::class, 'generatePDF'])->name('se
 // Route to generate the link
 Route::get('/generate-link', [LinkGenerationController::class, 'generateLink'])->name('link.generate');
 
+// Route for feedback
+Route::post('/link-feedback', [LinkGenerationController::class, 'linkFeedback'])->name('link.feedback');
+
+
 // Route to view the information from the link
 Route::get('/view-link/{token}', [LinkGenerationController::class, 'viewLink'])->name('link.view');
+
+/***************************************************************************************************************************************/
+
+/* Stored Proposals Area */
+Route::get('/storedProposals', [StoredProposalController::class, 'indexStoredProposals'])->name('storedProposals.storedProposalsIndex');
+
 
 
 require __DIR__.'/auth.php';

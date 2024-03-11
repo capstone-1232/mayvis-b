@@ -33,15 +33,15 @@
                    <!-- This form will be routed to the storeStep3 function inside 'ProposalController.php' -->
                     <form action="{{ route('proposals.storeStep3') }}" method="post">
                         @csrf
-                        <label for="sender">Sender</label>
+                        <x-input-label for="sender">Sender</x-input-label>
                         <x-text-input type="text" name="sender" field="sender" placeholder="Staff Sender" class="w-full my-2" autocomplete="off" :value="old('sender', Auth::user()->first_name . ' ' . Auth::user()->last_name)"></x-text-input>
     
-                        <label for="automated_message">Automated Message</label>
-                        <x-textarea id="automated_message" name="automated_message" class="mt-1 block w-full" value="{{ Auth::user()->automated_message }}"></x-textarea>
+                        <x-input-label for="automated_message" :value="__('Automated Message')" />
+                        <x-textarea id="automated_message" name="automated_message" type="text" class="mt-1 block w-full" :value="old('automated_message', Auth::user()->automated_message)" required autofocus autocomplete="username" />
                         <x-input-error class="mt-2" :messages="$errors->get('automated_message')" />
+
+                    
     
-    
-                        
                         <a href="{{ route('proposals.step2') }}">Previous</a>
                         <x-primary-button class="mt-6">Next</x-primary-button>
                     </form>

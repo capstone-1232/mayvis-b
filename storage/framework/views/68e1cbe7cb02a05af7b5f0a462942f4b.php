@@ -83,7 +83,7 @@
                             <?php $__currentLoopData = $proposals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $proposal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr>
                                     <td><?php echo e($proposal->proposal_title); ?></td>
-                                    <td><?php echo e($proposal->client->first_name ?? 'No Client'); ?></td>
+                                    <td><?php echo e($proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client'); ?></td>
                                     <td><span class="badge bg-success"><?php echo e($proposal->status); ?></span></td>
                                     <td><?php echo e($proposal->start_date); ?></td>
                                 </tr>
@@ -92,7 +92,7 @@
                     </table>
                 </div>
                 <div class="card-footer bg-white text-center">
-                    <a href="#" class="btn btn-primary">View All</a>
+                    <a href="<?php echo e(route('storedProposals.storedProposalsIndex')); ?>" class="btn btn-primary">View All</a>
                 </div>
             </div>
         </div>

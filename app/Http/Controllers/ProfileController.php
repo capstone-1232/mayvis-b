@@ -40,6 +40,9 @@ class ProfileController extends Controller
         /* Proposal Message */
         $request->user()->proposal_message = $request -> proposal_message;
 
+        /* Job Title */
+        $request->user()->job_title = $request -> job_title;
+
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

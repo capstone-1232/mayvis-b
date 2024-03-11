@@ -41,9 +41,8 @@ class RegisteredUserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
-            'job_title' => $request->job_title,
+            'job_title' => $request->has('job_title') ? $request->job_title : 'No Job Title',
             'profile_image' => $request->has('profile_image') ? $request->profile_image : 'default_profile.jpg',
-            'automated_message' => $request->automated_message,
             'password' => Hash::make($request->password),
         ]);
 

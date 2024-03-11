@@ -26,6 +26,11 @@
     - totalPrice
     - proposalTotal
 
+    IMPORTANT INFORMATION:
+
+    DO NOT REMOVE THE "!!" INSIDE THE CURLY BRACES. IT ALLOWS OUR PDF TO READ CONTENTS FROM TEXTAREAS MADE BY TINYMCE TO BE TREATED AS AN HTML.
+    ADDITIONALLY, I SUGGEST ADDING THOSE ON INFORMATION THAT INVOLVES TEXTAREA. e.g: automated_message, proposal_message, description. Please ask me if you are unsure.
+
 -->
 
 
@@ -48,7 +53,7 @@
 
             <div>
                 <h2></h2>
-                <p>{{ $step3Data['automated_message'] }}</p>
+                <p>{!! $step3Data['automated_message'] !!}</p>
                 <p>{{ $step3Data['sender'] }}</p>
                 <!-- Filter Users Query based on the sender's name and grab their job_title and profile_image ; automated_message-->
             </div>
@@ -56,10 +61,31 @@
 
         <ul>
             @foreach($step4Data['selectedProducts'] as $product)
-                <li>Name: {{ $product['name'] }}, Price: ${{ $product['price'] }}, Quantity: {{ $product['quantity'] }}, Description: {{ $product['description'] }}</li> <!-- Array Loop -->
+                <li>Name: {{ $product['name'] }}, Price: ${{ $product['price'] }}, Quantity: {{ $product['quantity'] }}, Description: {!! $product['description'] !!}</li> <!-- Array Loop -->
             @endforeach
             <p>Proposal Total: ${{ $step4Data['proposalTotal'] }}.00</p>
         </ul>
+
+
+        <form action="{{ route('link.feedback') }}" method="POST">
+            @csrf
+            <!-- Checkbox for updating status -->
+
+            <input type="hidden" name="proposalId" value="{{ $proposalId }}">
+
+            <label for="updateStatus">These look good to me.</label>
+            <input type="radio" name="updateStatus" value="1">
+
+            <label for="updateStatus">I am unsure, let's talk.</label>
+            <input type="radio" name="updateStatus" value="2">
+        
+            <!-- Textbox for sending a message -->
+            <label for="clientMessage">Message:</label>
+            <textarea name="clientMessage"></textarea>
+        
+            <button type="submit">Submit</button>
+        </form>
+        
     </main>
     <footer>
 

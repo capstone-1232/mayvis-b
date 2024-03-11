@@ -13,12 +13,6 @@ class PDFController extends Controller
 {
     public function generatePDF(Request $request)
     {
-        $step1Data = session('step1_data');
-        $step2Data = session('step2_data');
-        $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); 
-
-        $sessionData = $request->session()->all();
 
         // Ensure the user is authenticated
         if (!Auth::check()) {
@@ -56,14 +50,21 @@ class PDFController extends Controller
             'product_id' => $productIdsString,
         ];
 
-        // Create a new proposal
-        $proposal = Proposal::create($proposalData);
-        
-        
-        // Load a view where you pass the session data
-        $pdf = PDF::loadView('pdf.sessionInfo', compact('step1Data', 'step2Data', 'step3Data', 'step4Data', 'sessionData'));
-        
-        // Return the generated PDF
-        return $pdf->download('session-information.pdf');
+        // Create the data array with all the session data and any additional data for the PDF.
+        $data = [
+            'step1Data' => $step1Data,
+            'step2Data' => $step2Data,
+            'step3Data' => $step3Data,
+            'step4Data' => $step4Data,
+        ];
+
+        // Load the view and pass the data array to it.
+        $pdf = PDF::loadView('pdf.sessionInfo', $data);
+
+        // Generate the PDF to download with a dynamic filename based on proposal data.
+        $filename = 'Proposal-' . $proposalData['proposal_title'] . '-' . $proposalData['start_date'] . '.pdf';
+
+        // Return the generated PDF.
+        return $pdf->download($filename);
     }
 }
