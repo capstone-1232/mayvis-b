@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Proposal;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -133,7 +134,17 @@ class ProposalController extends Controller
 
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
-        
+
+        // Assuming 'sender' field contains the last name to check
+        $senderLastName = $request->input('sender');
+
+        // Check if a user with the given last name exists in the database
+        $userExists = User::where('last_name', $senderLastName)->exists();
+
+        if(!$userExists){
+            return redirect()->back()->with('error', 'No user found with the last name "' . $senderLastName . '". Please check the name and try again.');
+        }
+   
         // Store step 3 data in session
         session()->put('step3_data', $request->all());
 
@@ -371,6 +382,5 @@ class ProposalController extends Controller
         // Redirect or return view with success message
         return view('proposals.step7');
     }
-
     
 }

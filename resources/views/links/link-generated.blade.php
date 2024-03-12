@@ -9,15 +9,13 @@
                     </div>
                     <p class="text-muted">
                         By creating a custom URL for this proposal, you effectively lock it from being changed by the estimating team.
-                        The proposal's status will be set to "Sent," and feedback can be solicited from the clients via the link.
+                        The proposal's status will be set to "Pending" and feedback can be solicited from the clients via the link.
                     </p>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" value="{{ $link }}" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
                     </div>
                     <div class="text-center">
-                        <button class="btn btn-primary me-2">Deactivate Link</button>
-                        <button class="btn btn-outline-primary me-2">Share Link</button>
-                        <a href="{{ route('proposals.step7') }}" class="btn btn-primary">Go Back</a>
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
                     </div>
                 </div>
             </div>

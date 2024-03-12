@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Proposal;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,18 @@ class PDFController extends Controller
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data');
+
+
+        /* This Snippet of code filters the database to display the profile_image, automated_message, first + last name of the user entered as a "sender" on step 3.*/
+
+        // Filter users based on sender's name
+        $senderName = $step3Data['sender'] ?? ''; // Make sure this key exists and has a default
+        $users = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
+                      ->where('first_name', 'like', '%' . $senderName . '%')
+                      ->get();
+
+                      
+        // $firstUser = $users->first(); // Get the first user in the collection
 
         // Extract the keys from the selectedProducts array, which are the product IDs
         $productIds = array_keys($step4Data['selectedProducts']);
@@ -56,6 +69,7 @@ class PDFController extends Controller
             'step2Data' => $step2Data,
             'step3Data' => $step3Data,
             'step4Data' => $step4Data,
+            'users' => $users
         ];
 
         // Load the view and pass the data array to it.

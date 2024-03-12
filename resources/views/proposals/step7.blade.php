@@ -5,6 +5,16 @@
         </h2>
     </x-slot>
 
+    <!-- Refreshing the page during URL generation after the client has given feedback will throw an error. -->
+    <!-- Additionally, refreshing the page during URL generation will no longer create a new record on the database. -->
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+
     <div class="content">
         <div class="py-12">
             <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -16,13 +26,15 @@
                         <div class="flex justify-around items-center mb-6">
                             <div class="p-4 max-w-sm bg-gray-100 rounded-lg border border-gray-200 shadow-md">
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Send a PDF Copy</h5>
-                                <p class="mb-3 font-normal text-gray-700">Note: Printable proposals are less desirable than soliciting feedback via client approval links.</p>
+                                <p class="mb-3 font-normal text-gray-700">Note: Printable proposals are less desirable than soliciting feedback via client approval links. 
+                                    Proposals will not be registered in the database until you generate a link. This is solely to generate a copy for yourself.</p>
                                 <a href="{{ route('session.info.pdf') }}" class="btn btn-primary">View PDF</a>
     
                             </div>
                             <div class="p-4 max-w-sm bg-gray-100 rounded-lg border border-gray-200 shadow-md">
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Send using a link</h5>
-                                <p class="mb-3 font-normal text-gray-700">Note: This proposal cannot be edited once the link has been created.</p>
+                                <p class="mb-3 font-normal text-gray-700">Note: Proposal Information will no longer be editable as soon as you create a link. Additionally, in the rare situation where the client provides feedback right away,
+                                    refreshing the URL generation page will send you back to the dashboard. This is a security measure to prevent database alteration.</p>
                                 <a href="{{ route('link.generate') }}" class="btn btn-primary">Generate Link</a>
                             </div>
                         </div>
