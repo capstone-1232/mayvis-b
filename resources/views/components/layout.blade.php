@@ -84,7 +84,7 @@
             <a class="nav-link" href="#"><i class="fas fa-chart-bar fa-lg"></i><span> Reports</span></a>
         </nav>
         <div class="mt-auto">
-            <form action="/logout" method="POST" class="mb-2">
+            <form action="{{ route('logout') }}" method="POST" class="mb-2">
                 @csrf
                 <button class="nav-link btn py-2 w-100"><i class="fas fa-sign-out-alt fa-lg"></i><span> Log Out</span></button>
             </form>
