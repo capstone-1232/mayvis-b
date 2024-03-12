@@ -22,6 +22,8 @@ class LinkGenerationController extends Controller
         if ($request->session()->get('feedback_submitted', false)) {
             return redirect()->route('dashboard')->with('message', 'Feedback already processed.');
         }
+
+        $request->session()->forget(['feedback_submitted', 'proposalId', 'uniqueToken', 'step1Data', 'step2Data', 'step3Data', 'step4Data', 'userData']);
         
         // Retrieve session data
         $step1Data = session('step1_data');
