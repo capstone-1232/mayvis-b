@@ -205,13 +205,14 @@
                         <form id="filterForm" action="{{ route('proposals.filterProducts') }}" method="GET">
                             <h2 class="mt-5">Choose a category</h2>
                             <select name="category_id" id="category" class="form-select" required>
+                                <option value="" disabled selected>Choose a category</option>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" {{ (request()->category_id == $category->id) ? 'selected' : '' }}>
                                         {{ $category->category_name }}
                                     </option>
                                 @endforeach
                             </select>
-                        </form>
+                        </form>                        
                     </div>  
     
                     <form action="{{ route('proposals.storeStep4') }}" method="POST">

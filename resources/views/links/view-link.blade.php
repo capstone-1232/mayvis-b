@@ -59,7 +59,7 @@
             <div>
                 <h2>Hello There!!!</h2>
                 <!-- Filter Users Query based on the sender's name and grab their job_title and profile_image ; automated_message-->
-                @foreach ($userData as $user)
+                @foreach ($users as $user)
                     <p>{!! $user->automated_message !!}</p>
                     <p>{{ $user->first_name }} {{ $user->last_name }}</p>
                     <p>{{ $user->profile_image }}</p>

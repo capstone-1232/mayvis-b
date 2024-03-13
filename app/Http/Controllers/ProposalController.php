@@ -36,18 +36,18 @@ class ProposalController extends Controller
 
         // Validate and store step 1 data in session
         $request->validate([
-            'first_name' => 'required|max:30',
-            'last_name' => 'required|max:30',
-            'company_name' => 'required|max:30',
-            'email' => 'required|email|unique:users,email',
-            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
+            'first_name' => 'required|max:80',
+            'last_name' => 'required|max:80',
+            'company_name' => 'required|max:80',
+            'email' => 'required|email|unique:users,email|unique:clients,email', // Combined the email rules (This checks for unique emails inside "Users" and "Clients" Table)
+            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/'],
         ], [
             'first_name.required' => 'The first name field is required.',
-            'first_name.max' => 'The first name may not be greater than 30 characters.',
+            'first_name.max' => 'The first name may not be greater than 80 characters.',
             'last_name.required' => 'The last name field is required.',
-            'last_name.max' => 'The last name may not be greater than 30 characters.',
+            'last_name.max' => 'The last name may not be greater than 80 characters.',
             'company_name.required' => 'The company name field is required.',
-            'company_name.max' => 'The company name may not be greater than 30 characters.',
+            'company_name.max' => 'The company name may not be greater than 80 characters.',
             'email.required' => 'The email field is required.',
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'The email has already been taken.',
@@ -96,12 +96,15 @@ class ProposalController extends Controller
 
         // Validate and store step 2 data in session
         $request->validate([
-            'proposal_title' => 'required|max:30',
-            'start_date' => 'required',
+            'proposal_title' => 'required|max:100',
+            'start_date' => 'required|date|after_or_equal:today',
         ],[
             'proposal_title.required' => 'The Proposal Title field is required.',
-            'start_date.required' => 'The date created field is required'
+            'start_date.required' => 'The date created field is required.',
+            'start_date.date' => 'The date created field must be a valid date.',
+            'start_date.after_or_equal' => 'The date created must be today or a future date.',
         ]);
+        
 
         $step1Data = session('step1_data');
         
@@ -135,14 +138,25 @@ class ProposalController extends Controller
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
 
+        $request->validate([
+            'sender' => 'required|email|exists:users,email',
+            'automated_message' => 'required', 
+        ], [
+            'sender.required' => 'The sender field is required.',
+            'sender.email' => 'The sender must be a valid email address.',
+            'sender.exists' => 'No user found with the email. Please check and try again.',
+            'automated_message.required' => 'The automated message field is required.',
+        ]);
+        
+
         // Assuming 'sender' field contains the last name to check
-        $senderLastName = $request->input('sender');
+        $senderEmail = $request->input('sender');
 
         // Check if a user with the given last name exists in the database
-        $userExists = User::where('last_name', $senderLastName)->exists();
+        $userExists = User::where('email', $senderEmail)->exists();
 
         if(!$userExists){
-            return redirect()->back()->with('error', 'No user found with the last name "' . $senderLastName . '". Please check the name and try again.');
+            return redirect()->back()->with('error', 'No user found with the email "' . $senderEmail . '". Please check the name and try again.');
         }
    
         // Store step 3 data in session

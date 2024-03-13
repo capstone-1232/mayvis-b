@@ -46,14 +46,14 @@
                         <label for="first_name">First Name</label>
                         <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'first_name','field' => 'first_name','placeholder' => 'Client First Name','class' => 'w-full my-2','autocomplete' => 'off','value' => old('first_name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'first_name','field' => 'first_name','placeholder' => 'Client First Name','class' => 'w-full my-2','autocomplete' => 'off','value' => session('step1_data.first_name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'text','name' => 'first_name','field' => 'first_name','placeholder' => 'Client First Name','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('first_name'))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['type' => 'text','name' => 'first_name','field' => 'first_name','placeholder' => 'Client First Name','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step1_data.first_name'))]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
 <?php $attributes = $__attributesOriginal18c21970322f9e5c938bc954620c12bb; ?>
@@ -67,14 +67,14 @@
                         <label for="last_name">Last Name</label>
                         <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'last_name','field' => 'last_name','placeholder' => 'Client Last Name','class' => 'w-full my-2','autocomplete' => 'off','value' => old('last_name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'last_name','field' => 'last_name','placeholder' => 'Client Last Name','class' => 'w-full my-2','autocomplete' => 'off','value' => session('step1_data.last_name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'text','name' => 'last_name','field' => 'last_name','placeholder' => 'Client Last Name','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('last_name'))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['type' => 'text','name' => 'last_name','field' => 'last_name','placeholder' => 'Client Last Name','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step1_data.last_name'))]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
 <?php $attributes = $__attributesOriginal18c21970322f9e5c938bc954620c12bb; ?>
@@ -88,14 +88,14 @@
                         <label for="company_name">Company Name</label>
                         <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'company_name','field' => 'company_name','placeholder' => 'Company Name','class' => 'w-full my-2','autocomplete' => 'off','value' => old('company_name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'company_name','field' => 'company_name','placeholder' => 'Company Name','class' => 'w-full my-2','autocomplete' => 'off','value' => session('step1_data.company_name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'text','name' => 'company_name','field' => 'company_name','placeholder' => 'Company Name','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('company_name'))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['type' => 'text','name' => 'company_name','field' => 'company_name','placeholder' => 'Company Name','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step1_data.company_name'))]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
 <?php $attributes = $__attributesOriginal18c21970322f9e5c938bc954620c12bb; ?>
@@ -109,14 +109,14 @@
                         <label for="email">Email</label>
                         <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'email','name' => 'email','field' => 'email','placeholder' => 'Client Email','class' => 'w-full my-2','autocomplete' => 'off','value' => old('email')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'email','name' => 'email','field' => 'email','placeholder' => 'Client Email','class' => 'w-full my-2','autocomplete' => 'off','value' => session('step1_data.email')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'email','name' => 'email','field' => 'email','placeholder' => 'Client Email','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('email'))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['type' => 'email','name' => 'email','field' => 'email','placeholder' => 'Client Email','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step1_data.email'))]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
 <?php $attributes = $__attributesOriginal18c21970322f9e5c938bc954620c12bb; ?>
@@ -130,14 +130,14 @@
                         <label for="phone_number">Phone Number</label>
                         <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'tel','name' => 'phone_number','field' => 'phone_number','placeholder' => 'Client Phone','class' => 'w-full my-2','autocomplete' => 'off','value' => old('phone_number')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'tel','name' => 'phone_number','field' => 'phone_number','placeholder' => 'Client Phone','class' => 'w-full my-2','autocomplete' => 'off','value' => session('step1_data.phone_number')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'tel','name' => 'phone_number','field' => 'phone_number','placeholder' => 'Client Phone','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('phone_number'))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['type' => 'tel','name' => 'phone_number','field' => 'phone_number','placeholder' => 'Client Phone','class' => 'w-full my-2','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step1_data.phone_number'))]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
 <?php $attributes = $__attributesOriginal18c21970322f9e5c938bc954620c12bb; ?>
@@ -148,7 +148,7 @@
 <?php unset($__componentOriginal18c21970322f9e5c938bc954620c12bb); ?>
 <?php endif; ?>
                         
-                        <a href="dashboard">Cancel</a>
+                        <a href="<?php echo e(route('dashboard')); ?>">Cancel</a>
                         <?php if (isset($component)) { $__componentOriginald411d1792bd6cc877d687758b753742c = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginald411d1792bd6cc877d687758b753742c = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.primary-button','data' => ['class' => 'mt-6']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>

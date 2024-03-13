@@ -215,6 +215,7 @@
                         <form id="filterForm" action="<?php echo e(route('proposals.filterProducts')); ?>" method="GET">
                             <h2 class="mt-5">Choose a category</h2>
                             <select name="category_id" id="category" class="form-select" required>
+                                <option value="" disabled selected>Choose a category</option>
                                 <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <option value="<?php echo e($category->id); ?>" <?php echo e((request()->category_id == $category->id) ? 'selected' : ''); ?>>
                                         <?php echo e($category->category_name); ?>
@@ -222,7 +223,7 @@
                                     </option>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
-                        </form>
+                        </form>                        
                     </div>  
     
                     <form action="<?php echo e(route('proposals.storeStep4')); ?>" method="POST">

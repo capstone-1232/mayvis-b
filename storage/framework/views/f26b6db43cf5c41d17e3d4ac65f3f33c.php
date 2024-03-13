@@ -29,13 +29,17 @@
         }
         
         function savePrice(productId) {
-           // Get the input value, removing any formatting like commas or currency symbols
-            var priceInputValue = document.getElementById('price-input-' + productId).value.replace(/[^0-9.]/g, '');
+            // Get the input values, removing any formatting like commas or currency symbols
+            var priceInputValue = document.getElementById('price-input-' + productId).value.replace(/[^0-9.-]/g, '');
             var quantityInputValue = document.getElementById('quantity-input-' + productId).value;
-            var descriptionInputValue = document.getElementById('description-input-' + productId).value;
 
-            var newPrice = priceInputValue ? parseFloat(priceInputValue) : 0; // default to 0 if empty
-            var newQuantity = quantityInputValue ? parseInt(quantityInputValue) : 1; // default to 1 if empty
+            // Ensure price is not negative; default to 0 if it is
+            var newPrice = Math.max(0, parseFloat(priceInputValue || 0));
+
+            // Ensure quantity is at least 1; default to 1 if it is less
+            var newQuantity = Math.max(1, parseInt(quantityInputValue || 1));
+
+            var descriptionInputValue = document.getElementById('description-input-' + productId).value;
 
             // Update the display with new values
             document.getElementById('price-value-' + productId).innerText = newPrice.toFixed(2);
@@ -52,9 +56,14 @@
             document.getElementById('edit-button-' + productId).style.display = 'inline';
             document.getElementById('save-button-' + productId).style.display = 'none';
 
+            // Update the input fields to reflect the corrected values (for submission)
+            document.getElementById('price-input-' + productId).value = newPrice.toFixed(2);
+            document.getElementById('quantity-input-' + productId).value = newQuantity;
+
             // Recalculate and update total prices
             updateTotalPrice();
         }
+
 
         function updateTotalPrice() {
             let totalPrice = 0;

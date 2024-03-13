@@ -33,7 +33,7 @@ class PDFController extends Controller
         // Filter users based on sender's name
         $senderName = $step3Data['sender'] ?? ''; // Make sure this key exists and has a default
         $users = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
-                      ->where('first_name', 'like', '%' . $senderName . '%')
+                      ->where('email', 'like', '%' . $senderName . '%')
                       ->get();
 
                       
@@ -69,7 +69,7 @@ class PDFController extends Controller
             'step2Data' => $step2Data,
             'step3Data' => $step3Data,
             'step4Data' => $step4Data,
-            'users' => $users
+            'users' => $users,
         ];
 
         // Load the view and pass the data array to it.

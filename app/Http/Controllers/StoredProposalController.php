@@ -22,4 +22,20 @@ class StoredProposalController extends Controller
         // Pass the proposals to the view
         return view('storedProposals.storedProposals-index', compact('proposals', 'step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
+
+    public function searchProposals(Request $request) {
+        $searchTerm = $request->input('search_term');
+    
+        $searchResults = Proposal::with('client', 'user')
+                        ->where(function($query) use ($searchTerm) {
+                            $query->where('proposal_title', 'LIKE', '%' . $searchTerm . '%')
+                                ->orWhereHas('client', function($query) use ($searchTerm) {
+                                    $query->where('first_name', 'LIKE', '%' . $searchTerm . '%');
+                                });
+                        })->get();
+
+    
+        // Return JSON response
+        return response()->json($searchResults);
+    }
 }

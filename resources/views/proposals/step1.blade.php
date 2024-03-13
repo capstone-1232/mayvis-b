@@ -34,21 +34,21 @@
                     <form action="{{ route('proposals.storeStep1') }}" method="post">
                         @csrf
                         <label for="first_name">First Name</label>
-                        <x-text-input type="text" name="first_name" field="first_name" placeholder="Client First Name" class="w-full my-2" autocomplete="off" :value="old('first_name')"></x-text-input>
+                        <x-text-input type="text" name="first_name" field="first_name" placeholder="Client First Name" class="w-full my-2" autocomplete="off" :value="session('step1_data.first_name')"></x-text-input>
     
                         <label for="last_name">Last Name</label>
-                        <x-text-input type="text" name="last_name" field="last_name" placeholder="Client Last Name" class="w-full my-2" autocomplete="off" :value="old('last_name')"></x-text-input>
+                        <x-text-input type="text" name="last_name" field="last_name" placeholder="Client Last Name" class="w-full my-2" autocomplete="off" :value="session('step1_data.last_name')"></x-text-input>
                         
                         <label for="company_name">Company Name</label>
-                        <x-text-input type="text" name="company_name" field="company_name" placeholder="Company Name" class="w-full my-2" autocomplete="off" :value="old('company_name')"></x-text-input>
+                        <x-text-input type="text" name="company_name" field="company_name" placeholder="Company Name" class="w-full my-2" autocomplete="off" :value="session('step1_data.company_name')"></x-text-input>
     
                         <label for="email">Email</label>
-                        <x-text-input type="email" name="email" field="email" placeholder="Client Email" class="w-full my-2" autocomplete="off" :value="old('email')"></x-text-input>
+                        <x-text-input type="email" name="email" field="email" placeholder="Client Email" class="w-full my-2" autocomplete="off" :value="session('step1_data.email')"></x-text-input>
     
                         <label for="phone_number">Phone Number</label>
-                        <x-text-input type="tel" name="phone_number" field="phone_number" placeholder="Client Phone" class="w-full my-2" autocomplete="off" :value="old('phone_number')"></x-text-input>
+                        <x-text-input type="tel" name="phone_number" field="phone_number" placeholder="Client Phone" class="w-full my-2" autocomplete="off" :value="session('step1_data.phone_number')"></x-text-input>
                         
-                        <a href="dashboard">Cancel</a>
+                        <a href="{{ route('dashboard') }}">Cancel</a>
                         <x-primary-button class="mt-6">Next</x-primary-button>
                     </form>
                 </div>

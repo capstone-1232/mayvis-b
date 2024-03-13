@@ -191,5 +191,8 @@ Route::get('/view-link/{token}', [LinkGenerationController::class, 'viewLink'])-
 Route::get('/storedProposals', [StoredProposalController::class, 'indexStoredProposals'])->name('storedProposals.storedProposalsIndex');
 
 
+/* Search Proposals in Proposals Page */
+Route::get('/search-proposals', [StoredProposalController::class, 'searchProposals'])->name('storedProposals.searchProposals');
+
 
 require __DIR__.'/auth.php';
