@@ -6,7 +6,10 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Proposal;
+<<<<<<< HEAD
 use App\Models\Draft;
+=======
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -140,11 +143,20 @@ class ProposalController extends Controller
         $step2Data = session('step2_data');
 
         $request->validate([
+<<<<<<< HEAD
             'sender' => 'required|email|exists:users,email', 
+=======
+            'sender' => 'required|email|exists:users,email',
+            'automated_message' => 'required', 
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
         ], [
             'sender.required' => 'The sender field is required.',
             'sender.email' => 'The sender must be a valid email address.',
             'sender.exists' => 'No user found with the email. Please check and try again.',
+<<<<<<< HEAD
+=======
+            'automated_message.required' => 'The automated message field is required.',
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
         ]);
         
 
@@ -364,8 +376,13 @@ class ProposalController extends Controller
         return redirect()->route('proposals.step6');
     }
     
+<<<<<<< HEAD
+=======
+
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
 
 
+<<<<<<< HEAD
     public function showStep6()
     {
         if (!Auth::check()) {
@@ -384,11 +401,35 @@ class ProposalController extends Controller
             return redirect()->route('proposals.listDrafts')->with('error', 'No proposal data found in session.');
         }
 
+=======
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
+        if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
+            // If step4_data is empty, redirect back to the Step 4 route
+            return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
+        }
+
+        // Retrieve session data
+        $step1Data = session('step1_data');
+        $step2Data = session('step2_data');
+        $step3Data = session('step3_data');
+        $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
+
+        // dd($step4Data['selectedProducts']);
+    
+        // Pass the session data to the view
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
         return view('proposals.step6', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
     public function showStep7(Request $request){
         // Ensure the user is authenticated
         if (!Auth::check()) {
@@ -398,6 +439,7 @@ class ProposalController extends Controller
 
         // Redirect or return view with success message
         return view('proposals.step7');
+<<<<<<< HEAD
     }
 
 
@@ -446,6 +488,8 @@ class ProposalController extends Controller
 
         // Redirect the user back to the dashboard
         return redirect()->route('dashboard')->with('success', 'Draft saved successfully.');
+=======
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
     }
 
     public function listDrafts()

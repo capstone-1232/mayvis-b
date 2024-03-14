@@ -1,10 +1,10 @@
-<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
-<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
-<?php $component->withName('app-layout'); ?>
+<?php if (isset($component)) { $__componentOriginal23a33f287873b564aaf305a1526eada4 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal23a33f287873b564aaf305a1526eada4 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layout','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('layout'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\AppLayout::class))->getConstructor()): ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
@@ -15,6 +15,7 @@
         </h2>
      <?php $__env->endSlot(); ?>
 
+   <div class="content">
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg mt-2">
@@ -44,14 +45,14 @@
                     <label for="proposal_title">Proposal Title</label>
                     <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'proposal_title','field' => 'proposal_title','placeholder' => 'Proposal Title','class' => 'w-full','autocomplete' => 'off','value' => @old('proposal_title')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['type' => 'text','name' => 'proposal_title','field' => 'proposal_title','placeholder' => 'Proposal Title','class' => 'w-full','autocomplete' => 'off','value' => session('step2_data.proposal_title')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['type' => 'text','name' => 'proposal_title','field' => 'proposal_title','placeholder' => 'Proposal Title','class' => 'w-full','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(@old('proposal_title'))]); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes(['type' => 'text','name' => 'proposal_title','field' => 'proposal_title','placeholder' => 'Proposal Title','class' => 'w-full','autocomplete' => 'off','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step2_data.proposal_title'))]); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
 <?php $attributes = $__attributesOriginal18c21970322f9e5c938bc954620c12bb; ?>
@@ -65,14 +66,14 @@
                     <label for="start_date" class="mt-5">Date Created</label>
                     <?php if (isset($component)) { $__componentOriginal2c7cd37e2e80199b9dbc9a9aa91b96b1 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal2c7cd37e2e80199b9dbc9a9aa91b96b1 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.date-input','data' => ['name' => 'start_date','placeholder' => 'YYYY-MM-DD','value' => old('start_date')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.date-input','data' => ['name' => 'start_date','placeholder' => 'YYYY-MM-DD','value' => session('step2_data.start_date', old('start_date'))]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
 <?php $component->withName('date-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['name' => 'start_date','placeholder' => 'YYYY-MM-DD','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('start_date'))]); ?>
+<?php $component->withAttributes(['name' => 'start_date','placeholder' => 'YYYY-MM-DD','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(session('step2_data.start_date', old('start_date')))]); ?>
                      <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal2c7cd37e2e80199b9dbc9a9aa91b96b1)): ?>
@@ -108,14 +109,15 @@
             </div>
         </div>
     </div>
+   </div>
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
-<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
-<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php if (isset($__attributesOriginal23a33f287873b564aaf305a1526eada4)): ?>
+<?php $attributes = $__attributesOriginal23a33f287873b564aaf305a1526eada4; ?>
+<?php unset($__attributesOriginal23a33f287873b564aaf305a1526eada4); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
-<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
-<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php if (isset($__componentOriginal23a33f287873b564aaf305a1526eada4)): ?>
+<?php $component = $__componentOriginal23a33f287873b564aaf305a1526eada4; ?>
+<?php unset($__componentOriginal23a33f287873b564aaf305a1526eada4); ?>
 <?php endif; ?>
     <?php /**PATH /var/www/html/resources/views/proposals/step2.blade.php ENDPATH**/ ?>

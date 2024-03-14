@@ -77,7 +77,11 @@
             </a>
             <div class="collapse" id="proposalsSubmenu">
                 <a class="nav-link" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ps-5"> Ongoing</span></a>
+<<<<<<< HEAD
                 <a class="nav-link" href="{{ route('proposals.listDrafts') }}"><span class="ps-5"> Drafts</span></a>
+=======
+                <a class="nav-link" href="#"><span class="ps-5"> Drafts</span></a>
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
             </div>
             <a class="nav-link" href="{{ route('servicesIndex') }}"><i class="fas fa-cogs fa-lg"></i><span> Services</span></a>
             <a class="nav-link" href="{{ route('index-client') }}"><i class="fas fa-users fa-lg"></i><span> Clients</span></a>

@@ -17,7 +17,7 @@
                         <img src="https://via.placeholder.com/64" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
                     <div>
-                        <h3 class="text-white fw-bold fs-5">Welcome back, <?php echo e(Auth::user()->name); ?></h3>
+                        <h3 class="text-white fw-bold fs-5">Welcome back, <?php echo e(Auth::user()->first_name); ?></h3>
                         <h4 class="fw-light fs-6 text-white"><?php echo e(Auth::user()->job_title); ?></h4>
                     </div>
                 </div>
@@ -80,35 +80,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-success">Publishing</span></td>
-                                <td>Feb 1, 2024</td>
-                            </tr>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-warning text-dark">Ongoing</span></td>
-                                <td>Jan 30, 2024</td>
-                            </tr>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-danger">Disapproved</span></td>
-                                <td>Dec 28, 2024</td>
-                            </tr>
-                            <tr>
-                                <td>Proposal Name Lorem</td>
-                                <td>Client Name</td>
-                                <td><span class="badge bg-warning text-dark">Ongoing</span></td>
-                                <td>Dec 24, 2024</td>
-                            </tr>
+                            <?php $__currentLoopData = $proposals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $proposal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr>
+                                    <td><?php echo e($proposal->proposal_title); ?></td>
+                                    <td><?php echo e($proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client'); ?></td>
+                                    <td><span class="badge bg-success"><?php echo e($proposal->status); ?></span></td>
+                                    <td><?php echo e($proposal->start_date); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
                 <div class="card-footer bg-white text-center">
-                    <a href="#" class="btn btn-primary">View All</a>
+                    <a href="<?php echo e(route('storedProposals.storedProposalsIndex')); ?>" class="btn btn-primary">View All</a>
                 </div>
             </div>
         </div>

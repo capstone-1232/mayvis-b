@@ -53,7 +53,10 @@
 
 
     </script>
+<<<<<<< HEAD
     
+=======
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
     <div class="content">
         <div class="container mt-5">
             <div class="my-2">
@@ -91,8 +94,12 @@
                                         <td>{{ $proposal->client->company_name }}</td>
                                         <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                                         <td>{{ $proposal->start_date }}</td>
+<<<<<<< HEAD
                                         <td><img src="{{ asset('storage/' . $proposal->user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo"></td>
                                         
+=======
+                                        <td>{{ $proposal->user->first_name . ' ' . $proposal->user->last_name }}</td>
+>>>>>>> e460a808fb7e8761010459153acad2bee72678d6
                                     </tr>
                                 @endforeach
                             </tbody>
