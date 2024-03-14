@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Proposal;
 use App\Models\User;
-<<<<<<< HEAD
 use App\Models\Draft;
-=======
->>>>>>> e460a808fb7e8761010459153acad2bee72678d6
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -64,17 +61,12 @@ class LinkGenerationController extends Controller
         $request->session()->put('proposalId', $proposal->id);
 
         $uniqueToken = uniqid();
-<<<<<<< HEAD
-=======
-        
->>>>>>> e460a808fb7e8761010459153acad2bee72678d6
         $request->session()->put('uniqueToken', $uniqueToken);
 
         $link = URL::temporarySignedRoute(
             'link.view', now()->addMinutes(2880), ['token' => $uniqueToken]
         );
 
-<<<<<<< HEAD
         // After successfully finalizing the proposal
         if ($draftId = session('draftId')) {
             $draft = Draft::find($draftId);
@@ -84,8 +76,6 @@ class LinkGenerationController extends Controller
             }
         }
 
-=======
->>>>>>> e460a808fb7e8761010459153acad2bee72678d6
         return view('links.link-generated', ['link' => $link]);
     }
 

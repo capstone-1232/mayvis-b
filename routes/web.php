@@ -194,7 +194,6 @@ Route::get('/storedProposals', [StoredProposalController::class, 'indexStoredPro
 /* Search Proposals in Proposals Page */
 Route::get('/search-proposals', [StoredProposalController::class, 'searchProposals'])->name('storedProposals.searchProposals');
 
-<<<<<<< HEAD
 
 /***************************************************************************************************************************************/
 
@@ -213,7 +212,5 @@ Route::get('/proposals/drafts/{draft}/summary', [ProposalController::class, 'vie
 
 
 
-=======
->>>>>>> e460a808fb7e8761010459153acad2bee72678d6
 
 require __DIR__.'/auth.php';
