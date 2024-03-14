@@ -13,7 +13,9 @@ class DashboardController extends Controller
         // Fetch the proposals with Clients so we can convert client_id -> first_name (client)
         if (Auth::check()) {
             $userId = Auth::user()->id; // Get the currently logged-in user's ID
-            $proposals = Proposal::with(['client', 'user'])->where('user_id', $userId)->get();
+            $proposals = Proposal::with(['client', 'user'])
+                    ->where('user_id', $userId)
+                    ->paginate(5);
         } else {
             return redirect()->route('login');
         }

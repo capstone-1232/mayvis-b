@@ -88,6 +88,10 @@
             </div>
         </div>
     </div>
+
+    <div id="paginatin-container">
+        {{ $proposals->links() }}
+    </div>
 </div>
 </div>
 </x-layout>
