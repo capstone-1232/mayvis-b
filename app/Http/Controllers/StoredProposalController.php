@@ -17,7 +17,7 @@ class StoredProposalController extends Controller
         $sessionData = $request->session()->all();
 
         // Fetch the proposals with Clients so we can convert client_id -> first_name (client)
-        $proposals = Proposal::with('client', 'user')->get();
+        $proposals = Proposal::with('client', 'user')->paginate(10);
         
         // Pass the proposals to the view
         return view('storedProposals.storedProposals-index', compact('proposals', 'step1Data', 'step2Data', 'step3Data', 'step4Data'));

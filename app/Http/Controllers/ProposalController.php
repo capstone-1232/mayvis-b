@@ -177,10 +177,16 @@ class ProposalController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
 
+        $step1Data = session('step1_data');
+        $step2Data = session('step2_data');
+        $step3Data = session('step3_data');
+
         if (!session()->has('step3_data') || empty(session()->get('step3_data'))) {
             // If step3_data is empty, redirect back to the Step 3 route
             return redirect()->route('proposals.step3')->with('error', 'Please complete Step 3 first.');
         }
+
+        
 
         $categories = Category::all(); // Fetch all categories
 
