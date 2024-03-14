@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LinkGenerationController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\StoredProposalController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,11 +26,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -66,6 +73,7 @@ Route::post('/proposals/step5', [ProposalController::class, 'storeStep5'])->name
 
 /* Step 6 */
 Route::get('/proposals/step6', [ProposalController::class, 'showStep6'])->name('proposals.step6');
+Route::post('/proposals/step6', [ProposalController::class, 'storeStep6'])->name('proposals.storeStep6');
 
 /* Step 6 */
 Route::get('/proposals/step7', [ProposalController::class, 'showStep7'])->name('proposals.step7');
@@ -78,6 +86,12 @@ Route::get('/search-products', [ProposalController::class, 'searchProducts'])->n
 
 /* Edit Products */
 Route::put('/update-product/{productId}', [ProposalController::class, 'updateProduct'])->name('proposals.updateProduct');
+
+
+Route::get('/proposals/success', function () {
+    return view('proposals.success');
+})->name('proposals.success');
+
 
 /************************************************************************************************************************************/
 
@@ -149,6 +163,53 @@ Route::delete('/clients/{client}', [ClientController::class, 'destroyClient'])->
 
 /* Search Clients in Clients Page */
 Route::get('/search-clients', [ClientController::class, 'searchClients'])->name('clients.searchClients');
+
+/***************************************************************************************************************************************/
+
+
+/* PDF AREA */
+Route::get('/session-info-pdf', [PDFController::class, 'generatePDF'])->name('session.info.pdf');
+
+
+/***************************************************************************************************************************************/
+
+/* Link Generation Area */
+
+// Route to generate the link
+Route::get('/generate-link', [LinkGenerationController::class, 'generateLink'])->name('link.generate');
+
+// Route for feedback
+Route::post('/link-feedback', [LinkGenerationController::class, 'linkFeedback'])->name('link.feedback');
+
+
+// Route to view the information from the link
+Route::get('/view-link/{token}', [LinkGenerationController::class, 'viewLink'])->name('link.view');
+
+/***************************************************************************************************************************************/
+
+/* Stored Proposals Area */
+Route::get('/storedProposals', [StoredProposalController::class, 'indexStoredProposals'])->name('storedProposals.storedProposalsIndex');
+
+
+/* Search Proposals in Proposals Page */
+Route::get('/search-proposals', [StoredProposalController::class, 'searchProposals'])->name('storedProposals.searchProposals');
+
+
+/***************************************************************************************************************************************/
+
+
+/* Save Draft Route */
+Route::post('/proposals/save-draft', [ProposalController::class, 'saveDraft'])->name('proposals.saveDraft');
+
+/* List Drafts Route */
+Route::get('/proposals/drafts', [ProposalController::class, 'listDrafts'])->name('proposals.listDrafts');
+
+/* Load Draft Route */
+Route::get('/proposals/drafts/{draft}/summary', [ProposalController::class, 'viewDraftSummary'])->name('proposals.viewDraftSummary');
+
+
+
+
 
 
 

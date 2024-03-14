@@ -14,13 +14,25 @@ class Proposal extends Model
         'proposal_title',
         'status',
         'start_date',
+        'proposal_price',
         'client_id', // foreign key
         'user_id', // foreign key
-        'product_id' // foreign key
+        'product_id' // varchar
     ];
 
     public function products()
     {
         return $this->belongsToMany(Product::class);
     }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

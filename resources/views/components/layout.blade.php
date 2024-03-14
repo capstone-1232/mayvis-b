@@ -7,6 +7,27 @@
       <!-- Fonts -->
       <link rel="preconnect" href="https://fonts.bunny.net">
       <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+
+      <!-- Jquery for RTE -->
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+      <script src="https://cdn.tiny.cloud/1/6rx6za7wdjkaouwy1jgn6ghqu6erxtgznija96oyutz7fotz/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+      <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          tinycomments_mode: 'embedded',
+          tinycomments_author: 'Author name',
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' },
+          ],
+          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+      </script>
+
+
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
       <!-- Bootstrap -->
@@ -25,7 +46,7 @@
         <div class="top-nav flex">
           <div class="icons ms-auto my-auto">
             <i class="fas fa-bell fa-lg me-3"></i>
-            <i class="fas fa-user-circle fa-lg me-4"></i>
+            <a href="{{ route('profile.edit') }}"><i class="fas fa-user-circle fa-lg me-4"></i></a>
           </div>
         </div>
         
@@ -55,15 +76,15 @@
                 <i class="fas fa-file-alt fa-lg me-auto"></i><span> Proposals</span><i class="fas fa-chevron-down fa-md ms-3"></i>
             </a>
             <div class="collapse" id="proposalsSubmenu">
-                <a class="nav-link" href="#"><span class="ps-5"> Ongoing</span></a>
-                <a class="nav-link" href="#"><span class="ps-5"> Drafts</span></a>
+                <a class="nav-link" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ps-5"> Ongoing</span></a>
+                <a class="nav-link" href="{{ route('proposals.listDrafts') }}"><span class="ps-5"> Drafts</span></a>
             </div>
             <a class="nav-link" href="{{ route('servicesIndex') }}"><i class="fas fa-cogs fa-lg"></i><span> Services</span></a>
             <a class="nav-link" href="{{ route('index-client') }}"><i class="fas fa-users fa-lg"></i><span> Clients</span></a>
             <a class="nav-link" href="#"><i class="fas fa-chart-bar fa-lg"></i><span> Reports</span></a>
         </nav>
         <div class="mt-auto">
-            <form action="/logout" method="POST" class="mb-2">
+            <form action="{{ route('logout') }}" method="POST" class="mb-2">
                 @csrf
                 <button class="nav-link btn py-2 w-100"><i class="fas fa-sign-out-alt fa-lg"></i><span> Log Out</span></button>
             </form>

@@ -13,12 +13,20 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function servicesIndex()
+    public function servicesIndex(Request $request)
     {   
-        $products = Product::paginate(3); // Retrieve all products from the database
-        $categories = Category::paginate(10);
-        return view('services.servicesIndex', compact('products', 'categories')); // Pass the products/categories to the view
+        $query = Product::query();
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->paginate(3);
+        $categories = Category::all(); // No need to paginate categories
+
+        return view('services.servicesIndex', compact('products', 'categories'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -55,7 +63,7 @@ class ServiceController extends Controller
             'created_by.max' => 'Name is too long.'
         ]);
 
-        $validatedData['created_by'] = Auth::user()->name; // Set the created_by directly from the authenticated user
+        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; // Set the created_by directly from the authenticated user
 
      
          // Create a new Product instance and save it to the database
@@ -99,15 +107,15 @@ class ServiceController extends Controller
         $validatedData = $request->validate([
             'product_name' => 'min:1|max:30',
             'product_description' => 'min:1|max:600',
-            'product_price' => 'min:1|numeric',
+            'price' => 'min:1|numeric',
             'product_notes' => 'max:600'
         ], [       
             'product_name.min' => 'The product name cannot be empty.',
             'product_name.max' => 'The product name must not be greater than 30 characters.',        
             'product_description.min' => 'The product description cannot be empty.',
             'product_description.max' => 'The product description must not be greater than 600 characters.',
-            'product_price.min' => 'The product must have a price.',
-            'product_price.numeric' => 'The price must be a number.',
+            'price.min' => 'The product must have a price.',
+            'price.numeric' => 'The price must be a number.',
             'product_notes.max' => 'The product notes must not be greater than 600 characters.',
         ]);
 

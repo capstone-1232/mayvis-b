@@ -1,10 +1,11 @@
-<x-app-layout>
+<x-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Proposals') }}
         </h2>
     </x-slot>
 
+   <div class="content">
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="my-6 p-6 bg-white border-b border-gray-200 shadow-sm sm:rounded-lg mt-2">
@@ -32,13 +33,13 @@
                 <form action="{{ route('proposals.storeStep2') }}" method="post">
                     @csrf
                     <label for="proposal_title">Proposal Title</label>
-                    <x-text-input type="text" name="proposal_title" field="proposal_title" placeholder="Proposal Title" class="w-full" autocomplete="off" :value="@old('proposal_title')"></x-text-input>
+                    <x-text-input type="text" name="proposal_title" field="proposal_title" placeholder="Proposal Title" class="w-full" autocomplete="off" :value="session('step2_data.proposal_title')"></x-text-input>
 
                     <label for="start_date" class="mt-5">Date Created</label>
                     <x-date-input 
                         name="start_date"
                         placeholder="YYYY-MM-DD"
-                        :value="old('start_date')">
+                        :value="session('step2_data.start_date', old('start_date'))">
                     </x-date-input>
                     
                     <a href="{{ route('proposals.step1') }}">Cancel</a>
@@ -47,5 +48,6 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+   </div>
+</x-layout>
     
