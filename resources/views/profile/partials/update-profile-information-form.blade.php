@@ -13,13 +13,13 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->first_name . ' ' . $user->last_name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
@@ -48,6 +48,12 @@
         </div>
 
         <div>
+            <x-input-label for="job_title" :value="__('Job Title')" />
+            <x-text-input id="job_title" name="job_title" type="text" class="mt-1 block w-full" :value="old('job_title', $user->job_title)" required autofocus autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('job_title')" />
+        </div>
+
+        <div>
             <x-input-label for="automated_message" :value="__('Automated Message')" />
             <x-textarea id="automated_message" name="automated_message" type="text" class="mt-1 block w-full" :value="old('automated_message', $user->automated_message)" required autofocus autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('automated_message')" />
@@ -57,6 +63,12 @@
             <x-input-label for="proposal_message" :value="__('Proposal Message')" />
             <x-textarea id="proposal_message" name="proposal_message" type="text" class="mt-1 block w-full" :value="old('proposal_message', $user->proposal_message)" required autofocus autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('proposal_message')" />
+        </div>
+
+        <div>
+            <x-input-label for="photo" :value="__('Profile Photo')" />
+            <x-text-input id="photo" name="photo" type="file" class="mt-1 block w-full"/>
+            <x-input-error class="mt-2" :messages="$errors->get('photo')" />
         </div>
 
         <div class="flex items-center gap-4">

@@ -39,7 +39,7 @@
 
                 <div class="form-group">
                     <label for="created_by">Created By</label>
-                    <x-text-input type="text" name="created_by" class="form-control" value="{{ Auth::user()->name }}"></x-text-input>
+                    <x-text-input type="text" name="created_by" class="form-control" value="{{ Auth::user()->first_name . ' ' . Auth::user()->last_name }}"></x-text-input>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('created_by')" />
                 </div>
 

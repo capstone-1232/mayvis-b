@@ -39,7 +39,7 @@ class CategoryController extends Controller
             'category_name.max' => 'The category name must not be greater than 255 characters.', // Corrected from product_name to category_name
         ]);
 
-        $validatedData['created_by'] = Auth::user()->name; // Set the created_by directly from the authenticated user
+        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; // Set the created_by directly from the authenticated user
 
      
          // Create a new Category instance and save it to the database

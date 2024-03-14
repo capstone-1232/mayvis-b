@@ -3,34 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\Product;
+use App\Models\Proposal;
+use App\Models\Draft;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProposalController extends Controller
 {
 
     public function showStep1()
     {
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
+        
+
         return view('proposals.step1');
     }
 
     /* Step 1 Starts Here */
     public function storeStep1(Request $request)
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Validate and store step 1 data in session
         $request->validate([
-            'first_name' => 'required|max:30',
-            'last_name' => 'required|max:30',
-            'company_name' => 'required|max:30',
-            'email' => 'required|email|unique:users,email',
-            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
+            'first_name' => 'required|max:80',
+            'last_name' => 'required|max:80',
+            'company_name' => 'required|max:80',
+            'email' => 'required|email|unique:users,email|unique:clients,email', // Combined the email rules (This checks for unique emails inside "Users" and "Clients" Table)
+            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/'],
         ], [
             'first_name.required' => 'The first name field is required.',
-            'first_name.max' => 'The first name may not be greater than 30 characters.',
+            'first_name.max' => 'The first name may not be greater than 80 characters.',
             'last_name.required' => 'The last name field is required.',
-            'last_name.max' => 'The last name may not be greater than 30 characters.',
+            'last_name.max' => 'The last name may not be greater than 80 characters.',
             'company_name.required' => 'The company name field is required.',
-            'company_name.max' => 'The company name may not be greater than 30 characters.',
+            'company_name.max' => 'The company name may not be greater than 80 characters.',
             'email.required' => 'The email field is required.',
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'The email has already been taken.',
@@ -51,6 +69,12 @@ class ProposalController extends Controller
 
     public function showStep2()
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Debugging: Check the session data
         // dd(session()->all()); // This will dump and die, showing all session data
 
@@ -65,14 +89,23 @@ class ProposalController extends Controller
     }
 
     public function storeStep2(Request $request){
+        
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Validate and store step 2 data in session
         $request->validate([
-            'proposal_title' => 'required|max:30',
-            'start_date' => 'required',
+            'proposal_title' => 'required|max:100',
+            'start_date' => 'required|date|after_or_equal:today',
         ],[
             'proposal_title.required' => 'The Proposal Title field is required.',
-            'start_date.required' => 'The date created field is required'
+            'start_date.required' => 'The date created field is required.',
+            'start_date.date' => 'The date created field must be a valid date.',
+            'start_date.after_or_equal' => 'The date created must be today or a future date.',
         ]);
+        
 
         $step1Data = session('step1_data');
         
@@ -85,6 +118,11 @@ class ProposalController extends Controller
     }
 
     public function showStep3(){
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // dd(session()->all());
         // Check if step1_data is present in the session
@@ -100,7 +138,26 @@ class ProposalController extends Controller
 
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
+
+        $request->validate([
+            'sender' => 'required|email|exists:users,email', 
+        ], [
+            'sender.required' => 'The sender field is required.',
+            'sender.email' => 'The sender must be a valid email address.',
+            'sender.exists' => 'No user found with the email. Please check and try again.',
+        ]);
         
+
+        // Assuming 'sender' field contains the last name to check
+        $senderEmail = $request->input('sender');
+
+        // Check if a user with the given last name exists in the database
+        $userExists = User::where('email', $senderEmail)->exists();
+
+        if(!$userExists){
+            return redirect()->back()->with('error', 'No user found with the email "' . $senderEmail . '". Please check the name and try again.');
+        }
+   
         // Store step 3 data in session
         session()->put('step3_data', $request->all());
 
@@ -114,11 +171,21 @@ class ProposalController extends Controller
 
     public function showStep4()
     {
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
+        $step1Data = session('step1_data');
+        $step2Data = session('step2_data');
+        $step3Data = session('step3_data');
 
         if (!session()->has('step3_data') || empty(session()->get('step3_data'))) {
             // If step3_data is empty, redirect back to the Step 3 route
             return redirect()->route('proposals.step3')->with('error', 'Please complete Step 3 first.');
         }
+
+        
 
         $categories = Category::all(); // Fetch all categories
 
@@ -171,6 +238,11 @@ class ProposalController extends Controller
 
     public function storeStep4(Request $request){
 
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
@@ -184,13 +256,11 @@ class ProposalController extends Controller
         // Retrieve data
         $selectedProducts = explode(',', $request->input('selectedProducts'));
         $totalPrice = $request->input('totalPrice');
-        $recurringTotal = $request->input('recurringTotal');
         $proposalTotal = $request->input('proposalTotal');
 
         // Store into session
         $request->session()->put('selectedProducts', $selectedProducts);
         $request->session()->put('totalPrice', $totalPrice);
-        $request->session()->put('recurringTotal', $recurringTotal);
         $request->session()->put('proposalTotal', $proposalTotal);
 
         // Store everything in one
@@ -205,115 +275,216 @@ class ProposalController extends Controller
     public function showStep5()
     {
 
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
             // If step4_data is empty, redirect back to the Step 4 route
             return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
         }
-
+    
         // Retrieve session data
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data'); // Retrieve the data stored in step 4
-
+    
         // Ensure selectedProducts is an array
         if (isset($step4Data['selectedProducts']) && is_string($step4Data['selectedProducts'])) {
             $selectedProductIds = explode(',', $step4Data['selectedProducts']);
-
-            // Fetch product names and prices from the database based on the selectedProductIds
-            $products = Product::whereIn('id', $selectedProductIds)->get(['id', 'product_name', 'price']);
-
-            // Initialize an array to hold the product name and price   
+    
+            // Fetch product names, prices, and descriptions from the database based on the selectedProductIds
+            $products = Product::whereIn('id', $selectedProductIds)->get(['id', 'product_name', 'price', 'product_description']);
+    
+            // Initialize an array to hold the product name, price, and description  
             $selectedProductsInfo = [];
-
+    
             foreach ($products as $product) {
-                // Map the product ID to its name and price
+                // Map the product ID to its name, price, and description
                 $selectedProductsInfo[$product->id] = [
                     'name' => $product->product_name,
                     'price' => $product->price ?? 'No Price', // Assume price is always available but add a fallback just in case
+                    'description' => $product->product_description ?? '', // Default to empty string if description is not set
                 ];
             }
-
-            // Replace the product IDs in step4Data with the fetched product names and prices
+    
+            // Replace the product IDs in step4Data with the fetched product names, prices, and descriptions
             $step4Data['selectedProducts'] = $selectedProductsInfo;
-
+    
             // Store the modified data back into the session
             session(['step4_data' => $step4Data]);
-
         }
-
+    
         // Pass the modified data to the view
         return view('proposals.step5', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
-
     
-
-
-
     public function storeStep5(Request $request)
     {
+
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
         // Retrieve session data
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
-
+    
         // Check if we have product updates in the request
         if ($request->has('products')) {
             foreach ($request->input('products') as $productId => $productDetails) {
-                // Update the session data with new price and quantity
+                // Update the session data with new price, quantity, and description
                 if (isset($step4Data['selectedProducts'][$productId])) {
                     $step4Data['selectedProducts'][$productId]['price'] = $productDetails['price'];
                     $step4Data['selectedProducts'][$productId]['quantity'] = $productDetails['quantity'];
+                    $step4Data['selectedProducts'][$productId]['description'] = $productDetails['description'];
                 }
             }
-
+    
             // Recalculate totals based on updated prices and quantities
             $totalPrice = 0;
             foreach ($step4Data['selectedProducts'] as $product) {
                 $totalPrice += $product['price'] * $product['quantity'];
             }
             $step4Data['totalPrice'] = $totalPrice;
-            
-            // Step 4 Data is calculated with recurringtotal
-            $step4Data['proposalTotal'] = $totalPrice + $step4Data['recurringTotal'];
-
+    
+            // Proposal total is the same as total price since there's no recurring total
+            $step4Data['proposalTotal'] = $totalPrice;
+    
             // Update the session with the modified data
             session(['step4_data' => $step4Data]);
         }
-
-        // Uncomment the following line to debug the session data
-        // dd(session()->all());
-
+    
         // Redirect to the next step or another page
         return redirect()->route('proposals.step6');
     }
+    
 
-    public function showStep6(){
 
-        if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
-            // If step4_data is empty, redirect back to the Step 4 route
-            return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
+    public function showStep6()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
 
-        // Retrieve session data
-        $step1Data = session('step1_data');
-        $step2Data = session('step2_data');
-        $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
-    
-        // Pass the session data to the view
+
+        // Check if session data exists
+        if (session()->has('step4_data')) {
+            $step1Data = session('step1_data');
+            $step2Data = session('step2_data');
+            $step3Data = session('step3_data');
+            $step4Data = session('step4_data');
+        } else {
+            // No session data, so redirect to the drafts list with an error message
+            return redirect()->route('proposals.listDrafts')->with('error', 'No proposal data found in session.');
+        }
+
         return view('proposals.step6', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
 
-    public function showStep7(){
-        // Retrieve session data
+
+
+    public function showStep7(Request $request){
+        // Ensure the user is authenticated
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
+
+        // Redirect or return view with success message
+        return view('proposals.step7');
+    }
+
+
+
+    public function saveDraft(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to save a draft.');
+        }
+
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
-        // Pass the session data to the view
-        return view('proposals.step7', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
+        $step4Data = session('step4_data');
+
+        // This assumes that $step1Data already contains all the necessary client fields.
+        $client = Client::updateOrCreate(
+            ['email' => $step1Data['email']],
+            $step1Data
+        );
+
+        // Prepare the products as a string of IDs
+        $productIds = array_keys($step4Data['selectedProducts']);
+        $productIdsString = implode(',', $productIds);
+
+        // Collect all session data related to the proposal
+        $draftData = collect([
+            'step1_data' => $step1Data,
+            'step2_data' => $step2Data,
+            'step3_data' => $step3Data,
+            'step4_data' => $step4Data,
+        ])->toJson();
+
+        // Create a new draft entry
+        $draft = Draft::create([
+            'user_id' => Auth::id(),
+            'created_by' => $step1Data['first_name'] . ' ' . $step1Data['last_name'],
+            'proposal_title' => $step2Data['proposal_title'],
+            'status' => 'Draft',
+            'start_date' => $step2Data['start_date'],
+            'proposal_price' => $step4Data['proposalTotal'] ?? null,
+            'client_id' => $client->id,
+            'product_id' => $productIdsString,
+            'data' => $draftData,
+        ]);
+
+        // Redirect the user back to the dashboard
+        return redirect()->route('dashboard')->with('success', 'Draft saved successfully.');
     }
+
+    public function listDrafts()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to view drafts.');
+        }
+
+        // Retrieve all drafts for the currently authenticated user
+        $drafts = Draft::where('user_id', Auth::id())->get();
+
+        // Pass the drafts to the view
+        return view('proposals.listDrafts', compact('drafts'));
+    }
+
+    public function viewDraftSummary($draftId)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to view a draft.');
+        }
+
+        $draft = Draft::findOrFail($draftId);
+
+        $draftData = json_decode($draft->data, true);
+
+        session([
+            'step1_data' => $draftData['step1_data'],
+            'step2_data' => $draftData['step2_data'],
+            'step3_data' => $draftData['step3_data'],
+            'step4_data' => $draftData['step4_data'],
+            'draftId' => $draftId, // Now also storing the draftId in the session.
+        ]);
+
+        return redirect()->route('proposals.step6');
+    }
+
+
+
+
+
     
 }
