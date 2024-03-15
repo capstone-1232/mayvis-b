@@ -98,12 +98,26 @@ class ClientController extends Controller
      }
 
      public function destroyClient($id)
-     {
-         $client = Client::findOrFail($id);
-         $client->delete();
- 
-         return redirect()->route('index-client')->with('success', 'Client deleted successfully.');
-     }
+    {
+        $client = Client::findOrFail($id);
+        
+        // Check if the client has any proposals
+        if ($client->proposals()->count() > 0) {
+            // Redirect back with an error message if there are related proposals
+            return redirect()->route('index-client')->with('error', 'Cannot delete client because they are associated with one or more proposals.');
+        }
+        
+        try {
+            // If no proposals are related, proceed with delete
+            $client->delete();
+            // Redirect with a success message
+            return redirect()->route('index-client')->with('success', 'Client deleted successfully.');
+        } catch (\Exception $e) {
+            // Redirect back with a general error message if an exception occurs
+            return redirect()->route('index-client')->with('error', 'An unexpected error occurred while deleting the client.');
+        }
+    }
+
 
      public function searchClients(Request $request) {
         $searchTerm = $request->input('search_term');

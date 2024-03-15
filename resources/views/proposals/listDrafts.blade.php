@@ -28,7 +28,8 @@
                                         <td>{{ $draft->proposal_title }}</td>
                                         <td>{{ $draft->client->first_name . ' ' . $draft->client->last_name }}</td>
                                         <td>${{ $draft->proposal_price }}</td>
-                                        <td>{{ $draft->created_at->toDateString() }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($draft->created_at)->format('F j, Y') }}</td>
+                                        {{-- <td>{{ $draft->created_at->toDateString() }}</td> --}}
                                         <td>
                                             {{-- The button to view the summary of a draft --}}
                                             <a href="{{ route('proposals.viewDraftSummary', $draft->id) }}" class="btn btn-primary">Resume</a>

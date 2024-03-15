@@ -90,8 +90,25 @@
                                 <tr>
                                     <td><?php echo e($proposal->proposal_title); ?></td>
                                     <td><?php echo e($proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client'); ?></td>
-                                    <td><span class="badge bg-success"><?php echo e($proposal->status); ?></span></td>
-                                    <td><?php echo e($proposal->start_date); ?></td>
+                                    <td>
+                                        <?php switch($proposal->status):
+                                            case ('Approved'): ?>
+                                                <span class="badge bg-success"><?php echo e($proposal->status); ?></span>
+                                                <?php break; ?>
+                                    
+                                            <?php case ('Pending'): ?>
+                                                <span class="badge bg-warning"><?php echo e($proposal->status); ?></span>
+                                                <?php break; ?>
+                                    
+                                            <?php case ('Denied'): ?>
+                                                <span class="badge bg-danger"><?php echo e($proposal->status); ?></span>
+                                                <?php break; ?>
+                                    
+                                            <?php default: ?>
+                                                <span class="badge bg-secondary"><?php echo e($proposal->status); ?></span>
+                                        <?php endswitch; ?>
+                                    </td>
+                                    <td><?php echo e(\Carbon\Carbon::parse($proposal->start_date)->format('F j, Y')); ?></td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
@@ -104,7 +121,7 @@
         </div>
     </div>
 
-    <div id="paginatin-container">
+    <div id="pagination-container">
         <?php echo e($proposals->links()); ?>
 
     </div>

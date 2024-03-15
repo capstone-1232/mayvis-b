@@ -41,7 +41,7 @@ class ProposalController extends Controller
             'last_name' => 'required|max:80',
             'company_name' => 'required|max:80',
             'email' => 'required|email|unique:users,email|unique:clients,email', // Combined the email rules (This checks for unique emails inside "Users" and "Clients" Table)
-            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/'],
+            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/', 'unique:clients,phone_number']
         ], [
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name may not be greater than 80 characters.',
@@ -53,7 +53,8 @@ class ProposalController extends Controller
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'The email has already been taken.',
             'phone_number.required' => 'The phone number field is required.',
-            'phone_number.regex' => 'The phone number format is invalid.'
+            'phone_number.regex' => 'The phone number format is invalid.',
+            'phone_number.unique' => 'This phone number is already in use.',
         ]);
 
         
