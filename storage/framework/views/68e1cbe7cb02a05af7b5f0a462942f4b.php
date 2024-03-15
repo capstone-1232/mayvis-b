@@ -11,10 +11,16 @@
     <div class="content">
     <div class="container my-3">
         <div class="row">
+            <?php if(session('success')): ?>
+                <div class="alert alert-success">
+                    <?php echo e(session('success')); ?>
+
+                </div>
+            <?php endif; ?>
             <div class="col-md-8 d-flex">
                 <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-3">
-                        <img src="https://via.placeholder.com/64" alt="Profile Image" class="rounded-circle profile-photo">
+                        <img src="<?php echo e(asset('storage/' . Auth::user()->profile_image)); ?>" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
                     <div>
                         <h3 class="text-white fw-bold fs-5">Welcome back, <?php echo e(Auth::user()->first_name); ?></h3>
@@ -96,6 +102,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="paginatin-container">
+        <?php echo e($proposals->links()); ?>
+
     </div>
 </div>
 </div>

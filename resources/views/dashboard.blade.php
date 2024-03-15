@@ -2,6 +2,11 @@
     <div class="content">
     <div class="container my-3">
         <div class="row">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="col-md-8 d-flex">
                 <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-3">
