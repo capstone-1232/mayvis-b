@@ -12,6 +12,9 @@
       <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
       <script src="https://cdn.tiny.cloud/1/6rx6za7wdjkaouwy1jgn6ghqu6erxtgznija96oyutz7fotz/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
       <script>
         tinymce.init({
           selector: 'textarea',
@@ -81,7 +84,7 @@
             </div>
             <a class="nav-link" href="{{ route('servicesIndex') }}"><i class="fas fa-cogs fa-lg"></i><span> Services</span></a>
             <a class="nav-link" href="{{ route('index-client') }}"><i class="fas fa-users fa-lg"></i><span> Clients</span></a>
-            <a class="nav-link" href="#"><i class="fas fa-chart-bar fa-lg"></i><span> Reports</span></a>
+            <a class="nav-link" href="{{ route('storedProposals.report') }}"><i class="fas fa-chart-bar fa-lg"></i><span> Reports</span></a>
         </nav>
         <div class="mt-auto">
             <form action="{{ route('logout') }}" method="POST" class="mb-2">

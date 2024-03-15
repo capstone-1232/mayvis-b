@@ -207,7 +207,11 @@ Route::get('/proposals/drafts', [ProposalController::class, 'listDrafts'])->name
 /* Load Draft Route */
 Route::get('/proposals/drafts/{draft}/summary', [ProposalController::class, 'viewDraftSummary'])->name('proposals.viewDraftSummary');
 
+/****************************************************************************************************************************************/
 
+/* Reports Area */
+
+Route::get('/proposals/report', [StoredProposalController::class, 'proposalsReport'])->name('storedProposals.report');
 
 
 

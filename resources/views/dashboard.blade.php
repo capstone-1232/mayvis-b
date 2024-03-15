@@ -80,8 +80,25 @@
                                 <tr>
                                     <td>{{ $proposal->proposal_title }}</td>
                                     <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
-                                    <td><span class="badge bg-success">{{ $proposal->status }}</span></td>
-                                    <td>{{ $proposal->start_date }}</td>
+                                    <td>
+                                        @switch($proposal->status)
+                                            @case('Approved')
+                                                <span class="badge bg-success">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @case('Pending')
+                                                <span class="badge bg-warning">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @case('Denied')
+                                                <span class="badge bg-danger">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @default
+                                                <span class="badge bg-secondary">{{ $proposal->status }}</span>
+                                        @endswitch
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -94,7 +111,7 @@
         </div>
     </div>
 
-    <div id="paginatin-container">
+    <div id="pagination-container">
         {{ $proposals->links() }}
     </div>
 </div>
