@@ -33,13 +33,13 @@
                 <form action="{{ route('proposals.storeStep2') }}" method="post">
                     @csrf
                     <label for="proposal_title">Proposal Title</label>
-                    <x-text-input type="text" name="proposal_title" field="proposal_title" placeholder="Proposal Title" class="w-full" autocomplete="off" :value="session('step2_data.proposal_title')"></x-text-input>
+                    <x-text-input type="text" name="proposal_title" field="proposal_title" placeholder="Proposal Title" class="w-full" autocomplete="off" :value="old('proposal_title', session('step2_data.proposal_title', ''))"></x-text-input>
 
                     <label for="start_date" class="mt-5">Date Created</label>
                     <x-date-input 
                         name="start_date"
                         placeholder="YYYY-MM-DD"
-                        :value="session('step2_data.start_date', old('start_date'))">
+                        :value="old('start_date', session('step2_data.start_date', ''))">
                     </x-date-input>
                     
                     <a href="{{ route('proposals.step1') }}">Cancel</a>

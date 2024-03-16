@@ -53,6 +53,7 @@
 
 
     </script>
+    
     <div class="content">
         <div class="container mt-5">
             <div class="my-2">
@@ -85,12 +86,30 @@
                             <tbody id="tableBody">
                                 @foreach ($proposals as $proposal)
                                     <tr>
-                                        <td>{{ $proposal->status }}</td>
+                                        <td>
+                                            @switch($proposal->status)
+                                                @case('Approved')
+                                                    <span class="badge bg-success">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @case('Pending')
+                                                    <span class="badge bg-warning">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @case('Denied')
+                                                    <span class="badge bg-danger">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @default
+                                                    <span class="badge bg-secondary">{{ $proposal->status }}</span>
+                                            @endswitch
+                                        </td>
                                         <td>{{ $proposal->proposal_title }}</td>
                                         <td>{{ $proposal->client->company_name }}</td>
                                         <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
-                                        <td>{{ $proposal->start_date }}</td>
-                                        <td>{{ $proposal->user->first_name . ' ' . $proposal->user->last_name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
+                                        <td><img src="{{ asset('storage/' . $proposal->user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo"></td>
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -99,7 +118,7 @@
                 </div>
             </div>
         </div>
-        <div id="paginatin-container">
+        <div id="pagination-container">
             {{ $proposals->links() }}
         </div>
     </div>

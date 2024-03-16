@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Proposal;
+use App\Models\Draft;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,7 @@ class ProposalController extends Controller
             'last_name' => 'required|max:80',
             'company_name' => 'required|max:80',
             'email' => 'required|email|unique:users,email|unique:clients,email', // Combined the email rules (This checks for unique emails inside "Users" and "Clients" Table)
-            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/'],
+            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/', 'unique:clients,phone_number']
         ], [
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name may not be greater than 80 characters.',
@@ -52,7 +53,8 @@ class ProposalController extends Controller
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'The email has already been taken.',
             'phone_number.required' => 'The phone number field is required.',
-            'phone_number.regex' => 'The phone number format is invalid.'
+            'phone_number.regex' => 'The phone number format is invalid.',
+            'phone_number.unique' => 'This phone number is already in use.',
         ]);
 
         
@@ -139,13 +141,11 @@ class ProposalController extends Controller
         $step2Data = session('step2_data');
 
         $request->validate([
-            'sender' => 'required|email|exists:users,email',
-            'automated_message' => 'required', 
+            'sender' => 'required|email|exists:users,email', 
         ], [
             'sender.required' => 'The sender field is required.',
             'sender.email' => 'The sender must be a valid email address.',
             'sender.exists' => 'No user found with the email. Please check and try again.',
-            'automated_message.required' => 'The automated message field is required.',
         ]);
         
 
@@ -367,29 +367,27 @@ class ProposalController extends Controller
     
 
 
-    public function showStep6(){
-
+    public function showStep6()
+    {
         if (!Auth::check()) {
-            // Redirect the user to login page or show an error message
             return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
 
-        if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
-            // If step4_data is empty, redirect back to the Step 4 route
-            return redirect()->route('proposals.step4')->with('error', 'Please complete Step 4 first.');
+
+        // Check if session data exists
+        if (session()->has('step4_data')) {
+            $step1Data = session('step1_data');
+            $step2Data = session('step2_data');
+            $step3Data = session('step3_data');
+            $step4Data = session('step4_data');
+        } else {
+            // No session data, so redirect to the drafts list with an error message
+            return redirect()->route('proposals.listDrafts')->with('error', 'No proposal data found in session.');
         }
 
-        // Retrieve session data
-        $step1Data = session('step1_data');
-        $step2Data = session('step2_data');
-        $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
-
-        // dd($step4Data['selectedProducts']);
-    
-        // Pass the session data to the view
         return view('proposals.step6', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
+
 
 
     public function showStep7(Request $request){
@@ -402,5 +400,92 @@ class ProposalController extends Controller
         // Redirect or return view with success message
         return view('proposals.step7');
     }
+
+
+
+    public function saveDraft(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to save a draft.');
+        }
+
+        $step1Data = session('step1_data');
+        $step2Data = session('step2_data');
+        $step3Data = session('step3_data');
+        $step4Data = session('step4_data');
+
+        // This assumes that $step1Data already contains all the necessary client fields.
+        $client = Client::updateOrCreate(
+            ['email' => $step1Data['email']],
+            $step1Data
+        );
+
+        // Prepare the products as a string of IDs
+        $productIds = array_keys($step4Data['selectedProducts']);
+        $productIdsString = implode(',', $productIds);
+
+        // Collect all session data related to the proposal
+        $draftData = collect([
+            'step1_data' => $step1Data,
+            'step2_data' => $step2Data,
+            'step3_data' => $step3Data,
+            'step4_data' => $step4Data,
+        ])->toJson();
+
+        // Create a new draft entry
+        $draft = Draft::create([
+            'user_id' => Auth::id(),
+            'created_by' => $step1Data['first_name'] . ' ' . $step1Data['last_name'],
+            'proposal_title' => $step2Data['proposal_title'],
+            'status' => 'Draft',
+            'start_date' => $step2Data['start_date'],
+            'proposal_price' => $step4Data['proposalTotal'] ?? null,
+            'client_id' => $client->id,
+            'product_id' => $productIdsString,
+            'data' => $draftData,
+        ]);
+
+        // Redirect the user back to the dashboard
+        return redirect()->route('dashboard')->with('success', 'Draft saved successfully.');
+    }
+
+    public function listDrafts()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to view drafts.');
+        }
+
+        // Retrieve all drafts for the currently authenticated user
+        $drafts = Draft::where('user_id', Auth::id())->get();
+
+        // Pass the drafts to the view
+        return view('proposals.listDrafts', compact('drafts'));
+    }
+
+    public function viewDraftSummary($draftId)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to view a draft.');
+        }
+
+        $draft = Draft::findOrFail($draftId);
+
+        $draftData = json_decode($draft->data, true);
+
+        session([
+            'step1_data' => $draftData['step1_data'],
+            'step2_data' => $draftData['step2_data'],
+            'step3_data' => $draftData['step3_data'],
+            'step4_data' => $draftData['step4_data'],
+            'draftId' => $draftId, // Now also storing the draftId in the session.
+        ]);
+
+        return redirect()->route('proposals.step6');
+    }
+
+
+
+
+
     
 }

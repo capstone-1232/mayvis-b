@@ -50,7 +50,9 @@
                     <form action="<?php echo e(route('proposals.storeStep3')); ?>" method="post">
                         <?php echo csrf_field(); ?>
                         <p><strong>Note: </strong>Please make sure you are entering the user's email. This will ensure if you are creating a proposal for another person -- their respective job title, 
-                            profile image and automated message will be displayed. Entering a user's email that does not exist in the database will issue an error.</p>
+                            profile image and automated message will be displayed. Entering a user's email that does not exist in the database will issue an error. Moreover, if you wish to use another user's automated message,
+                            consider leaving the automated message field blank.
+                        </p>
                         <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'sender']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>

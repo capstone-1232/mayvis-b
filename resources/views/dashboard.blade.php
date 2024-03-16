@@ -2,10 +2,15 @@
     <div class="content">
     <div class="container my-3">
         <div class="row">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="col-md-8 d-flex">
                 <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-3">
-                        <img src="https://via.placeholder.com/64" alt="Profile Image" class="rounded-circle profile-photo">
+                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
                     <div>
                         <h3 class="text-white fw-bold fs-5">Welcome back, {{ Auth::user()->first_name }}</h3>
@@ -75,8 +80,25 @@
                                 <tr>
                                     <td>{{ $proposal->proposal_title }}</td>
                                     <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
-                                    <td><span class="badge bg-success">{{ $proposal->status }}</span></td>
-                                    <td>{{ $proposal->start_date }}</td>
+                                    <td>
+                                        @switch($proposal->status)
+                                            @case('Approved')
+                                                <span class="badge bg-success">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @case('Pending')
+                                                <span class="badge bg-warning">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @case('Denied')
+                                                <span class="badge bg-danger">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @default
+                                                <span class="badge bg-secondary">{{ $proposal->status }}</span>
+                                        @endswitch
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -89,7 +111,7 @@
         </div>
     </div>
 
-    <div id="paginatin-container">
+    <div id="pagination-container">
         {{ $proposals->links() }}
     </div>
 </div>

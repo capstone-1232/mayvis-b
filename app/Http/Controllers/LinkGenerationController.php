@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Proposal;
 use App\Models\User;
+use App\Models\Draft;
+use App\Mail\FeedbackSubmitted;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class LinkGenerationController extends Controller
@@ -60,12 +64,20 @@ class LinkGenerationController extends Controller
         $request->session()->put('proposalId', $proposal->id);
 
         $uniqueToken = uniqid();
-        
         $request->session()->put('uniqueToken', $uniqueToken);
 
         $link = URL::temporarySignedRoute(
             'link.view', now()->addMinutes(2880), ['token' => $uniqueToken]
         );
+
+        // After successfully finalizing the proposal
+        if ($draftId = session('draftId')) {
+            $draft = Draft::find($draftId);
+            if ($draft) {
+                $draft->delete();
+                session()->forget('draftId'); // Clean up the session
+            }
+        }
 
         return view('links.link-generated', ['link' => $link]);
     }
@@ -100,6 +112,8 @@ class LinkGenerationController extends Controller
         $proposalId = $request->input('proposalId');
         $proposal = Proposal::findOrFail($proposalId);
         $updateStatus = $request->input('updateStatus');
+        $userName = Auth::user()->first_name . ' ' . Auth::user()->last_name; // Get the current user's name
+        $clientMessage = $request->input('clientMessage') ?? ''; // Default to an empty string if not provided
 
         $validator = Validator::make($request->all(), [
             'updateStatus' => 'required|in:1,2',
@@ -115,7 +129,26 @@ class LinkGenerationController extends Controller
         $proposal->status = $updateStatus == '1' ? 'Approved' : 'Denied';
         $proposal->save();
 
+        $proposalTitle = $proposal->proposal_title;
+        $proposalStatus = $proposal->status; // Get the status after saving
+
+
+        $userEmail = Auth::user()->email;
+
+        Log::info('Sending feedback email', [
+            'proposalTitle' => $proposalTitle,
+            'proposalStatus' => $proposalStatus,
+            'clientMessage' => $clientMessage,
+            'userName' => $userName,
+            'userEmail' => $userEmail,
+        ]);
+
+        // Now pass the additional data to the Mailable
+        Mail::to($userEmail)->send(new FeedbackSubmitted($proposalTitle, $proposalStatus, $clientMessage, $userName));
+
         $request->session()->put('feedback_submitted', true);
+
+        
 
         // Forget all proposal-related session data after submission
         $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4Data', 'proposalId', 'uniqueToken', 'feedback_submitted']);

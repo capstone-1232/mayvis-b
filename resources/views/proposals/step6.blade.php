@@ -54,7 +54,11 @@
     
                 <div class="flex-center">
                     <a href="{{ route('proposals.step5') }}" class="btn">Edit</a>
-                    {{-- <button class="btn">Save</button> --}}
+                    <form action="{{ route('proposals.saveDraft') }}" method="POST">
+                        @csrf
+                        <!-- Form inputs go here -->
+                        <button type="submit">Save to Drafts</button>
+                    </form>
                     <a href="{{ route('proposals.step7') }}" class="btn">Send to Client</a>
                 </div>
             </div>

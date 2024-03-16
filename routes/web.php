@@ -200,4 +200,26 @@ Route::get('/storedProposals', [StoredProposalController::class, 'indexStoredPro
 Route::get('/search-proposals', [StoredProposalController::class, 'searchProposals'])->name('storedProposals.searchProposals');
 
 
+/***************************************************************************************************************************************/
+
+
+/* Save Draft Route */
+Route::post('/proposals/save-draft', [ProposalController::class, 'saveDraft'])->name('proposals.saveDraft');
+
+/* List Drafts Route */
+Route::get('/proposals/drafts', [ProposalController::class, 'listDrafts'])->name('proposals.listDrafts');
+
+/* Load Draft Route */
+Route::get('/proposals/drafts/{draft}/summary', [ProposalController::class, 'viewDraftSummary'])->name('proposals.viewDraftSummary');
+
+/****************************************************************************************************************************************/
+
+/* Reports Area */
+
+Route::get('/proposals/report', [StoredProposalController::class, 'proposalsReport'])->name('storedProposals.report');
+
+
+
+
+
 require __DIR__.'/auth.php';
