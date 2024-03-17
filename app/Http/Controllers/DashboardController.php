@@ -20,7 +20,7 @@ class DashboardController extends Controller
                     ->where('user_id', $userId)
                     ->paginate(5);
         } else {
-            return redirect()->route('login');
+            return redirect()->route('welcome');
         }
 
         // Define a helper to format weeks
