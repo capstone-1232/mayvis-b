@@ -36,9 +36,6 @@ class PDFController extends Controller
                       ->where('email', 'like', '%' . $senderName . '%')
                       ->get();
 
-                      
-        // $firstUser = $users->first(); // Get the first user in the collection
-
         // Extract the keys from the selectedProducts array, which are the product IDs
         $productIds = array_keys($step4Data['selectedProducts']);
 
@@ -48,20 +45,14 @@ class PDFController extends Controller
 
         // Create or update the client information
         $client = Client::updateOrCreate(
-            ['email' => $step1Data['email']], // Unique identifier for the client
+            [
+                'first_name' => $step1Data['first_name'], 
+                'last_name' => $step1Data['last_name'],
+                'email' => $step1Data['email']
+            ], 
             $step1Data
         );
-
-        // Prepare proposal data
-        $proposalData = [
-            'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
-            'proposal_title' => $step2Data['proposal_title'],
-            'start_date' => $step2Data['start_date'],
-            'status' => 'Pending',
-            'client_id' => $client->id,
-            'user_id' => Auth::id(),
-            'product_id' => $productIdsString,
-        ];
+        
 
         // Create the data array with all the session data and any additional data for the PDF.
         $data = [
@@ -76,7 +67,7 @@ class PDFController extends Controller
         $pdf = PDF::loadView('pdf.sessionInfo', $data);
 
         // Generate the PDF to download with a dynamic filename based on proposal data.
-        $filename = 'Proposal-' . $proposalData['proposal_title'] . '-' . $proposalData['start_date'] . '.pdf';
+        $filename = 'Proposal-' . $step2Data['proposal_title'] . '-' . $step2Data['start_date'] . '.pdf';
 
         // Return the generated PDF.
         return $pdf->download($filename);

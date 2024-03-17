@@ -50,6 +50,12 @@ class ProfileController extends Controller
         /* Job Title */
         $request->user()->job_title = $request -> job_title;
 
+        /* First Name */
+        $request->user()->first_name = $request -> first_name;
+
+         /* Last Name */
+        $request->user()->last_name = $request -> last_name;
+
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

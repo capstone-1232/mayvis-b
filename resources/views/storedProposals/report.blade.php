@@ -13,20 +13,16 @@
             const proposalsChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: [@foreach ($approvedProposalsCountByMonth as $data) '{{ date("F", mktime(0, 0, 0, $data->month, 10)) }}', @endforeach],
+                    // Using the 'label' property for display on the chart
+                    labels: [@foreach ($approvedProposalsSumByWeek as $data) '{{ $data->label }}', @endforeach],
+
                     datasets: [
                         {
-                            label: 'Approved Proposals',
-                            data: [@foreach ($approvedProposalsCountByMonth as $data) {{ $data->count }}, @endforeach],
+                            label: 'Total Price of Approved Proposals',
+                            // Using 'total_price' for the data points
+                            data: [@foreach ($approvedProposalsSumByWeek as $data) {{ $data->total_price }}, @endforeach],
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                             borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Denied Proposals',
-                            data: [@foreach ($deniedProposalsCountByMonth as $data) {{ $data->count }}, @endforeach],
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255,99,132,1)',
                             borderWidth: 1
                         }
                     ]
@@ -34,7 +30,18 @@
                 options: {
                     scales: {
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Proposal Price'
+                            }
+                        },
+                        x: {
+                            // This will be handled by the 'labels' array
+                            title: {
+                                display: true,
+                                text: 'Weeks of the Year'
+                            }
                         }
                     }
                 }

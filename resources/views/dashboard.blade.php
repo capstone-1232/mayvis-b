@@ -1,4 +1,47 @@
 <x-layout>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('proposalsChart').getContext('2d');
+            const proposalsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    // Using the 'label' property for display on the chart
+                    labels: [@foreach ($approvedProposalsSumByWeek as $data) '{{ $data->label }}', @endforeach],
+
+                    datasets: [
+                        {
+                            label: 'Total Price of Approved Proposals',
+                            // Using 'total_price' for the data points
+                            data: [@foreach ($approvedProposalsSumByWeek as $data) {{ $data->total_price }}, @endforeach],
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Proposal Price'
+                            }
+                        },
+                        x: {
+                            // This will be handled by the 'labels' array
+                            title: {
+                                display: true,
+                                text: 'Weeks of the Year'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     <div class="content">
     <div class="container my-3">
         <div class="row">
@@ -54,9 +97,10 @@
             </div>
             <div class="col-md-4 d-flex">
                 <div class="card mb-3 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm">
-                    {{-- Insert Graph here --}}
+                    <canvas id="proposalsChart" style="width:100%; height:180px;"></canvas> 
                 </div>
             </div>
+        
         </div>
 
         <div class="row">
