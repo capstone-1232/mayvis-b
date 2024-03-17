@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Proposal;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Draft;
 use App\Mail\FeedbackSubmitted;
@@ -22,26 +23,31 @@ class LinkGenerationController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in.');
         }
 
+        // If feedback was already submitted, redirect to dashboard to prevent duplication
+        if ($request->session()->get('feedback_submitted', false)) {
+            // Clean up session related to proposal creation to start fresh next time
+            $request->session()->forget(['feedback_submitted', 'step1_data', 'step2_data', 'step3_data', 'step4_data', 'proposalId', 'uniqueToken', 'generatedLink']);
+            return redirect()->route('dashboard')->with('message', 'Feedback already processed. Starting a new session.');
+        }
+
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data');
 
-        // This checks if any of the session data is empty to avoid throwing an exception when attempting to acccess array for $client
+        // Checks if any of the session data is empty to avoid exceptions
         if ($step1Data === null || $step2Data === null || $step3Data === null || $step4Data === null) {
-            // Redirect to dashboard with an error message
             return redirect()->route('dashboard')->with('error', 'Your session has expired. Please try again.');
         }
 
-        if ($request->session()->get('feedback_submitted', false)) {
-            return redirect()->route('dashboard')->with('message', 'Feedback already processed.');
-        }
-
-        $productIds = array_keys($step4Data['selectedProducts']);
-        $productIdsString = implode(',', $productIds);
-
+        // Client updateOrCreate
         $client = Client::updateOrCreate(
-            ['email' => $step1Data['email']],
+            [
+                'first_name' => $step1Data['first_name'],
+                'last_name' => $step1Data['last_name'],
+                'email' => $step1Data['email'],
+                'phone_number' => $step1Data['phone_number'],
+            ],
             $step1Data
         );
 
@@ -49,33 +55,41 @@ class LinkGenerationController extends Controller
             'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
             'proposal_title' => $step2Data['proposal_title'],
             'start_date' => $step2Data['start_date'],
-            'proposal_price' => $step4Data['proposalTotal'] ? $step4Data['proposalTotal'] : "No Price",
+            'proposal_price' => $step4Data['proposalTotal'] ?? "No Price",
             'status' => 'Pending',
             'client_id' => $client->id,
             'user_id' => Auth::id(),
-            'product_id' => $productIdsString,
+            'product_id' => implode(',', array_keys($step4Data['selectedProducts'])),
         ];
 
         $proposal = Proposal::updateOrCreate(
-            ['proposal_title' => $proposalData['proposal_title']],
+            [
+                'client_id' => $proposalData['client_id'],
+                'user_id' => $proposalData['user_id'],
+                'proposal_title' => $proposalData['proposal_title'],
+                'start_date' => $proposalData['start_date'],
+            ],
             $proposalData
         );
 
+        // Store Proposal ID into the session
         $request->session()->put('proposalId', $proposal->id);
 
+        // Unique Token initialization
         $uniqueToken = uniqid();
+
+        // Unique token will allow us to uniquely identify the feedback
         $request->session()->put('uniqueToken', $uniqueToken);
 
-        $link = URL::temporarySignedRoute(
-            'link.view', now()->addMinutes(2880), ['token' => $uniqueToken]
-        );
+        $link = URL::temporarySignedRoute('link.view', now()->addMinutes(2880), ['token' => $uniqueToken]);
+        $request->session()->put('generatedLink', $link);
 
-        // After successfully finalizing the proposal
+        // Draft deletion logic is kept as is
         if ($draftId = session('draftId')) {
             $draft = Draft::find($draftId);
             if ($draft) {
                 $draft->delete();
-                session()->forget('draftId'); // Clean up the session
+                session()->forget('draftId');
             }
         }
 
@@ -112,9 +126,15 @@ class LinkGenerationController extends Controller
         $proposalId = $request->input('proposalId');
         $proposal = Proposal::findOrFail($proposalId);
         $updateStatus = $request->input('updateStatus');
-        $userName = Auth::user()->first_name . ' ' . Auth::user()->last_name; // Get the current user's name
+        $userName = Auth::user()->first_name . ' ' . Auth::user()->last_name;
         $clientMessage = $request->input('clientMessage') ?? ''; // Default to an empty string if not provided
 
+        // Early return if feedback was already processed, to avoid duplicating actions
+        if ($request->session()->get('feedback_submitted', false)) {
+            return redirect()->route('dashboard')->with('message', 'Feedback has already been processed.');
+        }
+
+        // Validation
         $validator = Validator::make($request->all(), [
             'updateStatus' => 'required|in:1,2',
         ], [
@@ -126,35 +146,70 @@ class LinkGenerationController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $proposal->status = $updateStatus == '1' ? 'Approved' : 'Denied';
-        $proposal->save();
+        // Process feedback based on the update status
+        if ($updateStatus == '1') { // Approved
+            $proposal->status = 'Approved';
+            $proposal->save();
+        } elseif ($updateStatus == '2') { // Denied
+            $proposal->status = 'Denied';
+            $proposal->save();
 
-        $proposalTitle = $proposal->proposal_title;
-        $proposalStatus = $proposal->status; // Get the status after saving
+            // Saving the proposal as a draft if denied
+            $this->saveProposalAsDraft($proposal);
 
+            // Flagging the feedback as submitted to prevent re-submission
+            $request->session()->put('feedback_submitted', true);
 
-        $userEmail = Auth::user()->email;
+            // Redirecting to the draft list or an appropriate page
+            return redirect()->route('proposals.denied');
+        }
 
-        Log::info('Sending feedback email', [
-            'proposalTitle' => $proposalTitle,
-            'proposalStatus' => $proposalStatus,
-            'clientMessage' => $clientMessage,
-            'userName' => $userName,
-            'userEmail' => $userEmail,
-        ]);
+        // Send feedback email for both approved and denied scenarios
+        Mail::to(Auth::user()->email)->send(new FeedbackSubmitted(
+            $proposal->proposal_title,
+            $proposal->status,
+            $clientMessage,
+            $userName
+        ));
 
-        // Now pass the additional data to the Mailable
-        Mail::to($userEmail)->send(new FeedbackSubmitted($proposalTitle, $proposalStatus, $clientMessage, $userName));
-
+        // Flag feedback as submitted to prevent re-submission, for both approved and denied scenarios
         $request->session()->put('feedback_submitted', true);
 
-        
+        // Clearing session data related to the proposal process
+        $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4_data', 'proposalId', 'uniqueToken']);
 
-        // Forget all proposal-related session data after submission
-        $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4Data', 'proposalId', 'uniqueToken', 'feedback_submitted']);
-
-        // dd(session()->all());
-
-        return redirect()->route('proposals.success')->with('status', 'Form submitted successfully!');
+        // Redirect to a success page or dashboard after feedback submission
+        return redirect()->route('proposals.success')->with('status', 'Feedback submitted successfully!');
     }
+
+
+    public function saveProposalAsDraft(Proposal $proposal)
+    {
+        $productIdsString = $proposal->product_id; 
+
+        // Collect all data related to the proposal
+        // Use the step data from the session
+            $stepDataJson = json_encode([
+                'step1_data' => session('step1_data', []),
+                'step2_data' => session('step2_data', []),
+                'step3_data' => session('step3_data', []),
+                'step4_data' => session('step4_data', [])
+            ]);
+
+            // Create a new draft entry using the data from the proposal
+            $draft = Draft::create([
+                'user_id' => $proposal->user_id,
+                'created_by' => $proposal->created_by,
+                'proposal_title' => $proposal->proposal_title,
+                'status' => 'Denied',
+                'start_date' => $proposal->start_date ? Carbon::parse($proposal->start_date)->format('Y-m-d') : null,
+                'proposal_price' => $proposal->proposal_price,
+                'client_id' => $proposal->client_id,
+                'product_id' => $productIdsString,
+                'data' => $stepDataJson, // Use the step data JSON
+            ]);
+
+        
+    }
+
 }

@@ -23,8 +23,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
     return view('welcome');
+    
 });
+
 
 Route::post('/logout', function () {
     Auth::logout();
@@ -91,6 +97,10 @@ Route::put('/update-product/{productId}', [ProposalController::class, 'updatePro
 Route::get('/proposals/success', function () {
     return view('proposals.success');
 })->name('proposals.success');
+
+Route::get('/proposals/denied', function () {
+    return view('proposals.denied');
+})->name('proposals.denied');
 
 
 /************************************************************************************************************************************/

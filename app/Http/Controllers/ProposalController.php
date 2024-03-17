@@ -40,8 +40,8 @@ class ProposalController extends Controller
             'first_name' => 'required|max:80',
             'last_name' => 'required|max:80',
             'company_name' => 'required|max:80',
-            'email' => 'required|email|unique:users,email|unique:clients,email', // Combined the email rules (This checks for unique emails inside "Users" and "Clients" Table)
-            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/', 'unique:clients,phone_number']
+            'email' => 'required|email', 
+            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
         ], [
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name may not be greater than 80 characters.',
@@ -51,12 +51,9 @@ class ProposalController extends Controller
             'company_name.max' => 'The company name may not be greater than 80 characters.',
             'email.required' => 'The email field is required.',
             'email.email' => 'The email must be a valid email address.',
-            'email.unique' => 'The email has already been taken.',
             'phone_number.required' => 'The phone number field is required.',
             'phone_number.regex' => 'The phone number format is invalid.',
-            'phone_number.unique' => 'This phone number is already in use.',
         ]);
-
         
         
         // Store step 1 data in session
@@ -414,9 +411,13 @@ class ProposalController extends Controller
         $step3Data = session('step3_data');
         $step4Data = session('step4_data');
 
-        // This assumes that $step1Data already contains all the necessary client fields.
+        // Update Existing Client or Create a new one
         $client = Client::updateOrCreate(
-            ['email' => $step1Data['email']],
+            [
+                'first_name' => $step1Data['first_name'],
+                'last_name' => $step1Data['last_name'],
+                'email' => $step1Data['email']
+            ],
             $step1Data
         );
 
@@ -432,22 +433,28 @@ class ProposalController extends Controller
             'step4_data' => $step4Data,
         ])->toJson();
 
-        // Create a new draft entry
-        $draft = Draft::create([
-            'user_id' => Auth::id(),
-            'created_by' => $step1Data['first_name'] . ' ' . $step1Data['last_name'],
-            'proposal_title' => $step2Data['proposal_title'],
-            'status' => 'Draft',
-            'start_date' => $step2Data['start_date'],
-            'proposal_price' => $step4Data['proposalTotal'] ?? null,
-            'client_id' => $client->id,
-            'product_id' => $productIdsString,
-            'data' => $draftData,
-        ]);
+        // Update existing draft or create a new one
+        $draft = Draft::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'client_id' => $client->id,
+                'start_date' => $step2Data['start_date'],
+                'proposal_title' => $step2Data['proposal_title'],
+            ],
+            [
+                'created_by' => $step1Data['first_name'] . ' ' . $step1Data['last_name'],
+                'status' => 'Draft',
+                'proposal_price' => $step4Data['proposalTotal'] ?? null,
+                'product_id' => $productIdsString,
+                'data' => $draftData,
+            ]
+        );
+        
 
         // Redirect the user back to the dashboard
         return redirect()->route('dashboard')->with('success', 'Draft saved successfully.');
     }
+
 
     public function listDrafts()
     {
@@ -469,23 +476,22 @@ class ProposalController extends Controller
         }
 
         $draft = Draft::findOrFail($draftId);
-
         $draftData = json_decode($draft->data, true);
 
+        $step1Data = $draftData['step1_data'] ?? []; // Provide a default empty array if not set
+        $step2Data = $draftData['step2_data'] ?? []; // Provide a default empty array if not set
+        $step3Data = $draftData['step3_data'] ?? []; // Provide a default empty array if not set
+        $step4Data = $draftData['step4_data'] ?? []; // Provide a default empty array if not set
+
         session([
-            'step1_data' => $draftData['step1_data'],
-            'step2_data' => $draftData['step2_data'],
-            'step3_data' => $draftData['step3_data'],
-            'step4_data' => $draftData['step4_data'],
+            'step1_data' => $step1Data,
+            'step2_data' => $step2Data,
+            'step3_data' => $step3Data,
+            'step4_data' => $step4Data,
             'draftId' => $draftId, // Now also storing the draftId in the session.
         ]);
 
         return redirect()->route('proposals.step6');
     }
-
-
-
-
-
     
 }
