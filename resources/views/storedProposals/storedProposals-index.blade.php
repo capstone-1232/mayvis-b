@@ -58,8 +58,10 @@
                         let actionColumnContent;
                         if (proposal.status === 'Approved' || proposal.status === 'Denied') {
                             actionColumnContent = 'Feedback Submitted';
+                        } else if (proposal.view_link) { // Make sure view_link is available
+                            actionColumnContent = `<a href="${proposal.view_link}" class="btn btn-primary">Access Proposal</a>`;
                         } else {
-                            actionColumnContent = `<a href="${proposal.generatedLink}" class="btn btn-primary">Access Proposal</a>`;
+                            actionColumnContent = 'Link Unavailable'; // Provide a fallback text
                         }
                         
 
@@ -142,8 +144,11 @@
                                         <td>
                                             @if ($proposal->status === 'Approved' || $proposal->status === 'Denied')
                                                 Feedback Submitted
+                                            @elseif ($proposal->view_link)
+                                                {{-- Use the view_link directly from the Proposal model --}}
+                                                <a href="{{ $proposal->viewLink }}" class="btn btn-primary">Access Proposal</a>
                                             @else
-                                                <a href="{{ $generatedLink }}" class="btn btn-primary">Access Proposal</a>
+                                                Link Unavailable
                                             @endif
                                         </td>
                                         <td><img src="{{ asset('storage/' . $proposal->user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo"></td>

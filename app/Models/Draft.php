@@ -19,6 +19,7 @@ class Draft extends Model
         'created_by',
         'proposal_title',
         'status',
+        'unique_token',
         'start_date',
         'proposal_price',
         'client_id',

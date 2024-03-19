@@ -53,7 +53,7 @@
                 </div>
     
                 <div class="flex-center">
-                    <a href="{{ route('proposals.step5') }}" class="btn">Edit</a>
+                    <a href="{{ route('proposals.step4') }}" class="btn">Edit</a>
                     <form action="{{ route('proposals.saveDraft') }}" method="POST">
                         @csrf
                         <!-- Form inputs go here -->

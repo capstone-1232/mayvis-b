@@ -37,13 +37,6 @@
                                 display: true,
                                 text: 'Total Proposal Price'
                             }
-                        },
-                        x: {
-                            // This will be handled by the 'labels' array
-                            title: {
-                                display: true,
-                                text: 'Weeks of the Year'
-                            }
                         }
                     }
                 }
@@ -60,6 +53,10 @@
 
                 </div>
             <?php endif; ?>
+            <?php if(session('debug')): ?>
+                <div class="alert alert-info"><?php echo e(session('debug')); ?></div>
+            <?php endif; ?>
+
             <div class="col-md-8 d-flex">
                 <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-3">
