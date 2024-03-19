@@ -59,8 +59,9 @@
             <div>
                 <!-- Filter Users Query based on the sender's name and grab their job_title and profile_image ; automated_message-->
                 
-                <p>{!! $step3Data['automated_message'] !!}</p>
+                
                 @foreach ($users as $user)
+                    <p>{!! $user['automated_message'] !!}</p>
                     <p>{{ $user->first_name }} {{ $user->last_name }}</p>
                     <div class="me-3">
                         <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OAuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LinkGenerationController;
@@ -28,14 +29,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Google login
+Route::get('/login/google', [OAuthController::class, 'redirectToGoogle'])->name('login.google');
+// Google callback
+Route::get('/login/google/callback', [OAuthController::class, 'handleGoogleCallback']);
+
 
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('login');
+    return redirect('auth.login');
 })->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware('auth')
     ->name('dashboard');
 
 
@@ -43,8 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        
+});
 
-    /************************************************************************************************************************************/
+/************************************************************************************************************************************/
 
     /* Proposals Area */
 
@@ -72,7 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/proposals/step6', [ProposalController::class, 'showStep6'])->name('proposals.step6');
     Route::post('/proposals/step6', [ProposalController::class, 'storeStep6'])->name('proposals.storeStep6');
 
-    /* Step 6 */
+    /* Step 7 */
     Route::get('/proposals/step7', [ProposalController::class, 'showStep7'])->name('proposals.step7');
 
     /* Filter Products Route */
@@ -174,17 +182,8 @@ Route::middleware('auth')->group(function () {
 
     /***************************************************************************************************************************************/
 
-    /* Link Generation Area */
 
-    // Route to generate the link
-    Route::get('/generate-link', [LinkGenerationController::class, 'generateLink'])->name('link.generate');
-
-    // Route for feedback
-    Route::post('/link-feedback', [LinkGenerationController::class, 'linkFeedback'])->name('link.feedback');
-
-
-    // Route to view the information from the link
-    Route::get('/view-link/{token}', [LinkGenerationController::class, 'viewLink'])->name('link.view');
+    
 
     /***************************************************************************************************************************************/
 
@@ -213,11 +212,17 @@ Route::middleware('auth')->group(function () {
     /* Reports Area */
 
     Route::get('/proposals/report', [StoredProposalController::class, 'proposalsReport'])->name('storedProposals.report');
-        
-    });
 
+/* Link Generation Area */
 
+// Route to generate the link
+Route::get('/generate-link', [LinkGenerationController::class, 'generateLink'])->name('link.generate');
 
+// Route for feedback
+Route::post('/link-feedback', [LinkGenerationController::class, 'linkFeedback'])->name('link.feedback');
+
+// Route to view the information from the link
+Route::get('/proposals/view/{token}', [LinkGenerationController::class, 'viewProposalByToken'])->name('proposals.view-by-token');
 
 
 require __DIR__.'/auth.php';

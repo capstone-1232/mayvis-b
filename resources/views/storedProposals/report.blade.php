@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+       document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('proposalsChart').getContext('2d');
             const proposalsChart = new Chart(ctx, {
                 type: 'bar',

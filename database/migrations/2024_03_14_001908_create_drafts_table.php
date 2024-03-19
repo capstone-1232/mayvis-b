@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('proposal_title');
             $table->string('status')->default('draft');
             $table->date('start_date');
+            $table->string('unique_token')->unique()->nullable();
             $table->decimal('proposal_price', 8, 2)->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->string('product_id')->nullable(); // Storing a comma-separated list of product IDs as a string
