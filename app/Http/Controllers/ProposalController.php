@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Proposal;
 use App\Models\Draft;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -416,9 +417,6 @@ class ProposalController extends Controller
         //     return redirect()->route('login')->with('error', 'You must be logged in to save a draft.');
         // }
 
-        
-
-
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
@@ -446,6 +444,8 @@ class ProposalController extends Controller
             'step4_data' => $step4Data,
         ])->toJson();
 
+        $uniqueToken = Str::random(60); // Generate a unique token
+
         // Update existing draft or create a new one
         $draft = Draft::updateOrCreate(
             [
@@ -455,10 +455,11 @@ class ProposalController extends Controller
                 'proposal_title' => $step2Data['proposal_title'],
             ],
             [
-                'created_by' => $step1Data['first_name'] . ' ' . $step1Data['last_name'],
+                'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
                 'status' => 'Draft',
                 'proposal_price' => $step4Data['proposalTotal'] ?? null,
                 'product_id' => $productIdsString,
+                'unique_token' => $uniqueToken,
                 'data' => $draftData,
             ]
         );

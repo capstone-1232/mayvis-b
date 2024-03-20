@@ -34,14 +34,17 @@ class LinkGenerationController extends Controller
         }
 
         $client = Client::updateOrCreate(
-        ['email' => $stepData['step1_data']['email']],
-        [
-            'first_name' => $stepData['step1_data']['first_name'],
-            'last_name' => $stepData['step1_data']['last_name'],
-            'phone_number' => $stepData['step1_data']['phone_number'],
-            'company_name' => $stepData['step1_data']['company_name'] ?? 'Default Company', // Provide a default value or ensure the field is filled
-        ]
-    );
+            [
+                'first_name' => $stepData['step1_data']['first_name'],
+                'last_name' => $stepData['step1_data']['last_name'],
+                'email' => $stepData['step1_data']['email'],
+                'phone_number' => $stepData['step1_data']['phone_number'],
+            ],
+            [
+                'company_name' => $stepData['step1_data']['company_name'] ?? 'Default Company',
+            ]
+        );
+        
         
         $uniqueToken = Str::random(60); // Generate a unique token
 
@@ -78,6 +81,7 @@ class LinkGenerationController extends Controller
 
         $draftId = $request->session()->get('draftId');
     
+        $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4_data', 'draftId']);
 
         return view('links.link-generated', ['link' => $viewLink]);
     }
@@ -189,12 +193,12 @@ class LinkGenerationController extends Controller
             }
         }
 
+
         $stepDataJson = json_encode($stepData);
 
         // Use updateOrCreate to save or update the draft
         $draft = Draft::updateOrCreate(
             [
-                'created_by' => $proposal->created_by,
                 'proposal_title' => $proposal->proposal_title,
                 'start_date' => $proposal->start_date ? Carbon::parse($proposal->start_date)->format('Y-m-d') : null,
                 'user_id' => $proposal->user_id,
@@ -202,6 +206,7 @@ class LinkGenerationController extends Controller
             ],
             [
                 'status' => 'Pending',
+                'created_by' => $proposal->created_by,
                 'proposal_price' => $proposal->proposal_price,
                 'product_id' => $productIdsString,
                 'unique_token' => $proposal->unique_token,
