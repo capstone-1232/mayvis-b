@@ -1,11 +1,56 @@
 <x-layout>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('proposalsChart').getContext('2d');
+            const proposalsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    // Using the 'label' property for display on the chart
+                    labels: [@foreach ($approvedProposalsSumByWeek as $data) '{{ $data->label }}', @endforeach],
+
+                    datasets: [
+                        {
+                            label: 'Total Price of Approved Proposals',
+                            // Using 'total_price' for the data points
+                            data: [@foreach ($approvedProposalsSumByWeek as $data) {{ $data->total_price }}, @endforeach],
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Proposal Price'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     <div class="content">
     <div class="container my-3">
         <div class="row">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session('debug'))
+                <div class="alert alert-info">{{ session('debug') }}</div>
+            @endif
+
             <div class="col-md-8 d-flex">
                 <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-3">
-                        <img src="https://via.placeholder.com/64" alt="Profile Image" class="rounded-circle profile-photo">
+                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
                     <div>
                         <h3 class="text-white fw-bold fs-5">Welcome back, {{ Auth::user()->first_name }}</h3>
@@ -49,9 +94,10 @@
             </div>
             <div class="col-md-4 d-flex">
                 <div class="card mb-3 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm">
-                    {{-- Insert Graph here --}}
+                    <canvas id="proposalsChart" style="width:100%; height:180px;"></canvas> 
                 </div>
             </div>
+        
         </div>
 
         <div class="row">
@@ -75,8 +121,25 @@
                                 <tr>
                                     <td>{{ $proposal->proposal_title }}</td>
                                     <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
-                                    <td><span class="badge bg-success">{{ $proposal->status }}</span></td>
-                                    <td>{{ $proposal->start_date }}</td>
+                                    <td>
+                                        @switch($proposal->status)
+                                            @case('Approved')
+                                                <span class="badge bg-success">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @case('Pending')
+                                                <span class="badge bg-warning">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @case('Denied')
+                                                <span class="badge bg-danger">{{ $proposal->status }}</span>
+                                                @break
+                                    
+                                            @default
+                                                <span class="badge bg-secondary">{{ $proposal->status }}</span>
+                                        @endswitch
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -89,7 +152,7 @@
         </div>
     </div>
 
-    <div id="paginatin-container">
+    <div id="pagination-container">
         {{ $proposals->links() }}
     </div>
 </div>

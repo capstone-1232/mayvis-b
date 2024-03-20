@@ -16,4 +16,9 @@ class Client extends Model
         'phone_number',
         'company_name'
     ];
+
+    public function proposals()
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }

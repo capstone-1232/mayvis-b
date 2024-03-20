@@ -12,6 +12,9 @@
       <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
       <script src="https://cdn.tiny.cloud/1/6rx6za7wdjkaouwy1jgn6ghqu6erxtgznija96oyutz7fotz/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
+      <!-- Chart.js -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
       <script>
         tinymce.init({
           selector: 'textarea',
@@ -27,6 +30,7 @@
         });
       </script>
 
+      <link rel="icon" href="{{ asset('images/keen-creatives-logo.webp') }}" type="image/x-icon">
 
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
@@ -76,12 +80,12 @@
                 <i class="fas fa-file-alt fa-lg me-auto"></i><span> Proposals</span><i class="fas fa-chevron-down fa-md ms-3"></i>
             </a>
             <div class="collapse" id="proposalsSubmenu">
-                <a class="nav-link" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ps-5"> Ongoing</span></a>
-                <a class="nav-link" href="#"><span class="ps-5"> Drafts</span></a>
+                <a class="nav-link" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ps-5"> All Proposals</span></a>
+                <a class="nav-link" href="{{ route('proposals.listDrafts') }}"><span class="ps-5"> Drafts</span></a>
             </div>
             <a class="nav-link" href="{{ route('servicesIndex') }}"><i class="fas fa-cogs fa-lg"></i><span> Services</span></a>
             <a class="nav-link" href="{{ route('index-client') }}"><i class="fas fa-users fa-lg"></i><span> Clients</span></a>
-            <a class="nav-link" href="#"><i class="fas fa-chart-bar fa-lg"></i><span> Reports</span></a>
+            <a class="nav-link" href="{{ route('storedProposals.report') }}"><i class="fas fa-chart-bar fa-lg"></i><span> Reports</span></a>
         </nav>
         <div class="mt-auto">
             <form action="{{ route('logout') }}" method="POST" class="mb-2">

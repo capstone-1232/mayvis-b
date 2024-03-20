@@ -18,7 +18,7 @@
                     });
 
                     function renderProducts(data) {
-                    const tableBody = document.getElementById('tableBody'); // Ensure this ID matches your table body
+                    const tableBody = document.getElementById('tableBody'); 
                     tableBody.innerHTML = ''; // Clear existing rows
 
                     let rowsHtml = '';
@@ -34,14 +34,46 @@
                             clientName = `${proposal.client.first_name || ''} ${proposal.client.last_name || ''}`.trim();
                         }
 
+                        // Construct the profile image URL
+                        let profileImageUrl = proposal.user && proposal.user.profile_image ? `storage/${proposal.user.profile_image}` : 'default.jpg';
+                        let profileImageTag = `<img src="${profileImageUrl}" alt="Profile Image" class="rounded-circle profile-photo">`;
+
+                        // Determine badge based on proposal status
+                        let statusBadge;
+                        switch(proposal.status) {
+                            case "Approved":
+                                statusBadge = `<span class="badge bg-success">${proposal.status}</span>`;
+                                break;
+                            case "Pending":
+                                statusBadge = `<span class="badge bg-warning">${proposal.status}</span>`;
+                                break;
+                            case "Denied":
+                                statusBadge = `<span class="badge bg-danger">${proposal.status}</span>`;
+                                break;
+                            default:
+                                statusBadge = `<span class="badge bg-secondary">${proposal.status}</span>`;
+                        }
+                        
+                        // Proposal Feedback Link in the template
+                        let actionColumnContent;
+                        if (proposal.status === 'Approved' || proposal.status === 'Denied') {
+                            actionColumnContent = 'Feedback Submitted';
+                        } else if (proposal.view_link) { // Make sure view_link is available
+                            actionColumnContent = `<a href="${proposal.view_link}" class="btn btn-primary">Access Proposal</a>`;
+                        } else {
+                            actionColumnContent = 'Link Unavailable'; // Provide a fallback text
+                        }
+                        
+
                         rowsHtml += `
                             <tr>
-                                <td>${proposal.status}</td>
+                                <td>${statusBadge}</td>
                                 <td>${proposal.proposal_title}</td>
                                 <td>${companyName}</td>
                                 <td>${clientName}</td> 
                                 <td>${proposal.start_date}</td>
-                                <td>${proposal.created_by}</td>
+                                <td>${actionColumnContent}</td>
+                                <td>${profileImageTag}</td>
                             </tr>
                         `;
                     });
@@ -53,6 +85,7 @@
 
 
     </script>
+    
     <div class="content">
         <div class="container mt-5">
             <div class="my-2">
@@ -79,18 +112,47 @@
                                     <th scope="col">Company Name <i class="fas fa-sort"></i></th>
                                     <th scope="col">Client Name <i class="fas fa-sort"></i></th>
                                     <th scope="col">Date <i class="fas fa-sort"></i></th>
+                                    <th scope="col">Active Link <i class="fas fa-sort"></i></th>
                                     <th scope="col">Author <i class="fas fa-sort"></i></th>
                                 </tr>
                             </thead>
                             <tbody id="tableBody">
                                 @foreach ($proposals as $proposal)
                                     <tr>
-                                        <td>{{ $proposal->status }}</td>
+                                        <td>
+                                            @switch($proposal->status)
+                                                @case('Approved')
+                                                    <span class="badge bg-success">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @case('Pending')
+                                                    <span class="badge bg-warning">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @case('Denied')
+                                                    <span class="badge bg-danger">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @default
+                                                    <span class="badge bg-secondary">{{ $proposal->status }}</span>
+                                            @endswitch
+                                        </td>
                                         <td>{{ $proposal->proposal_title }}</td>
                                         <td>{{ $proposal->client->company_name }}</td>
                                         <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
-                                        <td>{{ $proposal->start_date }}</td>
-                                        <td>{{ $proposal->user->first_name . ' ' . $proposal->user->last_name }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
+                                        <td>
+                                            @if ($proposal->status === 'Approved' || $proposal->status === 'Denied')
+                                                Feedback Submitted
+                                            @elseif ($proposal->view_link)
+                                                {{-- Use the view_link directly from the Proposal model --}}
+                                                <a href="{{ $proposal->viewLink }}" class="btn btn-primary">Access Proposal</a>
+                                            @else
+                                                Link Unavailable
+                                            @endif
+                                        </td>
+                                        <td><img src="{{ asset('storage/' . $proposal->user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo"></td>
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -99,7 +161,7 @@
                 </div>
             </div>
         </div>
-        <div id="paginatin-container">
+        <div id="pagination-container">
             {{ $proposals->links() }}
         </div>
     </div>

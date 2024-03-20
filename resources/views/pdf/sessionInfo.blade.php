@@ -52,12 +52,14 @@
             <img src="#" alt="Keen Creative Logo(?)">
 
             <div>
-                <h2>Hello There!!!</h2>
                 <!-- Filter Users Query based on the sender's name and grab their job_title and profile_image ; automated_message-->
+                
+                {{-- <p>{!! $step3Data['automated_message'] !!}</p> --}}
                 @foreach ($users as $user)
-                    <p>{!! $user->automated_message !!}</p>
                     <p>{{ $user->first_name }} {{ $user->last_name }}</p>
-                    <p>{{ $user->profile_image }}</p>
+                    {{-- <div class="me-3">
+                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
+                    </div> --}}
                     <p>{{ $user->job_title }}</p>
                 @endforeach
 
@@ -65,11 +67,13 @@
         </div>
 
         <ul>
-            @foreach($step4Data['selectedProducts'] as $product)
-                <li>Name: {{ $product['name'] }}, Price: ${{ $product['price'] }}, Quantity: {{ $product['quantity'] }}, Description: {!! $product['description'] !!}</li> <!-- Array Loop -->
+            @foreach($step4Data['selectedProducts'] as $productId => $product)
+                <li>Name: {{ $products[$productId] ?? 'Product Name not found' }}, Price: ${{ $product['price'] }}, Description: {!! $product['description'] !!}</li>
             @endforeach
-            <p>Proposal Total: ${{ $step4Data['proposalTotal'] }}.00</p>
+            <p>Proposal Total: ${{ $step4Data['proposalTotal'] }}</p>
         </ul>
+        
+        
     </main>
     <footer>
 

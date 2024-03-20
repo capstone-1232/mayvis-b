@@ -39,7 +39,9 @@
                     <form action="{{ route('proposals.storeStep3') }}" method="post">
                         @csrf
                         <p><strong>Note: </strong>Please make sure you are entering the user's email. This will ensure if you are creating a proposal for another person -- their respective job title, 
-                            profile image and automated message will be displayed. Entering a user's email that does not exist in the database will issue an error.</p>
+                            profile image and automated message will be displayed. Entering a user's email that does not exist in the database will issue an error. Moreover, if you wish to use another user's automated message,
+                            consider leaving the automated message field blank.
+                        </p>
                         <x-input-label for="sender">Sender</x-input-label>
                         <x-text-input type="text" name="sender" field="sender" placeholder="Staff Sender" class="w-full my-2" autocomplete="off" :value="old('sender', Auth::user()->email)"></x-text-input>
     

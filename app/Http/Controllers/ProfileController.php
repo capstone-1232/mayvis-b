@@ -26,7 +26,14 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
+
+        // Handle photo upload
+        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $path = $request->file('photo')->store('profile_photos', 'public');
+            $user->profile_image = $path;
+        }
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
@@ -42,6 +49,12 @@ class ProfileController extends Controller
 
         /* Job Title */
         $request->user()->job_title = $request -> job_title;
+
+        /* First Name */
+        $request->user()->first_name = $request -> first_name;
+
+         /* Last Name */
+        $request->user()->last_name = $request -> last_name;
 
         $request->user()->save();
 

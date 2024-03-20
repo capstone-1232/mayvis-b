@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::table('proposals', function (Blueprint $table) {
             $table->string('proposal_title');
-            $table->string('status')->default('Pending');;
-            $table->timestamp('start_date');
+            $table->string('status')->default('Pending');
+            $table->date('start_date');
+            $table->text('view_link')->nullable(); 
             $table->decimal('proposal_price', 8, 2);
             $table->foreignId('client_id')->constrained();
             $table->foreignId('user_id')->constrained();
@@ -32,6 +33,7 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
 
             $table->dropColumn('product_id');
+            $table->dropColumn('view_link');
             $table->dropColumn('proposal_price');
             $table->dropColumn('proposal_title');
             $table->dropColumn('status');
