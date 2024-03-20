@@ -296,15 +296,32 @@ div.form-container .custom-img {
 	width: 100%;
 }
 
-button.custom-btn {
+button.custom-btn, .primary-btn{
 	border: 1px solid #224182;
 	background-color: #224182;
 	transition: border 0.3s, background-color 0.3s;
 }
 
-button.custom-btn:hover {
+button.custom-btn:hover, .primary-btn:hover {
 	border: 1px solid #112652;
 	background-color: #112652;
+}
+
+.secondary-btn{
+	border: 1px solid #fff;
+	background-color: #fff;
+  color: #224182;
+	transition: border 0.3s, background-color 0.3s;
+}
+
+.secondary-btn:hover {
+  color: #112652;
+	border: 1px solid #bebebe;
+	background-color: #bebebe;
+}
+
+.back-btn:hover {
+  border-bottom: 1px solid #000;
 }
 
 a.sign-up-btn {
@@ -440,6 +457,29 @@ a.sign-up-btn:hover {
 .profile-photo {
     width: 64px;
     height: 64px;
+}
+
+/* Custom Styles */
+.no-style {
+  background-color: transparent;
+}
+
+i.bi-trash3-fill:hover {
+  color: red;
+  transition: color 0.3s ease;
+}
+
+i.bi-pencil-square:hover {
+  color: green;
+  transition: color 0.3s ease;
+}
+
+div.bg-blue {
+  background-color: #224182;
+}
+
+div.bg-gray {
+  background-color: #DBDBDB;
 }
 
 /* Step Progress Bar */
