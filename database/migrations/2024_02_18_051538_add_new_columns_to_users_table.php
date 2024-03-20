@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('job_title');
+            $table->string('google_id')->nullable();
             $table->string('first_name')->after('id'); // Add a 'first_name' column
             $table->string('last_name')->after('first_name'); // Add a 'last_name' column
             $table->string('profile_image')->default('placeholder.jpg');;
@@ -28,6 +29,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('job_title');
+            $table->dropColumn('google_id');
             $table->dropColumn('profile_image');
             $table->dropColumn('automated_message');
             $table->dropColumn('proposal_message');

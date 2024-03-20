@@ -8,6 +8,42 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('proposalsChart').getContext('2d');
+            const proposalsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    // Using the 'label' property for display on the chart
+                    labels: [<?php $__currentLoopData = $approvedProposalsSumByWeek; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> '<?php echo e($data->label); ?>', <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>],
+
+                    datasets: [
+                        {
+                            label: 'Total Price of Approved Proposals',
+                            // Using 'total_price' for the data points
+                            data: [<?php $__currentLoopData = $approvedProposalsSumByWeek; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> <?php echo e($data->total_price); ?>, <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>],
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Proposal Price'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     <div class="content">
     <div class="container my-3">
         <div class="row">
@@ -17,6 +53,10 @@
 
                 </div>
             <?php endif; ?>
+            <?php if(session('debug')): ?>
+                <div class="alert alert-info"><?php echo e(session('debug')); ?></div>
+            <?php endif; ?>
+
             <div class="col-md-8 d-flex">
                 <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-3">
@@ -64,9 +104,10 @@
             </div>
             <div class="col-md-4 d-flex">
                 <div class="card mb-3 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm">
-                    
+                    <canvas id="proposalsChart" style="width:100%; height:180px;"></canvas> 
                 </div>
             </div>
+        
         </div>
 
         <div class="row">

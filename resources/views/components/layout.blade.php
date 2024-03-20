@@ -30,6 +30,7 @@
         });
       </script>
 
+      <link rel="icon" href="{{ asset('images/keen-creatives-logo.webp') }}" type="image/x-icon">
 
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
@@ -79,7 +80,7 @@
                 <i class="fas fa-file-alt fa-lg me-auto"></i><span> Proposals</span><i class="fas fa-chevron-down fa-md ms-3"></i>
             </a>
             <div class="collapse" id="proposalsSubmenu">
-                <a class="nav-link" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ps-5"> Ongoing</span></a>
+                <a class="nav-link" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ps-5"> All Proposals</span></a>
                 <a class="nav-link" href="{{ route('proposals.listDrafts') }}"><span class="ps-5"> Drafts</span></a>
             </div>
             <a class="nav-link" href="{{ route('servicesIndex') }}"><i class="fas fa-cogs fa-lg"></i><span> Services</span></a>

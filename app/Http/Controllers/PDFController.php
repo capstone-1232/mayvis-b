@@ -4,81 +4,67 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Proposal;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
 
 class PDFController extends Controller
 {
     public function generatePDF(Request $request)
     {
-
-        // Ensure the user is authenticated
-        if (!Auth::check()) {
-            // Redirect the user to login page or show an error message
-            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        }
-
         // Retrieve session data
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
         $step4Data = session('step4_data');
 
+        // Ensure all necessary session data exists
+        if (in_array(null, [$step1Data, $step2Data, $step3Data, $step4Data], true)) {
+            return redirect()->route('dashboard')->with('error', 'Your session has expired. Please try again.');
+        }
 
-        /* This Snippet of code filters the database to display the profile_image, automated_message, first + last name of the user entered as a "sender" on step 3.*/
-
-        // Filter users based on sender's name
-        $senderName = $step3Data['sender'] ?? ''; // Make sure this key exists and has a default
-        $users = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
-                      ->where('email', 'like', '%' . $senderName . '%')
-                      ->get();
-
-                      
-        // $firstUser = $users->first(); // Get the first user in the collection
-
-        // Extract the keys from the selectedProducts array, which are the product IDs
+        // Fetch product details using product IDs
         $productIds = array_keys($step4Data['selectedProducts']);
+        $products = Product::whereIn('id', $productIds)->pluck('product_name', 'id');
 
-        // Convert the array of product IDs to a comma-separated string
-        $productIdsString = implode(',', $productIds);
-
-
-        // Create or update the client information
-        $client = Client::updateOrCreate(
-            ['email' => $step1Data['email']], // Unique identifier for the client
-            $step1Data
-        );
-
-        // Prepare proposal data
-        $proposalData = [
-            'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
-            'proposal_title' => $step2Data['proposal_title'],
-            'start_date' => $step2Data['start_date'],
-            'status' => 'Pending',
-            'client_id' => $client->id,
-            'user_id' => Auth::id(),
-            'product_id' => $productIdsString,
-        ];
-
-        // Create the data array with all the session data and any additional data for the PDF.
-        $data = [
+        // Generate the PDF data
+        $pdfData = [
             'step1Data' => $step1Data,
             'step2Data' => $step2Data,
             'step3Data' => $step3Data,
             'step4Data' => $step4Data,
-            'users' => $users,
+            'users' => [],
+            'products' => $products, // Pass product details to the view
         ];
 
-        // Load the view and pass the data array to it.
-        $pdf = PDF::loadView('pdf.sessionInfo', $data);
+        // Create or update client information
+        $client = Client::updateOrCreate(
+            [
+                'first_name' => $step1Data['first_name'],
+                'last_name' => $step1Data['last_name'],
+                'email' => $step1Data['email']
+            ],
+            $step1Data
+        );
 
-        // Generate the PDF to download with a dynamic filename based on proposal data.
-        $filename = 'Proposal-' . $proposalData['proposal_title'] . '-' . $proposalData['start_date'] . '.pdf';
+        // Filter users based on sender's name
+        $senderName = $step3Data['sender'] ?? '';
+        if ($senderName) {
+            $pdfData['users'] = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
+                ->where('email', 'like', '%' . $senderName . '%')
+                ->get();
+        }
 
-        // Return the generated PDF.
+        // Generate a unique filename for the PDF
+        $filename = 'Proposal-' . $step2Data['proposal_title'] . '-' . $step2Data['start_date'] . '.pdf';
+
+        // Generate the PDF using the data
+        $pdf = PDF::loadView('pdf.sessionInfo', $pdfData);
+
+        // Download the PDF
         return $pdf->download($filename);
     }
 }

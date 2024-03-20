@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('clients', function (Blueprint $table) {
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email')->unique();
-            $table->string('phone_number')->unique();
+            $table->string('email');
+            $table->string('phone_number');
             $table->string('company_name');
         });
     }

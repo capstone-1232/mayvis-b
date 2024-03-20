@@ -31,8 +31,8 @@ class ProfileController extends Controller
 
         // Handle photo upload
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            $path = $request->photo->store('profile_photos', 'public'); // Change 'profile_photos' to your desired directory within storage/app/public
-            $user->profile_image = $path; // Assume your User model has a column for storing the path to the profile photo
+            $path = $request->file('photo')->store('profile_photos', 'public');
+            $user->profile_image = $path;
         }
 
         if ($request->user()->isDirty('email')) {
@@ -49,6 +49,12 @@ class ProfileController extends Controller
 
         /* Job Title */
         $request->user()->job_title = $request -> job_title;
+
+        /* First Name */
+        $request->user()->first_name = $request -> first_name;
+
+         /* Last Name */
+        $request->user()->last_name = $request -> last_name;
 
         $request->user()->save();
 
