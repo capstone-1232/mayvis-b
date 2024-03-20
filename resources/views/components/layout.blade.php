@@ -30,6 +30,7 @@
         });
       </script>
 
+      <link rel="icon" href="{{ asset('images/keen-creatives-logo.webp') }}" type="image/x-icon">
 
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">

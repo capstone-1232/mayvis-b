@@ -29,6 +29,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/privacy-policy', function () {
+    return view('privacy_policy');
+});
+
+Route::get('/terms-of-service', function () {
+    return view('terms_of_service');
+});
+
+
 // Google login
 Route::get('/login/google', [OAuthController::class, 'redirectToGoogle'])->name('login.google');
 // Google callback
@@ -49,10 +58,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        
-});
 
-/************************************************************************************************************************************/
+
+    /************************************************************************************************************************************/
 
     /* Proposals Area */
 
@@ -91,15 +99,6 @@ Route::middleware('auth')->group(function () {
 
     /* Edit Products */
     Route::put('/update-product/{productId}', [ProposalController::class, 'updateProduct'])->name('proposals.updateProduct');
-
-
-    Route::get('/proposals/success', function () {
-        return view('proposals.success');
-    })->name('proposals.success');
-
-    Route::get('/proposals/denied', function () {
-        return view('proposals.denied');
-    })->name('proposals.denied');
 
 
     /************************************************************************************************************************************/
@@ -212,6 +211,8 @@ Route::middleware('auth')->group(function () {
     /* Reports Area */
 
     Route::get('/proposals/report', [StoredProposalController::class, 'proposalsReport'])->name('storedProposals.report');
+        
+});
 
 /* Link Generation Area */
 
@@ -223,6 +224,15 @@ Route::post('/link-feedback', [LinkGenerationController::class, 'linkFeedback'])
 
 // Route to view the information from the link
 Route::get('/proposals/view/{token}', [LinkGenerationController::class, 'viewProposalByToken'])->name('proposals.view-by-token');
+
+
+Route::get('/proposals/success', function () {
+    return view('proposals.success');
+})->name('proposals.success');
+
+Route::get('/proposals/denied', function () {
+    return view('proposals.denied');
+})->name('proposals.denied');
 
 
 require __DIR__.'/auth.php';

@@ -372,7 +372,7 @@
                         </form>
                        </div>
                    </div>
-                   <a href="/" class="d-flex justify-content-center">
+                   <a href="<?php echo e(route('login')); ?>" class="d-flex justify-content-center">
                        <div class="btn btn-dark btn-outline-light rounded-pill mt-4 w-75 mx-auto">
                            Back to Login Page
                        </div>
