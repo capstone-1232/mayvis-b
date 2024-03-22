@@ -61,8 +61,19 @@
     }
     const statusBadge = `<span class="badge ${statusBadgeClass}">${statusText}</span>`;
 
-    const baseUrl = 'http://127.0.0.1:8000/storage/'; // adjust to profile image storage
-    const profileImageUrl = proposal.author && proposal.author.profile_image ? baseUrl + proposal.author.profile_image : 'path/to/default/image.jpg';
+     // Construct the profile image URL
+     let profileImageUrl = proposal.user && proposal.user.profile_image ? `storage/${proposal.user.profile_image}` : 'default.jpg';
+    let profileImageTag = `<img src="${profileImageUrl}" alt="Profile Image" class="rounded-circle profile-photo">`;
+
+                            // Proposal Feedback Link in the template
+                            let actionColumnContent;
+                        if (proposal.status === 'Approved' || proposal.status === 'Denied') {
+                            actionColumnContent = 'Feedback Submitted';
+                        } else if (proposal.view_link) { // Make sure view_link is available
+                            actionColumnContent = `<a href="${proposal.view_link}" class="btn btn-primary">Access Proposal</a>`;
+                        } else {
+                            actionColumnContent = 'Link Unavailable'; // Provide a fallback text
+                        }
 
     rowsHtml += `
         <tr>
@@ -71,9 +82,8 @@
             <td class="align-middle d-none d-md-table-cell">${companyName}</td>
             <td class="align-middle d-none d-md-table-cell">${clientName}</td> 
             <td class="align-middle d-none d-md-table-cell">${formattedDate}</td>
-            <td class="align-middle">
-                <img src="${profileImageUrl}" alt="Profile Image" class="rounded-circle profile-photo" style="width: 30px; height: 30px;">
-            </td>
+            <td class="align-middle d-none d-md-table-cell">${actionColumnContent}</td>
+            <td class="align-middle">${profileImageTag}</td>
         </tr>
     `;
 });
@@ -114,6 +124,8 @@
                                     <th scope="col" class="d-none d-md-table-cell">Company Name <i class="fas fa-sort"></i></th>
                                     <th scope="col" class="d-none d-md-table-cell">Client Name <i class="fas fa-sort"></i></th>
                                     <th scope="col" class="d-none d-md-table-cell">Date <i class="fas fa-sort"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Active Link</th>
+
                                     <th scope="col">Author</th>
                                 </tr>
                             </thead>
@@ -142,6 +154,16 @@
                                         <td class="align-middle d-none d-md-table-cell">{{ $proposal->client->company_name }}</td>
                                         <td class="align-middle d-none d-md-table-cell">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                                         <td class="align-middle d-none d-md-table-cell">{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
+                                        <td class="align-middle d-none d-md-table-cell">
+                                            @if ($proposal->status === 'Approved' || $proposal->status === 'Denied')
+                                            <p class="text-warning">Feedback Submitted</p>
+                                        @elseif ($proposal->view_link)
+                                            {{-- Use the view_link directly from the Proposal model --}}
+                                            <a href="{{ $proposal->viewLink }}" class="btn btn-primary">Access Proposal</a>
+                                        @else
+                                            Link Unavailable
+                                        @endif
+                                        </td>
                                         <td class="align-middle"><img src="{{ asset('storage/' . $proposal->user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo"></td>
                                     </tr>
                                 @endforeach
