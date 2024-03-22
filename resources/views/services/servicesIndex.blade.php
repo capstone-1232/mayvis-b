@@ -122,9 +122,9 @@ productsContainer.innerHTML = productsHtml;
             </div>
         @endif
           
-        <div class="bg-gray p-4 rounded-4 mt-3">
+        <div class="bg-gray p-4 rounded-4 mt-3 mb-5">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="fs-4 py-2 fw-bold text-dark ">Services</h3>
+                <h3 class="fs-4 py-2 fw-bold text-dark ">Products</h3>
                 <div>
                     <a href="{{ route('services.createProduct') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5 ms-2">Create New</a>
                 </div>
@@ -152,7 +152,7 @@ productsContainer.innerHTML = productsHtml;
                                     </h5>
                                 </div>
                                 <div class="text-end text-secondary fst-italic">
-                                    <p class="mb-1">Date Created: {{ $product->created_at}}</p> <!-- Adjust date format as needed -->
+                                    <p class="mb-1">Date Created: {{ \Carbon\Carbon::parse($product->created_at)->format('F j, Y')}}</p> <!-- Adjust date format as needed -->
                                     <p>Created by: {{ $product->created_by }}</p>
                                 </div>
                             </div>
@@ -170,7 +170,7 @@ productsContainer.innerHTML = productsHtml;
                 
                 @endforeach
             </div>
-            <div id="pagination-container">
+            <div id="pagination-container mt-2">
                 {{ $products->appends(['category_id' => request()->category_id])->links() }}
             </div>
         </div>
