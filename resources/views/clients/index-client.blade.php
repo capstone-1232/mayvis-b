@@ -21,22 +21,30 @@
                 if(data.length > 0) {
                     data.forEach(client => {
                         tableBody.innerHTML += `
-    <tr>
-        <td>${client.company_name}</td>
-        <td>${client.first_name} ${client.last_name}</td>
-        <td class="d-none d-lg-table-cell">${client.email}</td>
-        <td>
-            <!-- Action buttons -->
-        </td>
-        <td>
-            <!-- Action buttons -->
-        </td>
-    </tr>
-`;
 
+                        <tr>
+                                <td>${client.company_name}</td>
+                                <td>${client.first_name} ${client.last_name}</td>
+                                <td>${client.email}</td>
+                                <td>
+                                    <form id="deleteClientForm_${client.id}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-danger-button type="submit" class="no-style fs-3" onclick="return confirm('Are you sure you want to delete this client?');">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </x-danger-button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="/clients/${client.id}/edit" class="fs-3">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
 
-                        // Dynamically set the action attribute of the delete form
-                        document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
+                        `;
+                    // Dynamically set the action attribute of the delete form
+                     document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
                     });
                 } else {
                     tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No clients found.</td></tr>';

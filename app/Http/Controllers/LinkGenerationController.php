@@ -48,23 +48,30 @@ class LinkGenerationController extends Controller
         
         $uniqueToken = Str::random(60); // Generate a unique token
 
+        // Execute the query to get the user and retrieve the first and last name
+        $user = User::where('email', $stepData['step3_data']['sender'])->first(['first_name', 'last_name', 'id']);
+
+        // Concatenate the first name and last name with a space between them
+        $createdBy = $user ? $user->first_name . ' ' . $user->last_name : null;
+        // Get the user ID
+        $getUserId = $user ? $user->id : null;
+
         $proposalData = [
-            'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
+            'created_by' => $createdBy,
             'proposal_title' => $stepData['step2_data']['proposal_title'],
             'start_date' => $stepData['step2_data']['start_date'],
             'proposal_price' => $stepData['step4_data']['proposalTotal'] ?? "No Price",
             'status' => 'Pending',
             'client_id' => $client->id,
-            'user_id' => Auth::id(),
+            'user_id' => $getUserId,
             'product_id' => implode(',', array_keys($stepData['step4_data']['selectedProducts'] ?? [])),
             'unique_token' => $uniqueToken,
         ];
 
         $proposal = Proposal::updateOrCreate(
             [
-                // Assuming these fields together uniquely identify a proposal.
                 'client_id' => $client->id,
-                'user_id' => Auth::id(),
+                'user_id' => $getUserId,
                 'proposal_title' => $stepData['step2_data']['proposal_title'],
                 'start_date' => Carbon::parse($stepData['step2_data']['start_date'])->format('Y-m-d'),
             ],
@@ -80,17 +87,30 @@ class LinkGenerationController extends Controller
         $proposal->save();
 
         $draftId = $request->session()->get('draftId');
-    
-        $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4_data', 'draftId']);
+
+        $request->session()->forget(['step1_data', 'step2_data', 'step4_data', 'draftId']);
 
         return view('links.link-generated', ['link' => $viewLink]);
     }
 
     public function linkFeedback(Request $request)
-    {
+    {   
+        // Get the current proposal ID
         $proposalId = $request->input('proposalId');
+
+        // Find that proposal using its id
         $proposal = Proposal::findOrFail($proposalId);
+
+        // User ID to store the user_id from proposal table
+        $user_id = $proposal->user_id;
+
+        // proposal owner's email is here
+        $ownerEmail = User::where('id', $user_id)->firstOrFail()->email;
+
+        // Status to update
         $updateStatus = $request->input('updateStatus');
+
+        // Client message to keep in mind
         $clientMessage = $request->input('clientMessage') ?? '';
 
         $validator = Validator::make($request->all(), [
@@ -215,19 +235,23 @@ class LinkGenerationController extends Controller
         );
     }
 
-
-
-
     public function viewProposalByToken(Request $request, $token)
     {
+        // Select the proposal by its unique token
         $proposal = Proposal::where('unique_token', $token)->firstOrFail();
+
+        // Select the user id from proposals so we can use it to grab the owner's email to email them, display their data on the client view without using session.
+        $user_id = $proposal->user_id;
+
+        $ownerEmail = User::where('id', $user_id)->firstOrFail()->email;
+
 
         // Decode the 'data' field from the proposal
         $data = json_decode($proposal->data, true);
 
         // Check if the proposal was denied and we have 'selectedProducts' in the 'data' field
         if ($proposal->status === 'Denied' && isset($data['step4_data']['selectedProducts'])) {
-            $products = collect($data['step4_data']['selectedProducts']); // Convert array to collection if needed
+            $products = collect($data['step4_data']['selectedProducts']); // Convert array to collection
         } else {
             // Fetch the products based on product_id or an alternative method
             $productIds = explode(',', $proposal->product_id);
@@ -236,46 +260,21 @@ class LinkGenerationController extends Controller
 
         // Fetch the client and user data associated with the proposal
         $client = $proposal->client; 
-        $user = $proposal->user; 
+        $user = User::select('profile_image', 'automated_message', 'proposal_message', 'first_name', 'last_name', 'job_title')
+                ->where('email', $ownerEmail)
+                ->first(); 
+
+        Log::debug($data);
 
         // Pass the necessary data to the view
         return view('proposals.view-by-token', [
+            'client' => $client,
             'proposal' => $proposal,
-            'products' => $products, // This is now either a collection from the 'data' field or from the database
-            'users' => $user ? [$user] : [], // Wrap the user in an array for consistency
-            // 'quantities' is not needed if quantities are included in 'selectedProducts'
+            'products' => $products, 
+            'users' => $user ? [$user] : [], 
             'selectedProducts' => $products,
             'proposalTotal' => $proposal->status === 'Denied' ? $data['step4_data']['proposalTotal'] : null,
         ]);
     }
-
-
-
-
-
-
-
-    // public function viewLink(Request $request, $token)
-    // {
-    //     $proposal = Proposal::where('unique_token', $token)->firstOrFail();
-
-    //     $step1Data = session('step1_data');
-    //     $step2Data = session('step2_data');
-    //     $step3Data = session('step3_data');
-    //     $step4Data = session('step4_data');
-
-    //     $senderName = $step3Data['sender'] ?? '';
-    //     $users = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
-    //                   ->where('email', 'like', '%' . $senderName . '%')
-    //                   ->get();
-
-    //     $proposalId = $request->session()->get('proposalId');
-
-    //     if (!$proposalId) {
-    //         return redirect()->back()->with('error', 'Proposal ID not found in session.');
-    //     }
-
-    //     return view('links.view-link', compact('step1Data', 'step2Data', 'step3Data', 'step4Data', 'users') + ['proposalId' => $proposalId]);
-    // }
 
 }

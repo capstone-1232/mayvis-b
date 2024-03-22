@@ -484,47 +484,7 @@ div.bg-gray {
 
 /* Step Progress Bar */
 
-.step-progress-bar {
-    display: flex;
-    justify-content: space-between;
-    list-style: none;
-    padding: 0;
-    background-color: #f0f0f0;
-  }
 
-  .step-progress-bar li {
-    flex-grow: 1;
-    text-align: center;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    position: relative;
-    padding: 10px 20px;
-  }
-
-  /* The pointer on the left side */
-  .step-progress-bar li::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -20px; /* half of the square's width */
-    transform: translateY(-50%) rotate(45deg);
-    width: 20px;
-    height: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-left: 0;
-    border-top: 0;
-  }
-
-  /* Hide the pointer for the first step */
-  .step-progress-bar li:first-child::before {
-    content: none;
-  }
-
-  /* Adjustments for the pointed shape to connect nicely */
-  .step-progress-bar li:not(:first-child) {
-    margin-left: -10px; /* Overlap the pointed shapes */
-  }
 
 /* Services Index Page */
 body {
@@ -600,7 +560,15 @@ body {
     cursor: pointer;
   }
 
-  
+  /* Generated URL Client View */
+
+  header {
+    background: #000; /* Use your exact color */
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
 
 
   /* END KEN'S CONTAINER */
