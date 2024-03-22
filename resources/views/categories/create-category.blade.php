@@ -2,7 +2,9 @@
     <div class="content">
         <div class="container my-4">
             <div class="row justify-content-center">
+
                 <div class="col-lg-8 mb-4">
+
             <h2 class="display-6 py-2 fw-bold">
                 <i class="bi bi-bookmark-plus-fill me-3"></i>Create Category
             </h2>
@@ -13,6 +15,7 @@
                 <div class="form-group mb-3">
                     <label for="category_name">Category Name</label>
                     <x-text-input type="text" name="category_name" class="form-control rounded-pill" :value="old('category_name')"></x-text-input>
+
                 </div>
                 <x-input-error class="mt-2 productserr" :messages="$errors->get('category_name')" />
 
@@ -25,6 +28,7 @@
                 <div class="form-group mb-3">
                     <label for="created_by">Created By</label>
                     <x-text-input type="text" name="created_by" class="form-control rounded-pill" value="{{ Auth::user()->name }}"></x-text-input>
+
                 </div>
                 <x-input-error class="mt-2 productserr" :messages="$errors->get('created_by')" />
 

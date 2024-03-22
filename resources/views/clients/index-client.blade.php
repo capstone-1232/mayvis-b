@@ -40,11 +40,9 @@
                                     </a>
                                 </td>
                             </tr>
-`;
-
-
-                        // Dynamically set the action attribute of the delete form
-                        document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
+                        `;
+                    // Dynamically set the action attribute of the delete form
+                     document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
                     });
                 } else {
                     tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No clients found.</td></tr>';

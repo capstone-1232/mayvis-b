@@ -54,11 +54,13 @@
     
                 <div class="flex-center">
                     <a href="{{ route('proposals.step4') }}" class="btn">Edit</a>
-                    <form action="{{ route('proposals.saveDraft') }}" method="POST">
-                        @csrf
-                        <!-- Form inputs go here -->
-                        <button type="submit">Save to Drafts</button>
-                    </form>
+                    @if(!session()->has('draftId'))
+                        <form action="{{ route('proposals.saveDraft') }}" method="POST">
+                            @csrf
+                            <!-- Form inputs go here -->
+                            <button type="submit">Save to Drafts</button>
+                        </form>
+                    @endif
                     <a href="{{ route('proposals.step7') }}" class="btn">Send to Client</a>
                 </div>
             </div>

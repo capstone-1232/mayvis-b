@@ -485,6 +485,7 @@ li.bg-lblue {
   background-color: #C4E6F0;
 }
 
+
 div.bg-gray {
   background-color: #f9f9f9;
 }
@@ -492,8 +493,6 @@ div.bg-gray {
 div.bg-dgray {
   background-color: #ececec;
 }
-
-/* Step Progress Bar */
 
 
 /* Services Index Page */
@@ -570,7 +569,15 @@ body {
     cursor: pointer;
   }
 
-  
+  /* Generated URL Client View */
+
+  header {
+    background: #000; /* Use your exact color */
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
 
 
   /* END KEN'S CONTAINER */

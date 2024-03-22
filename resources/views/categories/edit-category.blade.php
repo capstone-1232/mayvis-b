@@ -13,7 +13,9 @@
         
                 <div class="form-group mb-3">
                     <label for="category_name">Category Name</label>
+
                     <input type="text" class="form-control rounded-pill" id="category_name" name="category_name" value="{{ $category->category_name }}">
+
                 </div>
                 <x-input-error class="mt-2 productserr" :messages="$errors->get('category_name')" />
 
