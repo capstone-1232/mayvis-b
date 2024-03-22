@@ -125,6 +125,7 @@
                                     <th scope="col" class="d-none d-md-table-cell">Client Name <i class="fas fa-sort"></i></th>
                                     <th scope="col" class="d-none d-md-table-cell">Date <i class="fas fa-sort"></i></th>
                                     <th scope="col" class="d-none d-md-table-cell">Active Link</th>
+
                                     <th scope="col">Author</th>
                                 </tr>
                             </thead>
