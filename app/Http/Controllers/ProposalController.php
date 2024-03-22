@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Proposal;
 use App\Models\Draft;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +19,10 @@ class ProposalController extends Controller
 
     public function showStep1(Request $request)
     {
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
-
-        
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }       
 
         return view('proposals.step1');
     }
@@ -171,10 +170,10 @@ class ProposalController extends Controller
 
     public function showStep4()
     {
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
@@ -238,10 +237,10 @@ class ProposalController extends Controller
 
     public function storeStep4(Request $request){
 
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
@@ -275,10 +274,10 @@ class ProposalController extends Controller
     public function showStep5()
     {
 
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         if (!session()->has('step4_data') || empty(session()->get('step4_data'))) {
             // If step4_data is empty, redirect back to the Step 4 route
@@ -400,22 +399,20 @@ class ProposalController extends Controller
 
     public function showStep7(Request $request){
         // Ensure the user is authenticated
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // Redirect or return view with success message
         return view('proposals.step7');
     }
 
-
-
     public function saveDraft(Request $request)
     {
-        // if (!Auth::check()) {
-        //     return redirect()->route('login')->with('error', 'You must be logged in to save a draft.');
-        // }
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to save a draft.');
+        }
 
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
@@ -446,16 +443,25 @@ class ProposalController extends Controller
 
         $uniqueToken = Str::random(60); // Generate a unique token
 
+        // Execute the query to get the user and retrieve the first and last name
+        $user = User::where('email', $step3Data['sender'])->first(['first_name', 'last_name', 'id']);
+
+        // Concatenate the first name and last name with a space between them
+        $createdBy = $user ? $user->first_name . ' ' . $user->last_name : null;
+        
+        // Get the user ID
+        $getUserId = $user ? $user->id : null;
+
         // Update existing draft or create a new one
         $draft = Draft::updateOrCreate(
             [
-                'user_id' => Auth::id(),
+                'user_id' => $getUserId,
                 'client_id' => $client->id,
                 'start_date' => $step2Data['start_date'],
                 'proposal_title' => $step2Data['proposal_title'],
             ],
             [
-                'created_by' => Auth::user()->first_name . ' ' . Auth::user()->last_name,
+                'created_by' => $createdBy,
                 'status' => 'Draft',
                 'proposal_price' => $step4Data['proposalTotal'] ?? null,
                 'product_id' => $productIdsString,
@@ -464,6 +470,7 @@ class ProposalController extends Controller
             ]
         );
         
+        $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4_data']);
 
         // Redirect the user back to the dashboard
         return redirect()->route('dashboard')->with('success', 'Draft saved successfully.');
@@ -472,9 +479,10 @@ class ProposalController extends Controller
 
     public function listDrafts()
     {
-        // if (!Auth::check()) {
-        //     return redirect()->route('login')->with('error', 'You must be logged in to view drafts.');
-        // }
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'You must be logged in to view drafts.');
+        }
+        
 
         // Retrieve all drafts for the currently authenticated user
         $drafts = Draft::where('user_id', Auth::id())->get();
@@ -496,10 +504,32 @@ class ProposalController extends Controller
         $request->session()->put('draftId', $draftId);
 
         Log::debug($draftData);
+
         // Now redirect to the step6 view which will utilize this session data
-        return redirect()->route('proposals.step6');
+        return redirect()->route('proposals.step6', compact('draftId'));
     }
 
+    public function destroyDraft(Request $request, $id)
+    {
+        $draft = Draft::findOrFail($id);
+
+        // Grab the matching proposal via a unique token so when the user deletes a "denied" proposal, it will also delete that proposal from the "Proposals" table
+        $proposal = Proposal::where('unique_token', $draft->unique_token)->first();
+
+        if($proposal){
+            $proposal->delete();
+        }
+        
+        try {
+            $draft->delete();
+            // Redirect with a success message
+            $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4_data']);
+            return redirect()->route('proposals.listDrafts')->with('success', 'Draft deleted successfully.');
+        } catch (\Exception $e) {
+            // Redirect back with a general error message if an exception occurs
+            return redirect()->route('proposals.listDrafts')->with('error', 'An unexpected error occurred while deleting the draft.');
+        }
+    }
 
     
 }

@@ -1,56 +1,47 @@
 <x-layout>
     <div class="content">
-        <div class="container my-3">
+        <div class="container my-4">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h2 class="display-6 py-2 fw-bold">
-                        <i class="bi bi-person-fill me-3"></i>Add a Client
-                    </h2>
-                    <div class="bg-white p-4 rounded-4 mt-2">
-                        <form action="{{ route('clients.storeClient') }}" method="POST">
-                            @csrf
-                            <!-- Form fields for Client Creation -->
-                            <div class="form-group mb-3">
-                                <label for="company_name">Company Name</label>
-                                <x-text-input type="text" name="company_name" field="company_name" placeholder="Company Name" class="form-control" autocomplete="off" :value="old('company_name')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('company_name')" />
-                            </div>
-    
-                            <div class="form-group mb-3">
-                                <label for="first_name">First Name</label>
-                                <x-text-input type="text" name="first_name" placeholder="John" class="form-control" :value="old('first_name')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('first_name')" />
-                            </div>
-            
-                            <div class="form-group mb-3">
-                                <label for="last_name">Last Name</label>
-                                <x-text-input type="text" name="last_name" placeholder="Doe" class="form-control" :value="old('last_name')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('last_name')" />
-                            </div>
-            
-                            <div class="form-group mb-3">
-                                <label for="email">Email</label>
-                                <x-text-input type="email" name="email" placeholder="johndoe@email.com" field="email" class="form-control" autocomplete="off" :value="old('email')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('email')" />
-                            </div>
-            
-                            <div class="form-group mb-3">
-                                <label for="phone_number">Phone Number</label>
-                                <x-text-input type="tel" name="phone_number" placeholder="123-456-7891" field="phone_number" class="form-control" autocomplete="off" :value="old('phone_number')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('phone_number')" />
-                            </div>
-            
-                            <!-- Add other necessary form fields -->
-                            <div class="d-flex justify-content-end align-items-center mt-3">
-                                <a href="{{ route('index-client') }}" class="fs-7 fw-bold me-2">Cancel</a>
-                                <x-primary-button type="submit" class="btn primary-btn text-white rounded-pill">Save Client</x-primary-button>
-                            </div>
-                            
-                        </form>
-                    </div>
+
+                <div class="col-lg-8 mb-4">
+
+            <h2 class="display-6 py-2 fw-bold">
+                <i class="bi bi-bookmark-plus-fill me-3"></i>Create Category
+            </h2>
+            <div class="bg-white p-4 rounded-4 mt-2">
+            <form action="{{ route('categories.storeCategory') }}" method="POST">
+                @csrf
+                <!-- Form fields for product creation -->
+                <div class="form-group mb-3">
+                    <label for="category_name">Category Name</label>
+                    <x-text-input type="text" name="category_name" class="form-control rounded-pill" :value="old('category_name')"></x-text-input>
+
+                </div>
+                <x-input-error class="mt-2 productserr" :messages="$errors->get('category_name')" />
+
+                <div class="form-group mb-3">
+                    <label for="notes">Category Notes (Optional)</label>
+                    <textarea class="form-control" id="notes" name="notes"></textarea>
+                </div>
+                <x-input-error class="mt-2 productserr" :messages="$errors->get('notes')" />
+
+                <div class="form-group mb-3">
+                    <label for="created_by">Created By</label>
+                    <x-text-input type="text" name="created_by" class="form-control rounded-pill" value="{{ Auth::user()->name }}"></x-text-input>
+
+                </div>
+                <x-input-error class="mt-2 productserr" :messages="$errors->get('created_by')" />
+
+
+                <!-- Add other necessary form fields -->
+                <div class="d-flex justify-content-end align-items-center mt-3">
+                    <a href="{{ route('index-category') }}" class="fs-7 fw-bold me-2">Cancel</a>
+                    <x-primary-button type="submit" class="btn primary-btn text-white rounded-pill">Save Category</x-primary-button>
+                </div>
+            </form>
+            </div>
                 </div>
             </div>
-                
         </div>
     </div>
 </x-layout>

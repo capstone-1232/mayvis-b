@@ -44,8 +44,6 @@ step7.blade.php - CSS (Check Comments in this file as I have labelled them)
     display: flex;
     justify-content: space-between;
     list-style: none;
-    padding: 0;
-    background-color: #f0f0f0;
   }
 
   .step-progress-bar li {
@@ -55,6 +53,10 @@ step7.blade.php - CSS (Check Comments in this file as I have labelled them)
     background-color: #f9f9f9;
     position: relative;
     padding: 10px 20px;
+  }
+
+  .btn-width{
+    width: 95px;
   }
 
 
@@ -92,18 +94,6 @@ step7.blade.php - CSS (Check Comments in this file as I have labelled them)
 
 /* Totals Area (step4.blade.php) */
 
-  .selected-products-container {
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.selected-products-container h3 {
-    margin-bottom: 15px;
-    color: #333;
-}
 
 .project-total, .recurring-total, .proposal-total {
     padding: 10px;
@@ -123,12 +113,12 @@ step7.blade.php - CSS (Check Comments in this file as I have labelled them)
     box-sizing: border-box; /* Ensures padding does not increase the total width */
 }
 
-h3 {
-    color: #333;
+i.bi-circle-fill{
+  color: #224182;
 }
 
-h3 span {
-    color: #007bff; /* A nice blue color for the numbers */
+h3 {
+    color: #333;
 }
 
 /* You can find this part under step4.blade.php (error message for selected products) */
@@ -291,6 +281,10 @@ div.form-container .custom-img {
 	background-color: rgba(255, 255, 255, 0.9);
 }
 
+.d-hide {
+  display: none;
+}
+
 /* Buttons */
 .login-btn {
 	width: 100%;
@@ -424,6 +418,10 @@ a.sign-up-btn:hover {
     margin-left: 82px;
 }
 
+.rounded-xl {
+  border-radius: 25px;
+}
+
 .sidebar .nav-link {
 	color: white;
 }
@@ -455,8 +453,13 @@ a.sign-up-btn:hover {
 
 /* Dashboard */
 .profile-photo {
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
+}
+
+.profile-img{
+  max-width: 200px;
+  max-height: 200px;
 }
 
 /* Custom Styles */
@@ -474,57 +477,23 @@ i.bi-pencil-square:hover {
   transition: color 0.3s ease;
 }
 
-div.bg-blue {
+div.bg-blue, li.bg-blue {
   background-color: #224182;
 }
 
-div.bg-gray {
-  background-color: #DBDBDB;
+li.bg-lblue {
+  background-color: #C4E6F0;
 }
 
-/* Step Progress Bar */
 
-.step-progress-bar {
-    display: flex;
-    justify-content: space-between;
-    list-style: none;
-    padding: 0;
-    background-color: #f0f0f0;
-  }
+div.bg-gray {
+  background-color: #f9f9f9;
+}
 
-  .step-progress-bar li {
-    flex-grow: 1;
-    text-align: center;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    position: relative;
-    padding: 10px 20px;
-  }
+div.bg-dgray {
+  background-color: #ececec;
+}
 
-  /* The pointer on the left side */
-  .step-progress-bar li::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -20px; /* half of the square's width */
-    transform: translateY(-50%) rotate(45deg);
-    width: 20px;
-    height: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-left: 0;
-    border-top: 0;
-  }
-
-  /* Hide the pointer for the first step */
-  .step-progress-bar li:first-child::before {
-    content: none;
-  }
-
-  /* Adjustments for the pointed shape to connect nicely */
-  .step-progress-bar li:not(:first-child) {
-    margin-left: -10px; /* Overlap the pointed shapes */
-  }
 
 /* Services Index Page */
 body {
@@ -600,7 +569,15 @@ body {
     cursor: pointer;
   }
 
-  
+  /* Generated URL Client View */
+
+  header {
+    background: #000; /* Use your exact color */
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
 
 
   /* END KEN'S CONTAINER */

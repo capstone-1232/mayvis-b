@@ -21,22 +21,28 @@
                 if(data.length > 0) {
                     data.forEach(client => {
                         tableBody.innerHTML += `
-    <tr>
-        <td>${client.company_name}</td>
-        <td>${client.first_name} ${client.last_name}</td>
-        <td class="d-none d-lg-table-cell">${client.email}</td>
-        <td>
-            <!-- Action buttons -->
-        </td>
-        <td>
-            <!-- Action buttons -->
-        </td>
-    </tr>
-`;
-
-
-                        // Dynamically set the action attribute of the delete form
-                        document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
+                        <tr>
+                                <td>${client.company_name}</td>
+                                <td>${client.first_name} ${client.last_name}</td>
+                                <td>${client.email}</td>
+                                <td>
+                                    <form id="deleteClientForm_${client.id}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-danger-button type="submit" class="no-style fs-3" onclick="return confirm('Are you sure you want to delete this client?');">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </x-danger-button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="/clients/${client.id}/edit" class="fs-3">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    // Dynamically set the action attribute of the delete form
+                     document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
                     });
                 } else {
                     tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No clients found.</td></tr>';
@@ -58,13 +64,13 @@
                     <h2 class="display-6 py-2 fw-bold">
                         <i class="bi bi-person-fill me-3"></i>All Clients
                     </h2>
-                    <a href="{{ route('clients.createClient') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5">Add Client</a>
+                    <a href="{{ route('proposals.step1') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5">Add Client</a>
                 </div>
             </div>
 
             
 
-            <div class="bg-white p-4 rounded-4">
+            <div class="bg-white p-4 rounded-4 mb-5">
                 <div class="container">
                     <form id="searchForm" action="{{ route('clients.searchClients') }}" method="GET">
                         <div class="input-group mb-4 border-2 rounded-pill">
@@ -90,8 +96,8 @@
                 <table class="table px-5 search-results">
                     <thead>
                         <tr>
-                            <th scope="col">Company Name</th>
-                            <th scope="col">Client Name</th>
+                            <th scope="col">Company Name <i class="fas fa-sort"></i></th>
+                            <th scope="col">Client Name <i class="fas fa-sort"></i></th>
                             <th scope="col" class="d-none d-lg-table-cell">Email</th>
                             <th scope="col">Delete</th>
                             <th scope="col">Edit</th>

@@ -23,12 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', function () {
-  
     if (auth()->check()) {
         return redirect('/dashboard');
     }
     return view('welcome');
-    
 });
 
 Route::get('/privacy-policy', function () {
@@ -207,6 +205,9 @@ Route::middleware('auth')->group(function () {
 
     /* Load Draft Route */
     Route::get('/proposals/drafts/{draft}/summary', [ProposalController::class, 'viewDraftSummary'])->name('proposals.viewDraftSummary');
+
+    /* Delete Draft */
+    Route::delete('/drafts/{draft}', [ProposalController::class, 'destroyDraft'])->name('proposals.destroyDraft');
 
     /****************************************************************************************************************************************/
 
