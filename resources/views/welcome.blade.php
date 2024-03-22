@@ -1,15 +1,17 @@
 <x-layout>
-
-   <div class="content">
-    <section class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <h1 class="display-4 fw-bold">Welcome to Mayvis</h1>
-                <p class="lead mb-4">To get started, click the link below.</p>
- 
-                <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Get Started</a>
+    <div class="container welcome-section">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="mb-4">
+                    <img src="{{ asset('images/keen-creatives-logo.webp') }}" alt="Logo" class="mb-4 w-25 centered-image">
+       
+                </div>
+                <h1 class="display-4 fw-bold welcome-text">Build Proposals Faster.</h1>
+                <p class="lead mb-4">Login to get started.</p>
+                <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </a>
             </div>
         </div>
-    </section>
-   </div>
+    </div>
 </x-layout>
