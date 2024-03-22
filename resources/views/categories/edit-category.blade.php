@@ -4,6 +4,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
             <h2 class="display-6 py-2 fw-bold">
+
                 <i class="bi bi-pencil-square me-3"></i>Edit Category
             </h2>
             <div class="bg-white p-4 rounded-4 mt-2">
@@ -14,14 +15,16 @@
                 <div class="form-group mb-3">
                     <label for="category_name">Category Name</label>
                     <input type="text" class="form-control" id="category_name" name="category_name" value="{{ $category->category_name }}">
+
                 </div>
-                <x-input-error class="mt-2 productserr" :messages="$errors->get('category_name')" />
+                <x-input-error class="mt-2 productserr" :messages="$errors->get('first_name')" />
 
                 <div class="form-group">
-                    <label for="notes">Category Notes</label>
-                    <textarea class="form-control" id="notes" name="notes">{{ $category->notes }}</textarea>
+                    <label for="last_name">Last Name</label>
+                    <input type="text" class="form-control mb-3" id="last_name" name="last_name" value="{{ $client->last_name }}">
                 </div>
-                <x-input-error class="mt-2 productserr" :messages="$errors->get('notes')" />
+                <x-input-error class="mt-2 productserr" :messages="$errors->get('last_name')" />
+
 
                     <div class="d-flex justify-content-end align-items-center mt-3">
                         <a href="{{ route('index-category') }}" class="fs-7 fw-bold me-2">Cancel</a>

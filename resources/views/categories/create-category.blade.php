@@ -3,6 +3,7 @@
         <div class="container my-3">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
+
             <h2 class="display-6 py-2 fw-bold">
                 <i class="bi bi-bookmark-plus-fill me-3"></i>Create Category
             </h2>

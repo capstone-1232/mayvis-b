@@ -1,5 +1,57 @@
 <x-layout>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the form from submitting traditionally
+
+            let searchTerm = document.getElementById('search_term').value;
+            let tableBody = document.querySelector('.table tbody'); // Select the table body directly
+
+            fetch(`{{ route('clients.searchClients') }}?search_term=${encodeURIComponent(searchTerm)}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest', // Ensures Laravel treats the request as AJAX
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                tableBody.innerHTML = ''; // Clear current table rows
+
+                if(data.length > 0) {
+                    data.forEach(client => {
+                        tableBody.innerHTML += `
+    <tr>
+        <td>${client.company_name}</td>
+        <td>${client.first_name} ${client.last_name}</td>
+        <td class="d-none d-lg-table-cell">${client.email}</td>
+        <td>
+            <!-- Action buttons -->
+        </td>
+        <td>
+            <!-- Action buttons -->
+        </td>
+    </tr>
+`;
+
+
+                        // Dynamically set the action attribute of the delete form
+                        document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No clients found.</td></tr>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">An error occurred while searching. Please try again later.</td></tr>';
+            });
+        });
+    });
+
+    </script>
     <div class="content">
+
         <div class="container my-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="display-6 py-2 fw-bold">
@@ -42,6 +94,7 @@
                         @endforeach
                     </tbody>
                 </table>
+
             </div>
             <div class="d-flex justify-content-start align-items-center mt-3">
                 <a href="{{ route('servicesIndex') }}" class="fs-7 fw-semi-bold me-2 back-btn"><i class="bi bi-caret-left me-2"></i>Back to Service</a>

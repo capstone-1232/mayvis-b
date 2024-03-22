@@ -21,6 +21,7 @@
                 if(data.length > 0) {
                     data.forEach(client => {
                         tableBody.innerHTML += `
+
                         <tr>
                                 <td>${client.company_name}</td>
                                 <td>${client.first_name} ${client.last_name}</td>
