@@ -147,7 +147,6 @@ class ProposalController extends Controller
         ]);
         
 
-        // Assuming 'sender' field contains the last name to check
         $senderEmail = $request->input('sender');
 
         // Check if a user with the given last name exists in the database

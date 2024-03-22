@@ -48,7 +48,7 @@ class LinkGenerationController extends Controller
         
         $uniqueToken = Str::random(60); // Generate a unique token
 
-        // Execute the query to get the user and retrieve the first and last name
+        // Execute the query to get the user and retrieve the first and last name based on the email entered
         $user = User::where('email', $stepData['step3_data']['sender'])->first(['first_name', 'last_name', 'id']);
 
         // Concatenate the first name and last name with a space between them
@@ -77,6 +77,20 @@ class LinkGenerationController extends Controller
             ],
             $proposalData
         );
+
+        // Update the user's automated message because sessions are not highly dependable to display later informations
+        $updateUser = User::updateOrCreate(
+            [
+                'id' => $getUserId
+            ],
+            [
+                'automated_message' => $stepData['step3_data']['automated_message']
+            ]
+          
+        );
+
+        // Save the updated user information -- mainly for the automated_message
+        $updateUser->save();
         
         // Save the proposal as a draft
         $this->saveProposalAsDraft($proposal);
