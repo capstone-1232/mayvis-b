@@ -192,12 +192,12 @@
                                 </div> --}}
                                 {{-- Edit Amount --}}
                                 <div class="mb-3">
-                                    <label for="products[{{ $productId }}][price]" id="hidden-price-{{ $productId }}"  class="fw-bold d-hide">Quantity</label>
+                                    <label for="products[{{ $productId }}][price]" id="hidden-price-{{ $productId }}"  class="fw-bold d-hide">Price</label>
                                     <input class="d-hide w-100 border-2 rounded-pill px-2 py-1" type="number" name="products[{{ $productId }}][price]" id="price-input-{{ $productId }}"  value="{{ $productDetails['price'] }}" step="0.01">
                                 </div>
                                 {{-- Edit Quantity --}}
                                 <div class="mb-3">
-                                    <label for="products[{{ $productId }}][quantity]" id="hidden-quantity-{{ $productId }}"  class="fw-bold d-hide">Minimum Price</label>
+                                    <label for="products[{{ $productId }}][quantity]" id="hidden-quantity-{{ $productId }}"  class="fw-bold d-hide">Quantity</label>
                                     <input class="d-hide w-100 border-2 rounded-pill px-2 py-1" type="number" name="products[{{ $productId }}][quantity]" id="quantity-input-{{ $productId }}" value="{{ $productDetails['quantity'] ?? 1 }}" min="1">
                                 </div>
                                 {{-- Edit Product Description --}}

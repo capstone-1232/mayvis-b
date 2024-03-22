@@ -272,9 +272,9 @@
                                             <input type="hidden" name="selectedProducts" id="selectedProducts" value="">
                                             <x-text-input type="hidden" name="totalPrice" id="formTotalPrice" value="0"></x-text-input>
                                             <input type="hidden" name="proposalTotal" id="formProposalTotal" value="0">
-                    </div>
-                </div>
-            </div>
+                                    </div>
+                                </div>
+                            </div>
                         
 
                             <div class="d-flex justify-content-end align-items-center mt-3">
