@@ -463,6 +463,7 @@ class ProposalController extends Controller
                 'created_by' => $createdBy,
                 'status' => 'Draft',
                 'proposal_price' => $step4Data['proposalTotal'] ?? null,
+                'automated_message' => $step3Data['automated_message'],
                 'product_id' => $productIdsString,
                 'unique_token' => $uniqueToken,
                 'data' => $draftData,

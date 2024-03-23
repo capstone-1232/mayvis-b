@@ -6,7 +6,7 @@
             <h2 class="display-6 py-2 fw-bold">
                 <i class="bi bi-pencil-square me-3"></i>Edit Product
             </h2>
-            <div class="bg-white p-4 rounded-4 mt-2 mb-4">
+            <div class="bg-white p-4 rounded-4 mt-2">
                 <form action="{{ route('services.updateProduct', $product->id) }}" method="POST">
 
                     @csrf
@@ -14,13 +14,13 @@
             
                     <div class="form-group mb-3">
                         <label for="product_name">Product Name</label>
-                        <x-text-input type="text" class="form-control rounded-pill" id="product_name" name="product_name" value="{{ $product->product_name }}"></x-text-input>
+                        <x-text-input type="text" class="form-control" id="product_name" name="product_name" value="{{ $product->product_name }}"></x-text-input>
                     </div>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('product_name')" />
             
                     <div class="form-group mb-3">
                         <label for="product_description">Product Description</label>
-                        <input class="form-control rounded-pill" id="product_description" name="product_description" value="{{ $product->product_description }}"></input>
+                        <input class="form-control" id="product_description" name="product_description" value="{{ $product->product_description }}"></input>
                     </div>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('product_description')" />
     
@@ -31,7 +31,7 @@
     
                     <div class="form-group mb-3">
                         <label for="price">Price</label>
-                        <input type="text" class="form-control rounded-pill" id="price" name="price" value="{{ $product->price }}">
+                        <input type="text" class="form-control" id="price" name="price" value="{{ $product->price }}">
                     </div>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('price')" />
 

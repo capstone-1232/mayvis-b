@@ -76,7 +76,7 @@
                 
     </div>
 </div>
-
+        <h2>Keep these messages as generic as possible. You will be able to personally customize your automated message during the process.</h2>
         <div class="mt-4">
             <x-input-label class="fw-bold text-black fs-5 mb-1" for="automated_message" :value="__('Automated Message')" />
             <x-textarea id="automated_message" name="automated_message" type="text" class="mt-1 block w-full" :value="old('automated_message', $user->automated_message)" required autofocus autocomplete="username" />

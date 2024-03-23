@@ -1,8 +1,6 @@
 <x-layout>
     <div class="content">
-
-        <div class="container my-4">
-
+        <div class="container my-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="display-6 py-2 fw-bold">
                     <i class="bi bi-tags-fill me-3"></i>Category List

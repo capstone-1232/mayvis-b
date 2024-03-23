@@ -48,13 +48,22 @@
             <!-- Display user details -->
                 <div class="my-5">
                     <h2 class="fw-bold heading-4">Hello {{ $client->first_name }}</h2>
+
+                    <!-- User's Automated Message -->
+                    <div class="automated-message">
+                        @if($proposal->automated_message)
+                            <p>{!! $proposal->automated_message !!}</p>
+                        @else
+                            <!-- Assuming $user is available and contains the fallback automated message -->
+                            @foreach($users as $user)
+                                <p>{!! $user->automated_message !!}</p>
+                            @endforeach
+                        @endif
+                    </div>
+                    
+
                     @foreach ($users as $user)
                     <div class="user-card mb-4">
-
-                        <!-- User's Automated Message -->
-                        <div class="automated-message">
-                            <p>{!! $user->automated_message !!}</p>
-                        </div>
 
                         <div class="user-info d-flex align-items-center">
                             <!-- User's Profile Image -->
