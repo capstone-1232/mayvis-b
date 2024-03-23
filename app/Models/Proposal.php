@@ -15,6 +15,7 @@ class Proposal extends Model
         'status',
         'start_date',
         'proposal_price',
+        'automated_message',
         'unique_token',
         'view_link',
         'client_id', // foreign key

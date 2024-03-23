@@ -15,6 +15,10 @@
       <!-- Chart.js -->
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+      <!-- Alpine.js -->
+      <script src="//unpkg.com/alpinejs" defer></script>
+
+
       <script>
         tinymce.init({
           selector: 'textarea',

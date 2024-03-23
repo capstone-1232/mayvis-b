@@ -44,6 +44,7 @@ class LinkGenerationController extends Controller
                 'company_name' => $stepData['step1_data']['company_name'] ?? 'Default Company',
             ]
         );
+
         
         
         $uniqueToken = Str::random(60); // Generate a unique token
@@ -62,11 +63,13 @@ class LinkGenerationController extends Controller
             'start_date' => $stepData['step2_data']['start_date'],
             'proposal_price' => $stepData['step4_data']['proposalTotal'] ?? "No Price",
             'status' => 'Pending',
+            'automated_message' => $stepData['step3_data']['automated_message'] ?? $user->automated_message,
             'client_id' => $client->id,
             'user_id' => $getUserId,
             'product_id' => implode(',', array_keys($stepData['step4_data']['selectedProducts'] ?? [])),
             'unique_token' => $uniqueToken,
         ];
+
 
         $proposal = Proposal::updateOrCreate(
             [
@@ -79,18 +82,18 @@ class LinkGenerationController extends Controller
         );
 
         // Update the user's automated message because sessions are not highly dependable to display later informations
-        $updateUser = User::updateOrCreate(
-            [
-                'id' => $getUserId
-            ],
-            [
-                'automated_message' => $stepData['step3_data']['automated_message']
-            ]
+        // $updateUser = User::updateOrCreate(
+        //     [
+        //         'id' => $getUserId
+        //     ],
+        //     [
+        //         'automated_message' => $stepData['step3_data']['automated_message']
+        //     ]
           
-        );
+        // );
 
         // Save the updated user information -- mainly for the automated_message
-        $updateUser->save();
+        // $updateUser->save();
         
         // Save the proposal as a draft
         $this->saveProposalAsDraft($proposal);
@@ -243,6 +246,7 @@ class LinkGenerationController extends Controller
                 'created_by' => $proposal->created_by,
                 'proposal_price' => $proposal->proposal_price,
                 'product_id' => $productIdsString,
+                'automated_message' => $proposal->automated_message,
                 'unique_token' => $proposal->unique_token,
                 'data' => $stepDataJson,
             ]
