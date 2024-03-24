@@ -80,20 +80,6 @@ class LinkGenerationController extends Controller
             ],
             $proposalData
         );
-
-        // Update the user's automated message because sessions are not highly dependable to display later informations
-        // $updateUser = User::updateOrCreate(
-        //     [
-        //         'id' => $getUserId
-        //     ],
-        //     [
-        //         'automated_message' => $stepData['step3_data']['automated_message']
-        //     ]
-          
-        // );
-
-        // Save the updated user information -- mainly for the automated_message
-        // $updateUser->save();
         
         // Save the proposal as a draft
         $this->saveProposalAsDraft($proposal);

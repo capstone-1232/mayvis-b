@@ -27,7 +27,7 @@
                             <div class="p-4 max-w-sm bg-gray-100 rounded-lg border border-gray-200 shadow-md">
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Send a PDF Copy</h5>
                                 <p class="mb-3 font-normal text-gray-700">Note: Printable proposals are less desirable than soliciting feedback via client approval links. 
-                                    Proposals will not be registered in the database until you generate a link. This is solely to generate a copy for yourself.</p>
+                                    Proposals will not be registered in the database until you generate a link.</p>
                                 <a href="{{ route('session.info.pdf') }}" class="btn btn-primary">View PDF</a>
     
                             </div>

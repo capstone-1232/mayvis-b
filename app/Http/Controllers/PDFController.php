@@ -28,17 +28,9 @@ class PDFController extends Controller
 
         // Fetch product details using product IDs
         $productIds = array_keys($step4Data['selectedProducts']);
-        $products = Product::whereIn('id', $productIds)->pluck('product_name', 'id');
+        // Fetch detailed product information instead of just names
+        $products = Product::whereIn('id', $productIds)->get(); // Fetch full product objects
 
-        // Generate the PDF data
-        $pdfData = [
-            'step1Data' => $step1Data,
-            'step2Data' => $step2Data,
-            'step3Data' => $step3Data,
-            'step4Data' => $step4Data,
-            'users' => [],
-            'products' => $products, // Pass product details to the view
-        ];
 
         // Create or update client information
         $client = Client::updateOrCreate(
@@ -50,10 +42,21 @@ class PDFController extends Controller
             $step1Data
         );
 
+        // Generate the PDF data
+        $pdfData = [
+            'step1Data' => $step1Data,
+            'step2Data' => $step2Data,
+            'step3Data' => $step3Data,
+            'step4Data' => $step4Data,
+            'client' => $client,
+            'users' => [],
+            'products' => $products, // Pass product details to the view
+        ];
+
         // Filter users based on sender's name
         $senderName = $step3Data['sender'] ?? '';
         if ($senderName) {
-            $pdfData['users'] = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
+            $pdfData['users'] = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image', 'proposal_message')
                 ->where('email', 'like', '%' . $senderName . '%')
                 ->get();
         }
