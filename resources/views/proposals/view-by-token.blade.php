@@ -47,7 +47,7 @@
             
             <!-- Display user details -->
                 <div class="my-5">
-                    <h2 class="fw-bold heading-4">Hello {{ $client->first_name }}</h2>
+                    <h2 class="fw-bold heading-4">Hello {{ $client->first_name }},</h2>
 
                     <!-- User's Automated Message -->
                     <div class="automated-message">
