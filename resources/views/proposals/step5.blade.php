@@ -148,7 +148,7 @@
 
                             {{-- Product Description --}}
                             <div class="d-none">
-                            <span id="description-display-{{ $productId }}"><span id="description-value-{{ $productId }}">{{ $productDetails['description'] ?? '' }}</span></span>
+                                <span id="description-display-{{ $productId }}"><span id="description-value-{{ $productId }}">{{ $productDetails['description'] ?? '' }}</span></span>
                             </div>
                             {{-- Edit Product Description --}}
                             {{-- <div>

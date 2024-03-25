@@ -52,18 +52,22 @@
             <!-- Loop through selected products -->
             <div class="proposal-section" style="font-family: Arial, sans-serif;">
                 <ul class="list-group mb-4">
-                    @foreach ($products as $product)
+                    @foreach ($products as $index => $product)
                     <li class="list-group-item d-block py-3 border-0 border-bottom border-gray-200">
                         <div class="d-flex justify-content-between">
                             <span class="item-name fw-bold">{{ $product->product_name }}</span>
                             <span class="item-price fw-bold">${{ number_format($product->price, 2) }}</span>
                         </div>
-                        <p class="item-description mt-1 text-muted" style="color: #666;">{{ $product->product_description ?? 'N/A' }}</p>
+                        <!-- Display the corresponding project scope -->
+                        @if (isset($projectScopes[$index]))
+                            <p class="project-scope mt-1">{{ $projectScopes[$index] }}</p>
+                        @endif
                     </li>
                     @endforeach
                 </ul>
-                <p>Total Price: ${{ number_format($step4Data['proposalTotal'], 2) }}</p>
+                <p class="text-end fw-normal mb-5">Proposal Total: ${{ number_format($step4Data['proposalTotal'], 2) }}</p>
             </div>
+            
         </div>
     </main>
     <footer class="container">
