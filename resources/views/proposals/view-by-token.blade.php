@@ -47,14 +47,23 @@
             
             <!-- Display user details -->
                 <div class="my-5">
-                    <h2 class="fw-bold heading-4">Hello {{ $client->first_name }}</h2>
+                    <h2 class="fw-bold heading-4">Hello {{ $client->first_name }},</h2>
+
+                    <!-- User's Automated Message -->
+                    <div class="automated-message">
+                        @if($proposal->automated_message)
+                            <p>{!! $proposal->automated_message !!}</p>
+                        @else
+                            <!-- Assuming $user is available and contains the fallback automated message -->
+                            @foreach($users as $user)
+                                <p>{!! $user->automated_message !!}</p>
+                            @endforeach
+                        @endif
+                    </div>
+                    
+
                     @foreach ($users as $user)
                     <div class="user-card mb-4">
-
-                        <!-- User's Automated Message -->
-                        <div class="automated-message">
-                            <p>{!! $user->automated_message !!}</p>
-                        </div>
 
                         <div class="user-info d-flex align-items-center">
                             <!-- User's Profile Image -->
@@ -86,18 +95,23 @@
                 <!-- Loop through selected products -->
                 <div class="proposal-section" style="font-family: Arial, sans-serif;">
                     <ul class="list-group mb-4">
-                        @foreach ($products as $product)
+                        @foreach ($products as $index => $product)
                         <li class="list-group-item d-block py-3 border-0 border-bottom border-gray-200">
                             <div class="d-flex justify-content-between">
                                 <span class="item-name fw-bold">{{ $product->product_name }}</span>
                                 <span class="item-price fw-bold">${{ number_format($product->price, 2) }}</span>
                             </div>
-                            <p class="item-description mt-1 text-muted" style="color: #666;">{{ $product->product_description ?? 'N/A' }}</p>
+                            <!-- Display the corresponding project scope -->
+                            @if (isset($projectScopes[$index]))
+                                <p class="project-scope mt-1">{{ $projectScopes[$index] }}</p>
+                            @endif
                         </li>
                         @endforeach
                     </ul>
                     <p class="text-end fw-normal mb-5">Proposal Total: ${{ number_format($proposal->proposal_price, 2) }}</p>
                 </div>
+                
+                
 
             
 

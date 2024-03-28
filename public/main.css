@@ -576,7 +576,31 @@ body {
     color: #fff;
     padding: 20px 0;
     text-align: center;
-}
+  }
+
+  /* Welcome Page Styles */
+
+  .welcome-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+
+  .centered-image {
+      display: block; 
+      margin-left: auto;
+      margin-right: auto;
+  }
+
+
+  .welcome-text {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+  }
 
 
 

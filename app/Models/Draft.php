@@ -20,6 +20,8 @@ class Draft extends Model
         'proposal_title',
         'status',
         'unique_token',
+        'automated_message',
+        'project_scope',
         'start_date',
         'proposal_price',
         'client_id',
