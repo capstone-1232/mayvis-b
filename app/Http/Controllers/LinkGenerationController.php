@@ -33,6 +33,15 @@ class LinkGenerationController extends Controller
             return redirect()->route('dashboard')->with('error', 'Your session has expired. Please try again.');
         }
 
+        $selectedProductsDescriptions = collect($stepData['step4_data']['selectedProducts'] ?? [])
+        ->pluck('description')
+        ->map(function ($description) {
+            // Strip HTML tags if you just want the text
+            return strip_tags($description);
+        })
+        ->implode(', ');
+
+
         $client = Client::updateOrCreate(
             [
                 'first_name' => $stepData['step1_data']['first_name'],
@@ -44,11 +53,12 @@ class LinkGenerationController extends Controller
                 'company_name' => $stepData['step1_data']['company_name'] ?? 'Default Company',
             ]
         );
-        
+
+        // dd($stepData);
         
         $uniqueToken = Str::random(60); // Generate a unique token
 
-        // Execute the query to get the user and retrieve the first and last name
+        // Execute the query to get the user and retrieve the first and last name based on the email entered
         $user = User::where('email', $stepData['step3_data']['sender'])->first(['first_name', 'last_name', 'id']);
 
         // Concatenate the first name and last name with a space between them
@@ -62,11 +72,14 @@ class LinkGenerationController extends Controller
             'start_date' => $stepData['step2_data']['start_date'],
             'proposal_price' => $stepData['step4_data']['proposalTotal'] ?? "No Price",
             'status' => 'Pending',
+            'project_scope' => $selectedProductsDescriptions,
+            'automated_message' => $stepData['step3_data']['automated_message'] ?? $user->automated_message,
             'client_id' => $client->id,
             'user_id' => $getUserId,
             'product_id' => implode(',', array_keys($stepData['step4_data']['selectedProducts'] ?? [])),
             'unique_token' => $uniqueToken,
         ];
+
 
         $proposal = Proposal::updateOrCreate(
             [
@@ -206,6 +219,14 @@ class LinkGenerationController extends Controller
             'step4_data' => session('step4_data', [])
         ];
 
+        $selectedProductsDescriptions = collect($stepData['step4_data']['selectedProducts'] ?? [])
+        ->pluck('description')
+        ->map(function ($description) {
+            // Strip HTML tags if you just want the text
+            return strip_tags($description);
+        })
+        ->implode(', ');
+
         // Check if session data is empty and use data from the Proposal if needed
         foreach ($stepData as $key => $value) {
             if (empty($value) && isset($proposal->$key)) {
@@ -213,6 +234,7 @@ class LinkGenerationController extends Controller
             }
         }
 
+        $stepData['step4_data']['project_scope'] = $proposal->project_scope;
 
         $stepDataJson = json_encode($stepData);
 
@@ -228,7 +250,9 @@ class LinkGenerationController extends Controller
                 'status' => 'Pending',
                 'created_by' => $proposal->created_by,
                 'proposal_price' => $proposal->proposal_price,
+                'project_scope' => $selectedProductsDescriptions,
                 'product_id' => $productIdsString,
+                'automated_message' => $proposal->automated_message,
                 'unique_token' => $proposal->unique_token,
                 'data' => $stepDataJson,
             ]
@@ -244,6 +268,10 @@ class LinkGenerationController extends Controller
         $user_id = $proposal->user_id;
 
         $ownerEmail = User::where('id', $user_id)->firstOrFail()->email;
+
+        // Split the project_scope into an array
+        $projectScopes = explode(',', $proposal->project_scope);
+
 
 
         // Decode the 'data' field from the proposal
@@ -272,6 +300,7 @@ class LinkGenerationController extends Controller
             'proposal' => $proposal,
             'products' => $products, 
             'users' => $user ? [$user] : [], 
+            'projectScopes' => $projectScopes,
             'selectedProducts' => $products,
             'proposalTotal' => $proposal->status === 'Denied' ? $data['step4_data']['proposalTotal'] : null,
         ]);

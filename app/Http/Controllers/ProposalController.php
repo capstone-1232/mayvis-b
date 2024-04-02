@@ -147,7 +147,6 @@ class ProposalController extends Controller
         ]);
         
 
-        // Assuming 'sender' field contains the last name to check
         $senderEmail = $request->input('sender');
 
         // Check if a user with the given last name exists in the database
@@ -433,12 +432,21 @@ class ProposalController extends Controller
         $productIds = array_keys($step4Data['selectedProducts']);
         $productIdsString = implode(',', $productIds);
 
+        $selectedProductsDescriptions = collect($step4Data['selectedProducts'] ?? [])
+        ->pluck('description')
+        ->map(function ($description) {
+            // Strip HTML tags if you just want the text
+            return strip_tags($description);
+        })
+        ->implode(', ');
+
         // Collect all session data related to the proposal
         $draftData = collect([
             'step1_data' => $step1Data,
             'step2_data' => $step2Data,
             'step3_data' => $step3Data,
             'step4_data' => $step4Data,
+            'project_scope' => $selectedProductsDescriptions,
         ])->toJson();
 
         $uniqueToken = Str::random(60); // Generate a unique token
@@ -464,6 +472,8 @@ class ProposalController extends Controller
                 'created_by' => $createdBy,
                 'status' => 'Draft',
                 'proposal_price' => $step4Data['proposalTotal'] ?? null,
+                'automated_message' => $step3Data['automated_message'],
+                'project_scope' => $selectedProductsDescriptions,
                 'product_id' => $productIdsString,
                 'unique_token' => $uniqueToken,
                 'data' => $draftData,

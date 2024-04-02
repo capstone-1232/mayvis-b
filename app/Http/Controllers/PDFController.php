@@ -28,17 +28,15 @@ class PDFController extends Controller
 
         // Fetch product details using product IDs
         $productIds = array_keys($step4Data['selectedProducts']);
-        $products = Product::whereIn('id', $productIds)->pluck('product_name', 'id');
+        $products = Product::whereIn('id', $productIds)->get(); // Fetch full product objects
 
-        // Generate the PDF data
-        $pdfData = [
-            'step1Data' => $step1Data,
-            'step2Data' => $step2Data,
-            'step3Data' => $step3Data,
-            'step4Data' => $step4Data,
-            'users' => [],
-            'products' => $products, // Pass product details to the view
-        ];
+        // Extract descriptions (project scopes) from the selected products
+        $projectScopes = collect($step4Data['selectedProducts'])
+            ->pluck('description')
+            ->map(function ($description) {
+                return strip_tags($description); // Strip HTML tags if you just want the text
+            })
+            ->all(); // Convert the collection to an array
 
         // Create or update client information
         $client = Client::updateOrCreate(
@@ -50,12 +48,23 @@ class PDFController extends Controller
             $step1Data
         );
 
+        // Prepare the data for the PDF
+        $pdfData = [
+            'step1Data' => $step1Data,
+            'step2Data' => $step2Data,
+            'step3Data' => $step3Data,
+            'step4Data' => $step4Data,
+            'client' => $client,
+            'users' => [],
+            'projectScopes' => $projectScopes,
+            'products' => $products,
+        ];
+
         // Filter users based on sender's name
         $senderName = $step3Data['sender'] ?? '';
         if ($senderName) {
-            $pdfData['users'] = User::select('job_title', 'automated_message', 'first_name', 'last_name', 'profile_image')
-                ->where('email', 'like', '%' . $senderName . '%')
-                ->get();
+            $pdfData['users'] = User::where('email', 'like', '%' . $senderName . '%')
+                ->get(['job_title', 'automated_message', 'first_name', 'last_name', 'profile_image', 'proposal_message']);
         }
 
         // Generate a unique filename for the PDF
@@ -67,4 +76,5 @@ class PDFController extends Controller
         // Download the PDF
         return $pdf->download($filename);
     }
+
 }
