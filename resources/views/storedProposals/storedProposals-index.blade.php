@@ -110,7 +110,7 @@
                             <a href="{{ route('proposals.step1') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5">Create New</a>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-4">
+                    <div class="bg-white p-4 rounded-5">
                         <div class="container">
                             <form id="searchForm" action="{{ route('storedProposals.searchProposals') }}" method="GET">
                                 <div class="input-group mb-4 border-2 rounded-pill">
@@ -120,14 +120,14 @@
                             </form>
                         </div>
                         <table class="table mb-0">
-                            <thead>
-                                <tr>
+                            <thead class="border-bottom border-secondary-subtle">
+                                <tr class="fs-5 text-center text-dark">
                                     <th scope="col">Status</th>
                                     <th scope="col">Proposal Name <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Company Name <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Client Name <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Date <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Active Link <i class="fas fa-sort"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Company Name <i class="fas fa-sort  ms-2"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Client Name <i class="fas fa-sort  ms-2"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Date <i class="fas fa-sort  ms-2"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Active Link <i class="fas fa-sort  ms-2"></i></th>
                                     <th scope="col">Author</th>
                                 </tr>
                             </thead>
@@ -158,10 +158,12 @@
                                         <td class="align-middle d-none d-md-table-cell">{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
                                         <td class="align-middle d-none d-md-table-cell">
                                             @if ($proposal->status === 'Approved' || $proposal->status === 'Denied')
-                                                Feedback Submitted
+                                                <div class=" text-center">
+                                                    <span class="text-success fw-bold">Feedback Submitted</span>
+                                                </div>
                                             @elseif ($proposal->view_link)
                                                 {{-- Use the view_link directly from the Proposal model --}}
-                                                <a href="{{ $proposal->viewLink }}" class="btn btn-primary">Access Proposal</a>
+                                                <a href="{{ $proposal->viewLink }}" class="btn btn-outline-secondary rounded-pill w-100 fw-bold">Access Proposal</a>
                                             @else
                                                 Link Unavailable
                                             @endif

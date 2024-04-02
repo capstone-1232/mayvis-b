@@ -22,10 +22,10 @@
                     data.forEach(client => {
                         tableBody.innerHTML += `
                         <tr>
-                                <td>${client.company_name}</td>
-                                <td>${client.first_name} ${client.last_name}</td>
-                                <td>${client.email}</td>
-                                <td>
+                                <td  class="align-middle ps-5">${client.company_name}</td>
+                                <td  class="align-middle ps-5">${client.first_name} ${client.last_name}</td>
+                                <td  class="align-middle ps-5">${client.email}</td>
+                                <td  class="align-middle text-center">
                                     <form id="deleteClientForm_${client.id}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -34,7 +34,7 @@
                                         </x-danger-button>
                                     </form>
                                 </td>
-                                <td>
+                                <td  class="align-middle text-center">
                                     <a href="/clients/${client.id}/edit" class="fs-3">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
@@ -95,8 +95,8 @@
     
     
                 <table class="table px-5 search-results">
-                    <thead>
-                        <tr>
+                    <thead class="border-bottom border-secondary-subtle">
+                        <tr class="fs-5 text-center text-dark">
                             <th scope="col">Company Name</th>
                             <th scope="col">Client Name</th>
                             <th scope="col" class="d-none d-lg-table-cell">Email</th>
@@ -107,11 +107,11 @@
                     <tbody>
                         @foreach ($clients as $client)
                             <tr>
-                                <td class="align-middle">{{ $client->company_name }}</td>
-                                <td class="align-middle">{{ $client->first_name . ' ' . $client->last_name }}</td>
-                                <td class="align-middle d-none d-lg-table-cell">{{ $client->email }}</td>
+                                <td class="align-middle ps-5">{{ $client->company_name }}</td>
+                                <td class="align-middle ps-5">{{ $client->first_name . ' ' . $client->last_name }}</td>
+                                <td class="align-middle d-none d-lg-table-cell ps-5">{{ $client->email }}</td>
     
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <form action="{{ route('clients.destroyClient', $client->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -120,7 +120,7 @@
                                         </x-danger-button>
                                     </form>
                                 </td>
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <a href="{{ route('clients.editClient', $client->id) }}" class="fs-3">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>

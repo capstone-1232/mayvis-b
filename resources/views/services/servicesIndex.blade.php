@@ -54,7 +54,7 @@ data.forEach(product => {
     const createdAtFormatted = product.created_at; // Adjust this to format date as needed
     productsHtml += `
         <div class="mb-3">
-            <div class="card h-100 bg-white border-0 rounded-4 shadow-sm">
+            <div class="card h-100 border-0 rounded-4 shadow-sm custom-hover">
                 <div class="card-body d-flex flex-column">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -69,7 +69,7 @@ data.forEach(product => {
                             <p>Created by: ${product.created_by}</p>
                         </div>
                     </div>
-                    <p class="card-text mt-2">${product.description || product.product_description}</p>
+                    <p class="card-text mt-2">${product.product_description}</p>
                     <div class="mt-auto text-end fw-bold">
                         $ ${product.price}
                     </div>
@@ -96,7 +96,7 @@ productsContainer.innerHTML = productsHtml;
             </div>
         </div>
 
-        <div class="p-4 rounded-4 bg-blue">
+        <div class="p-4 rounded-5 bg-blue">
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="fs-4 py-2 fw-bold text-white">Categories</h3>
                 <div>
@@ -122,7 +122,7 @@ productsContainer.innerHTML = productsHtml;
             </div>
         @endif
           
-        <div class="bg-gray p-4 rounded-4 mt-3">
+        <div class="bg-gray p-4 rounded-5 mt-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="fs-4 py-2 fw-bold text-dark ">Services</h3>
                 <div>
@@ -140,7 +140,7 @@ productsContainer.innerHTML = productsHtml;
             <div id="products-container" class="container mt-3">
                 @foreach ($products as $product)
                 <div class="mb-3">
-                    <div class="card h-100 bg-white border-0 rounded-4 shadow-sm">
+                    <div class="card h-100 border-0 rounded-4 shadow-sm custom-hover">
                         <div class="card-body d-flex flex-column">
                             <!-- Top row for metadata -->
                             <div class="d-flex justify-content-between">
@@ -158,7 +158,7 @@ productsContainer.innerHTML = productsHtml;
                             </div>
                 
                             <!-- Main content -->
-                            <p class="card-text mt-2">{{ $product->product_description }}</p>
+                            <p class="card-text mt-2">{!! $product->product_description !!}</p>
                 
                             <!-- Bottom row for price, aligns to the bottom right -->
                             <div class="mt-auto text-end fw-bold">

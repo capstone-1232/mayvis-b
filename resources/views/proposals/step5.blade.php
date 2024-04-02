@@ -95,7 +95,7 @@
                         {{-- loop to display product details --}}
                         <div class="row">
                             <div class="col-md-4 pe-md-3">
-                                <div class="bg-white rounded-xl p-2">
+                                <div class="bg-white rounded-5 p-2">
                         @foreach($step4Data['selectedProducts'] as $productId => $productDetails)
                         {{-- PRODUCT SUMMARY DIV --}}
                         <div id="product-{{ $productId }}">
@@ -136,7 +136,7 @@
                                                             
                     </div>
                         {{-- Display totals and other information --}}
-                        <div class="bg-dgray rounded-xl my-3 p-3">
+                        <div class="bg-dgray rounded-5 my-3 p-3">
                             <div class="mb-2 border-bottom border-dark pb-2">
                                 <p class="d-flex justify-content-between">
                                     <span>Total Price:</span> 
@@ -153,7 +153,7 @@
                         
                             </div>
 
-                        <div class="col-md-8 bg-white rounded-xl pb-3">
+                        <div class="col-md-8 bg-white rounded-5 pb-3">
                             @foreach($step4Data['selectedProducts'] as $productId => $productDetails)
                             {{-- EDIT SUMMARY DIV --}}
                             <div class="px-4 pt-4 edit-container" id="edit-container-{{ $productId }}">

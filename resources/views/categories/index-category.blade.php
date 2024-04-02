@@ -11,8 +11,8 @@
             </div>
             <div class="bg-white p-4 rounded-4 mt-3">
                 <table class="table">
-                    <thead>
-                        <tr>
+                    <thead class="border-bottom border-secondary-subtle">
+                        <tr class="fs-5 text-center text-dark">
                             <th scope="col">Category Name</th>
                             <th scope="col" class="d-none d-md-table-cell">Note</th>
                             <th scope="col">Delete</th>
@@ -22,9 +22,9 @@
                     <tbody>
                         @foreach ($categories as $category)
                             <tr>
-                                <td class="align-middle">{{ $category->category_name }}</td>
-                                <td class="align-middle d-none d-md-table-cell">{{ $category->notes }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle ps-5">{{ $category->category_name }}</td>
+                                <td class="align-middle d-none d-md-table-cell text-center">{{ $category->notes }}</td>
+                                <td class="align-middle text-center">
                                     <form action="{{ route('categories.destroyCategory', $category->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -33,7 +33,7 @@
                                         </x-danger-button>
                                     </form>
                                 </td>
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <a href="{{ route('categories.editCategory', $category->id) }}" class="fs-3">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>

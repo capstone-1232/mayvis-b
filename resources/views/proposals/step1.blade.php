@@ -21,7 +21,7 @@
             <!-- Client should be highlighted here -->
             
             <div class="container">
-                <div class="p-4 bg-white rounded-xl col-lg-8 col-sm-12 mx-auto">
+                <div class="p-4 bg-white rounded-5 col-lg-8 col-sm-12 mx-auto">
                     <div class="px-4">
                     <div class="">
                         <div class="d-flex justify-content-between align-items-center">
@@ -35,27 +35,27 @@
                     <form action="{{ route('proposals.storeStep1') }}" method="post">
                         @csrf
                         <div class="mb-3">
-                        <label for="first_name" class="fw-bold">First Name</label>
+                        <x-input-label for="first_name" class="fw-bold">First Name</x-input-label>
                         <x-text-input type="text" name="first_name" field="first_name" placeholder="Client First Name" class="w-100" autocomplete="off" :value="old('first_name', session('step1_data.first_name', ''))"></x-text-input>                       
                         </div>
     
                         <div class="mb-3">
-                        <label for="last_name" class="fw-bold">Last Name</label>
+                        <x-input-label for="last_name" class="fw-bold">Last Name</x-input-label>
                         <x-text-input type="text" name="last_name" field="last_name" placeholder="Client Last Name" class="w-100" autocomplete="off" :value="old('last_name', session('step1_data.last_name', ''))"></x-text-input>
                         </div>
 
                         <div class="mb-3">
-                        <label for="company_name" class="fw-bold">Company Name</label>
+                        <x-input-label for="company_name" class="fw-bold">Company Name</x-input-label>
                         <x-text-input type="text" name="company_name" field="company_name" placeholder="Company Name" class="w-100" autocomplete="off" :value="old('company_name', session('step1_data.company_name', ''))"></x-text-input>
                         </div>
 
                         <div class="mb-3">
-                        <label for="email" class="fw-bold">Email</label>
+                        <x-input-label for="email" class="fw-bold">Email</x-input-label>
                         <x-text-input type="email" name="email" field="email" placeholder="Client Email" class="w-100" autocomplete="off" :value="old('email', session('step1_data.email', ''))"></x-text-input>
                         </div>
 
                         <div class="mb-3">
-                        <label for="phone_number" class="fw-bold">Phone Number</label>
+                        <x-input-label for="phone_number" class="fw-bold">Phone Number</x-input-label>
                         <x-text-input type="tel" name="phone_number" field="phone_number" placeholder="Client Phone" class="w-100" autocomplete="off" :value="old('phone_number', session('step1_data.phone_number', ''))"></x-text-input>
                         </div>
 

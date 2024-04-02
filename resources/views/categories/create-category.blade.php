@@ -11,19 +11,19 @@
                 @csrf
                 <!-- Form fields for product creation -->
                 <div class="form-group mb-3">
-                    <label for="category_name">Category Name</label>
+                    <x-input-label for="category_name"  :value="__('Category Name')" />
                     <x-text-input type="text" name="category_name" class="form-control" :value="old('category_name')"></x-text-input>
                 </div>
                 <x-input-error class="mt-2 productserr" :messages="$errors->get('category_name')" />
 
                 <div class="form-group mb-3">
-                    <label for="notes">Category Notes (Optional)</label>
+                    <x-input-label for="notes"  :value="__('Category Notes (Optional)')" />
                     <textarea class="form-control" id="notes" name="notes"></textarea>
                 </div>
                 <x-input-error class="mt-2 productserr" :messages="$errors->get('notes')" />
 
                 <div class="form-group mb-3">
-                    <label for="created_by">Created By</label>
+                    <x-input-label for="created_by"  :value="__('Created By')" />
                     <x-text-input type="text" name="created_by" class="form-control" value="{{ Auth::user()->name }}"></x-text-input>
                 </div>
                 <x-input-error class="mt-2 productserr" :messages="$errors->get('created_by')" />
