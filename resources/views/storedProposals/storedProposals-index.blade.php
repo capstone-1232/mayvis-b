@@ -23,50 +23,19 @@
 
                     let rowsHtml = '';
                     data.forEach(proposal => {
-    // Check if the client object exists and has names, otherwise set to 'No Client' and 'No Company'
-    let clientName = 'No Client';
-    let companyName = 'No Company';
+                    // Check if the client object exists and has names, otherwise set to 'No Client' and 'No Company'
+                    let clientName = 'No Client';
+                    let companyName = 'No Company';
 
-    if (proposal.client && proposal.client.company_name) {
-        companyName = proposal.client.company_name.trim();
-    }
-    if (proposal.client && (proposal.client.first_name || proposal.client.last_name)) {
-        clientName = `${proposal.client.first_name || ''} ${proposal.client.last_name || ''}`.trim();
-    }
+                    if (proposal.client && proposal.client.company_name) {
+                        companyName = proposal.client.company_name.trim();
+                    }
+                    if (proposal.client && (proposal.client.first_name || proposal.client.last_name)) {
+                        clientName = `${proposal.client.first_name || ''} ${proposal.client.last_name || ''}`.trim();
+                    }
 
-    // Format the date in 'F j, Y' format
-    const startDate = new Date(proposal.start_date);
-    const formattedDate = startDate.toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-    });
-
-    // Determine status badge based on proposal status
-    let statusBadgeClass = '';
-    let statusText = proposal.status || 'Unknown';
-    switch (proposal.status) {
-        case 'Approved':
-            statusBadgeClass = 'bg-success';
-            break;
-        case 'Pending':
-            statusBadgeClass = 'bg-warning';
-            break;
-        case 'Denied':
-            statusBadgeClass = 'bg-danger';
-            break;
-        default:
-            statusBadgeClass = 'bg-secondary';
-            break;
-    }
-    const statusBadge = `<span class="badge ${statusBadgeClass}">${statusText}</span>`;
-
-     // Construct the profile image URL
-     let profileImageUrl = proposal.user && proposal.user.profile_image ? `storage/${proposal.user.profile_image}` : 'default.jpg';
-    let profileImageTag = `<img src="${profileImageUrl}" alt="Profile Image" class="rounded-circle profile-photo">`;
-
-                            // Proposal Feedback Link in the template
-                            let actionColumnContent;
+                    // Proposal Feedback Link in the template
+                    let actionColumnContent;
                         if (proposal.status === 'Approved' || proposal.status === 'Denied') {
                             actionColumnContent = 'Feedback Submitted';
                         } else if (proposal.view_link) { // Make sure view_link is available
@@ -75,22 +44,56 @@
                             actionColumnContent = 'Link Unavailable'; // Provide a fallback text
                         }
 
-    rowsHtml += `
-        <tr>
-            <td class="align-middle">${statusBadge}</td>
-            <td class="align-middle">${proposal.proposal_title}</td>
-            <td class="align-middle d-none d-md-table-cell">${companyName}</td>
-            <td class="align-middle d-none d-md-table-cell">${clientName}</td> 
-            <td class="align-middle d-none d-md-table-cell">${formattedDate}</td>
-            <td class="align-middle d-none d-md-table-cell">${actionColumnContent}</td>
-            <td class="align-middle">${profileImageTag}</td>
-        </tr>
-    `;
-});
+
+                    // Format the date in 'F j, Y' format
+                    const startDate = new Date(proposal.start_date);
+                    const formattedDate = startDate.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                    });
+
+                    // Determine status badge based on proposal status
+                    let statusBadgeClass = '';
+                    let statusText = proposal.status || 'Unknown';
+                    switch (proposal.status) {
+                        case 'Approved':
+                            statusBadgeClass = 'bg-success';
+                            break;
+                        case 'Pending':
+                            statusBadgeClass = 'bg-warning';
+                            break;
+                        case 'Denied':
+                            statusBadgeClass = 'bg-danger';
+                            break;
+                        default:
+                            statusBadgeClass = 'bg-secondary';
+                            break;
+                    }
+                    const statusBadge = `<span class="badge ${statusBadgeClass}">${statusText}</span>`;
+
+                    // Construct the profile image URL
+                    let profileImageUrl = proposal.user && proposal.user.profile_image ? `storage/${proposal.user.profile_image}` : 'default.jpg';
+                    let profileImageTag = `<img src="${profileImageUrl}" alt="Profile Image" class="rounded-circle profile-photo">`;
+
+                    rowsHtml += `
+                        <tr>
+                            <td class="align-middle">${statusBadge}</td>
+                            <td class="align-middle">${proposal.proposal_title}</td>
+                            <td class="align-middle d-none d-md-table-cell">${companyName}</td>
+                            <td class="align-middle d-none d-md-table-cell">${clientName}</td> 
+                            <td class="align-middle d-none d-md-table-cell">${formattedDate}</td>
+                            <td class="align-middle d-none d-md-table-cell">${actionColumnContent}</td>
+                            <td class="align-middle d-none d-md-table-cell">
+                                ${profileImageTag}
+                            </td>
+                        </tr>
+                    `;
+                });
 
                     tableBody.innerHTML = rowsHtml;
                 }
-                {}
+                
 
         });
 
@@ -107,7 +110,7 @@
                             <a href="{{ route('proposals.step1') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5">Create New</a>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-4">
+                    <div class="bg-white p-4 rounded-5">
                         <div class="container">
                             <form id="searchForm" action="{{ route('storedProposals.searchProposals') }}" method="GET">
                                 <div class="input-group mb-4 border-2 rounded-pill">
@@ -117,15 +120,14 @@
                             </form>
                         </div>
                         <table class="table mb-0">
-                            <thead>
-                                <tr>
+                            <thead class="border-bottom border-secondary-subtle">
+                                <tr class="fs-5 text-center text-dark">
                                     <th scope="col">Status</th>
                                     <th scope="col">Proposal Name <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Company Name <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Client Name <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Date <i class="fas fa-sort"></i></th>
-                                    <th scope="col" class="d-none d-md-table-cell">Active Link</th>
-
+                                    <th scope="col" class="d-none d-md-table-cell">Company Name <i class="fas fa-sort  ms-2"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Client Name <i class="fas fa-sort  ms-2"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Date <i class="fas fa-sort  ms-2"></i></th>
+                                    <th scope="col" class="d-none d-md-table-cell">Active Link <i class="fas fa-sort  ms-2"></i></th>
                                     <th scope="col">Author</th>
                                 </tr>
                             </thead>
@@ -156,13 +158,15 @@
                                         <td class="align-middle d-none d-md-table-cell">{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
                                         <td class="align-middle d-none d-md-table-cell">
                                             @if ($proposal->status === 'Approved' || $proposal->status === 'Denied')
-                                            <p class="text-warning">Feedback Submitted</p>
-                                        @elseif ($proposal->view_link)
-                                            {{-- Use the view_link directly from the Proposal model --}}
-                                            <a href="{{ $proposal->viewLink }}" class="btn btn-primary">Access Proposal</a>
-                                        @else
-                                            Link Unavailable
-                                        @endif
+                                                <div class=" text-center">
+                                                    <span class="text-success fw-bold">Feedback Submitted</span>
+                                                </div>
+                                            @elseif ($proposal->view_link)
+                                                {{-- Use the view_link directly from the Proposal model --}}
+                                                <a href="{{ $proposal->viewLink }}" class="btn btn-outline-secondary rounded-pill w-100 fw-bold">Access Proposal</a>
+                                            @else
+                                                Link Unavailable
+                                            @endif
                                         </td>
                                         <td class="align-middle"><img src="{{ asset('storage/' . $proposal->user->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo"></td>
                                     </tr>

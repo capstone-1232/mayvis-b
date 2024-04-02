@@ -1,8 +1,6 @@
 <x-layout>
     <div class="content">
-
-        <div class="container my-4">
-
+        <div class="container my-5">
             <div class="d-flex justify-content-between align-items-center">
                 <h2 class="display-6 py-2 fw-bold">
                     <i class="bi bi-tags-fill me-3"></i>Category List
@@ -13,8 +11,8 @@
             </div>
             <div class="bg-white p-4 rounded-4 mt-3">
                 <table class="table">
-                    <thead>
-                        <tr>
+                    <thead class="border-bottom border-secondary-subtle">
+                        <tr class="fs-5 text-center text-dark">
                             <th scope="col">Category Name</th>
                             <th scope="col" class="d-none d-md-table-cell">Note</th>
                             <th scope="col">Delete</th>
@@ -24,9 +22,9 @@
                     <tbody>
                         @foreach ($categories as $category)
                             <tr>
-                                <td class="align-middle">{{ $category->category_name }}</td>
-                                <td class="align-middle d-none d-md-table-cell">{{ $category->notes }}</td>
-                                <td class="align-middle">
+                                <td class="align-middle ps-5">{{ $category->category_name }}</td>
+                                <td class="align-middle d-none d-md-table-cell text-center">{{ $category->notes }}</td>
+                                <td class="align-middle text-center">
                                     <form action="{{ route('categories.destroyCategory', $category->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
@@ -35,7 +33,7 @@
                                         </x-danger-button>
                                     </form>
                                 </td>
-                                <td class="align-middle">
+                                <td class="align-middle text-center">
                                     <a href="{{ route('categories.editCategory', $category->id) }}" class="fs-3">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>

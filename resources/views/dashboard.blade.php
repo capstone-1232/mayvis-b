@@ -48,8 +48,8 @@
             @endif
 
             <div class="col-md-8 d-flex">
-                <div class="d-flex align-items-center mb-3 bg-dark p-3 rounded-5 w-100 shadow-sm">
-                    <div class="me-3">
+                <div class="d-flex align-items-center mb-4 bg-dark p-3 rounded-5 w-100 shadow-sm">
+                    <div class="me-4">
                         <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
                     <div>
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card mb-3 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow-sm">
+                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow-sm">
                     <a href="{{ route('servicesIndex') }}" class="text-decoration-none w-100">
                         <div class="card-body text-center text-white">
                             <h3 class="card-title fs-5 fw-bold"><i class="fas fa-cogs fa-lg me-2"></i>Services</h3>
@@ -72,7 +72,7 @@
         
         <div class="row">
             <div class="col-md-8">
-                <div class="card mb-3 rounded-5 client-proposal shadow-sm">
+                <div class="card mb-4 rounded-5 client-proposal shadow-sm p-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between ">
                             <div class="me-3">
@@ -81,7 +81,7 @@
                             </div>
                             <div>
                                 <h3 class="card-title fw-bold fs-3">Client Proposal</h3>
-                                <p class="card-text mb-3">Initiate a fresh proposal estimate with a single click.</p>
+                                <p class="card-text mb-4">Initiate a fresh proposal estimate with a single click.</p>
                                 <a href="{{ route('proposals.step1') }}" class="btn login-btn custom-btn fw-bold rounded-pill text-uppercase fw-bold text-white">Create New</a>
                             </div>
                             <div>
@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card mb-3 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm">
+                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm p-4">
                     <canvas id="proposalsChart" style="width:100%; height:180px;"></canvas> 
                 </div>
             </div>
@@ -102,54 +102,56 @@
 
         <div class="row">
             <div class="col-md-12 ">
-                <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <i class="fas fa-file-alt me-2"></i>Proposals
-                </div>
-                <div class="card-body p-0">
-                    <table class="table mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">Proposal Name <i class="fas fa-sort"></i></th>
-                                <th scope="col">Client Name <i class="fas fa-sort"></i></th>
-                                <th scope="col">Status <i class="fas fa-sort"></i></th>
-                                <th scope="col">Date <i class="fas fa-sort"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($proposals as $proposal)
-                                <tr>
-                                    <td>{{ $proposal->proposal_title }}</td>
-                                    <td>{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
-                                    <td>
-                                        @switch($proposal->status)
-                                            @case('Approved')
-                                                <span class="badge bg-success">{{ $proposal->status }}</span>
-                                                @break
-                                    
-                                            @case('Pending')
-                                                <span class="badge bg-warning">{{ $proposal->status }}</span>
-                                                @break
-                                    
-                                            @case('Denied')
-                                                <span class="badge bg-danger">{{ $proposal->status }}</span>
-                                                @break
-                                    
-                                            @default
-                                                <span class="badge bg-secondary">{{ $proposal->status }}</span>
-                                        @endswitch
-                                    </td>
-                                    <td>{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
+                <div class="bg-white shadow-sm rounded-5 p-4">
+                    <h2 class="ms-1 fs-4 fw-bold">
+                        <i class="fas fa-file-alt me-3"></i>Proposals
+                    </h2>
+                    <div class="">
+                        <table class="table mb-0">
+                            <thead class="border-bottom border-secondary-subtle">
+                                <tr class="fs-5 text-center text-dark">
+                                    <th scope="col">Proposal Name <i class="fas fa-sort ms-2"></i></th>
+                                    <th scope="col">Client Name <i class="fas fa-sort ms-2"></i></th>
+                                    <th scope="col">Status <i class="fas fa-sort ms-2"></i></th>
+                                    <th scope="col">Date <i class="fas fa-sort ms-2"></i></th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="">
+                                @foreach ($proposals as $proposal)
+                                    <tr>
+                                        <td class="ps-md-5 fs-6">{{ $proposal->proposal_title }}</td>
+                                        <td class="ps-md-5 fs-6">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
+                                        <td class="text-center fs-6">
+                                            @switch($proposal->status)
+                                                @case('Approved')
+                                                    <span class="badge bg-success">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @case('Pending')
+                                                    <span class="badge bg-warning">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @case('Denied')
+                                                    <span class="badge bg-danger">{{ $proposal->status }}</span>
+                                                    @break
+                                        
+                                                @default
+                                                    <span class="badge bg-secondary">{{ $proposal->status }}</span>
+                                            @endswitch
+                                        </td>
+                                        <td class="text-center fs-6">{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class=" bg-white text-center mt-4">
+                        <a href="{{ route('storedProposals.storedProposalsIndex') }}" class="btn primary-btn text-white rounded-pill w-25 fw-bold">View All</a>
+                    </div>
                 </div>
-                <div class="card-footer bg-white text-center">
-                    <a href="{{ route('storedProposals.storedProposalsIndex') }}" class="btn btn-primary">View All</a>
-                </div>
+
             </div>
-        </div>
+
     </div>
 
     <div id="pagination-container">

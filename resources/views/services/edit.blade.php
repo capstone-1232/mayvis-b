@@ -6,32 +6,32 @@
             <h2 class="display-6 py-2 fw-bold">
                 <i class="bi bi-pencil-square me-3"></i>Edit Product
             </h2>
-            <div class="bg-white p-4 rounded-4 mt-2 mb-4">
+            <div class="bg-white p-4 rounded-5 mt-2">
                 <form action="{{ route('services.updateProduct', $product->id) }}" method="POST">
 
                     @csrf
                     @method('PUT')
             
                     <div class="form-group mb-3">
-                        <label for="product_name">Product Name</label>
-                        <x-text-input type="text" class="form-control rounded-pill" id="product_name" name="product_name" value="{{ $product->product_name }}"></x-text-input>
+                        <x-input-label for="product_name" :value="__('Product Name')" />
+                        <x-text-input type="text" class="form-control" id="product_name" name="product_name" value="{{ $product->product_name }}"></x-text-input>
                     </div>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('product_name')" />
             
                     <div class="form-group mb-3">
-                        <label for="product_description">Product Description</label>
-                        <input class="form-control rounded-pill" id="product_description" name="product_description" value="{{ $product->product_description }}"></input>
+                        <x-input-label for="product_description" :value="__('Product Description')" />
+                        <textarea class="form-control" id="product_description" name="product_description" value="{{ $product->product_description }}"></textarea>
                     </div>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('product_description')" />
     
                     <div class="form-group mb-3">
-                        <label for="product_notes">Product Notes</label>
-                        <textarea class="form-control" id="product_notes" name="product_notes">{{ $product->product_notes }}</textarea>
+                        <x-input-label for="product_notes" :value="__('Product Notes')" />
+                        <x-text-input class="form-control" id="product_notes" name="product_notes">{{ $product->product_notes }}</x-text-input>
                     </div>
     
                     <div class="form-group mb-3">
-                        <label for="price">Price</label>
-                        <input type="text" class="form-control rounded-pill" id="price" name="price" value="{{ $product->price }}">
+                        <x-input-label for="price" :value="__('Price')" />
+                        <x-text-input type="text" class="form-control" id="price" name="price" value="{{ $product->price }}" />
                     </div>
                     <x-input-error class="mt-2 productserr" :messages="$errors->get('price')" />
 

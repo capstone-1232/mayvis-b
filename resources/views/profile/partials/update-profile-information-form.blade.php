@@ -76,7 +76,6 @@
                 
     </div>
 </div>
-
         <div class="mt-4">
             <x-input-label class="fw-bold text-black fs-5 mb-1" for="automated_message" :value="__('Automated Message')" />
             <x-textarea id="automated_message" name="automated_message" type="text" class="mt-1 block w-full" :value="old('automated_message', $user->automated_message)" required autofocus autocomplete="username" />
