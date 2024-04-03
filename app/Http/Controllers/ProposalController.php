@@ -56,7 +56,7 @@ class ProposalController extends Controller
             'first_name' => ['required', 'max:80', 'regex:/^[a-zA-Z\'\- ]+$/'],
             'last_name' => ['required', 'max:80', 'regex:/^[a-zA-Z\'\- ]+$/'],
             'company_name' => 'required|max:80',
-            'email' => ['required', 'email', 'unique:clients,email,', 'regex:/^.+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
+            'email' => ['required', 'email', 'regex:/^.+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
         ], [
             'first_name.required' => 'The first name field is required.',
