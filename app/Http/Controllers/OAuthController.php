@@ -20,15 +20,19 @@ class OAuthController extends Controller
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            $user = User::updateOrCreate([
-                'email' => $googleUser->getEmail(),
-            ], [
-                'first_name' => $googleUser->user['given_name'],
-                'last_name' => $googleUser->user['family_name'],
-                'job_title' => "No Job Title",
-                'google_id' => $googleUser->getId(),
-                'password' => Hash::make(uniqid()), // Just a dummy password
-            ]);
+            
+            // Find or create the user based on their email
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()], // Check for the user based on their email
+                [
+                    'first_name' => $googleUser->user['given_name'], // Set only on initial creation
+                    'last_name' => $googleUser->user['family_name'],  // Set only on initial creation
+                    'job_title' => "No Job Title",
+                    'google_id' => $googleUser->getId(),               // Set only on initial creation
+                    'password' => Hash::make(uniqid()),                // Set only on initial creation
+                ]
+            );
+        
 
             Auth::login($user, true);
 
@@ -38,6 +42,7 @@ class OAuthController extends Controller
             return redirect()->route('login')->with('error', 'Unable to login using Google. Please try again.');
         }
     }
+
 
 }
 

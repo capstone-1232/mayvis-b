@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Draft;
 use App\Mail\FeedbackSubmitted;
+use App\Notifications\ClientFeedbackSubmitted;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+
 
 class LinkGenerationController extends Controller
 {
@@ -185,12 +187,14 @@ class LinkGenerationController extends Controller
 
             // Send feedback email
             $user = User::findOrFail($proposal->user_id);
-            Mail::to($user->email)->send(new FeedbackSubmitted(
-                $proposal->proposal_title,
-                $proposal->status,
-                $clientMessage,
-                $user->first_name . ' ' . $user->last_name
-            ));
+            // Mail::to($user->email)->send(new FeedbackSubmitted(
+            //     $proposal->proposal_title,
+            //     $proposal->status,
+            //     $clientMessage,
+            //     $user->first_name . ' ' . $user->last_name
+            // ));
+
+            $user->notify(new ClientFeedbackSubmitted($proposal, $clientMessage));
 
             DB::commit();
 
