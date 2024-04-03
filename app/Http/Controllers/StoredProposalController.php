@@ -45,35 +45,33 @@ class StoredProposalController extends Controller
 
     public function proposalsReport()
     {
-        // Define a helper to format weeks
-        $weekFormatter = function ($week, $year) {
-            $firstDayOfWeek = new DateTime();
-            $firstDayOfWeek->setISODate($year, $week);
-            $monthName = $firstDayOfWeek->format('F');
-            $weekOfMonth = ceil($firstDayOfWeek->format('j') / 7);
-            return "Week $weekOfMonth of $monthName, $year";
+        // Helper function to format periods
+        $periodFormatter = function ($startDate) {
+            return $startDate->format('F Y');
         };
 
-        // Fetch proposal prices for approved proposals by week of each month
-        $approvedProposalsSumByWeek = Proposal::select(
+        // Fetch proposal prices for both approved and denied proposals aggregated over 30-day periods
+        $proposalsData = Proposal::select(
             DB::raw('YEAR(start_date) as year'),
             DB::raw('MONTH(start_date) as month'),
-            DB::raw('WEEK(start_date, 5) as weekOfYear'), // Mode 5 for week starting Monday
-            DB::raw('SUM(proposal_price) as total_price')
+            DB::raw('SUM(case when status = "Approved" then proposal_price else 0 end) as total_approved_price'),
+            DB::raw('SUM(case when status = "Denied" then proposal_price else 0 end) as total_denied_price')
         )
         ->where('status', 'Approved')
-        ->groupBy('year', 'month', 'weekOfYear')
-        ->orderBy('year', 'asc')
-        ->orderBy('month', 'asc')
-        ->orderBy('weekOfYear', 'asc')
+        ->orWhere('status', 'Denied')
+        ->groupBy(DB::raw('YEAR(start_date)'), DB::raw('MONTH(start_date)'))
+        ->orderBy(DB::raw('YEAR(start_date)'), 'asc')
+        ->orderBy(DB::raw('MONTH(start_date)'), 'asc')
         ->get()
-        ->each(function ($item) {
-            $item->weekOfMonth = $this->getWeekOfMonth($item->start_date);
-            $item->label = "Week {$item->weekOfMonth} of " . DateTime::createFromFormat('!m', $item->month)->format('F') . ", {$item->year}";
+        ->map(function ($item) use ($periodFormatter) {
+            $startDate = new DateTime("{$item->year}-{$item->month}-01");
+            $item->label = $periodFormatter($startDate);
+            return $item;
         });
 
-        return view('storedProposals.report', compact('approvedProposalsSumByWeek'));
+        return view('storedProposals.report', compact('proposalsData'));
     }
+
 
 
     public function getWeekOfMonth($date) {
