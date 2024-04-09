@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -67,14 +68,24 @@ class PDFController extends Controller
                 ->get(['job_title', 'automated_message', 'first_name', 'last_name', 'profile_image', 'proposal_message']);
         }
 
+        // Create a new instance of mPDF
+        $mpdf = new Mpdf();
+
+        // Load your view with data
+        // Note: mPDF does not have a direct loadView method like DomPDF, so you use the view() helper to get the HTML content
+        $html = view('pdf.sessionInfo', $pdfData)->render();
+
+        // Write the HTML content to the PDF
+        $mpdf->WriteHTML($html);
+
         // Generate a unique filename for the PDF
-        $filename = 'Proposal-' . $step2Data['proposal_title'] . '-' . $step2Data['start_date'] . '.pdf';
+        $filename = 'Proposal-' . $step2Data['proposal_title'] . '-' . Str::slug($step2Data['start_date']) . '.pdf';
 
-        // Generate the PDF using the data
-        $pdf = PDF::loadView('pdf.sessionInfo', $pdfData);
-
-        // Download the PDF
-        return $pdf->download($filename);
+        // Output the PDF as a download
+        return response($mpdf->Output($filename, 'I'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+        ]);
     }
 
 }

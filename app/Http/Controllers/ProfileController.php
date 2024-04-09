@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -72,13 +73,32 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        // Check if the user is involved with any proposals
+        $proposalsCount = DB::table('proposals')
+                            ->where('user_id', $user->id)
+                            ->count();
 
-        $user->delete();
+        if ($proposalsCount > 0) {
+            // If the user is involved in proposals, do not delete and return an error message
+            return back()->withErrors(['userDeletion' => 'This user cannot be deleted because they are involved with existing proposals.']);
+        }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        try {
+            Auth::logout();
 
-        return Redirect::to('/');
+            $user->delete();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return Redirect::to('/');
+        } catch (\Exception $e) {
+            // Log the error or handle it as needed
+            // Log::error($e->getMessage());
+
+            // Redirect back with an error message
+            return back()->withErrors(['userDeletion' => 'An error occurred while attempting to delete the account. Please try again later.']);
+        }
     }
+
 }

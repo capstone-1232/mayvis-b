@@ -322,8 +322,8 @@ class ProposalController extends Controller
                 // Map the product ID to its name, price, and description
                 $selectedProductsInfo[$product->id] = [
                     'name' => $product->product_name,
-                    'price' => $product->price ?? 'No Price', // Assume price is always available but add a fallback just in case
-                    'description' => $product->product_description ?? '', // Default to empty string if description is not set
+                    'price' => $product->price ?? 'No Price', 
+                    'description' => $product->product_description ?? '', 
                 ];
             }
     
@@ -531,8 +531,6 @@ class ProposalController extends Controller
         $request->session()->put('step3_data', $draftData['step3_data'] ?? []);
         $request->session()->put('step4_data', $draftData['step4_data'] ?? []);
         $request->session()->put('draftId', $draftId);
-
-        Log::debug($draftData);
 
         // Now redirect to the step6 view which will utilize this session data
         return redirect()->route('proposals.step6', compact('draftId'));
