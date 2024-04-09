@@ -28,6 +28,7 @@ class OAuthController extends Controller
                     'first_name' => $googleUser->user['given_name'], // Set only on initial creation
                     'last_name' => $googleUser->user['family_name'],  // Set only on initial creation
                     'job_title' => "No Job Title",
+                    'profile_image' => "default_profile.jpg",
                     'google_id' => $googleUser->getId(),               // Set only on initial creation
                     'password' => Hash::make(uniqid()),                // Set only on initial creation
                 ]
@@ -35,8 +36,9 @@ class OAuthController extends Controller
         
 
             Auth::login($user, true);
-
-            return redirect()->intended('dashboard');
+            
+            
+            return redirect()->route('dashboard');
         } catch (\Exception $e) {
             Log::error('Google OAuth error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Unable to login using Google. Please try again.');
