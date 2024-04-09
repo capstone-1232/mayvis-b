@@ -105,10 +105,10 @@ class ServiceController extends Controller
     public function updateProduct(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'product_name' => 'min:1|max:30',
-            'product_description' => 'min:1|max:600',
-            'price' => 'min:1|numeric',
-            'product_notes' => 'max:600'
+            'product_name' => 'required|min:1|max:30',
+            'product_description' => 'required|min:1|max:600',
+            'price' => 'required|numeric|min:0',
+            'product_notes' => 'nullable|max:600'
         ], [       
             'product_name.min' => 'The product name cannot be empty.',
             'product_name.max' => 'The product name must not be greater than 30 characters.',        
@@ -120,12 +120,15 @@ class ServiceController extends Controller
         ]);
 
         $product = Product::findOrFail($id);
-        $product->fill($validatedData); // This will fill all the validated fields in the product
 
+        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; 
+
+        $product->fill($validatedData);
         $product->save();
 
         return redirect()->route('servicesIndex')->with('success', 'Product updated successfully.');
     }
+
 
     public function searchProducts(Request $request) {
         $searchTerm = $request->input('search_term');

@@ -27,7 +27,7 @@ class ClientController extends Controller
             'first_name' => 'required|max:30',
             'last_name' => 'required|max:30',
             'company_name' => 'required|max:30',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:clients,email',
             'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
         ], [
             'first_name.required' => 'The first name field is required.',
@@ -67,7 +67,7 @@ class ClientController extends Controller
             'first_name' => 'required|max:30',
             'last_name' => 'required|max:30',
             'company_name' => 'required|max:30',
-            'email' => 'required|email|unique:clients,email,' . $client->id,
+            'email' => ['required', 'email', 'unique:clients,email,' . $client->id, 'regex:/^.+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
         ], [
             'first_name.required' => 'Please enter the first name.',
@@ -124,6 +124,8 @@ class ClientController extends Controller
     
         $searchResults = Client::where('first_name', 'LIKE', '%' . $searchTerm . '%')
                                 ->orWhere('last_name', 'LIKE', '%' . $searchTerm . '%')
+                                ->orWhere('company_name', 'LIKE', '%' . $searchTerm . '%')
+                                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $searchTerm . '%'])
                                 ->get();
     
         // Return JSON response

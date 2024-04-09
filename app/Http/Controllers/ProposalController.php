@@ -27,34 +27,54 @@ class ProposalController extends Controller
         return view('proposals.step1');
     }
 
-    /* Step 1 Starts Here */
+    public function getClientInfo(Request $request)
+    {
+        $firstName = $request->query('first_name');
+        $clients = Client::where('first_name', 'like', '%' . $firstName . '%')->get();
+
+        if (!$clients->isEmpty()) {
+            return response()->json(['clients' => $clients]);
+        } else {
+            return response()->json(['clients' => []]);
+        }
+    }
+
+
+
+
+    /* Storing Step 1 Starts Here */
     public function storeStep1(Request $request)
     {
 
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // Validate and store step 1 data in session
         $request->validate([
-            'first_name' => 'required|max:80',
-            'last_name' => 'required|max:80',
+            'first_name' => ['required', 'max:80', 'regex:/^[a-zA-Z\'\- ]+$/'],
+            'last_name' => ['required', 'max:80', 'regex:/^[a-zA-Z\'\- ]+$/'],
             'company_name' => 'required|max:80',
-            'email' => 'required|email', 
+            'email' => ['required', 'email', 'regex:/^.+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
             'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
         ], [
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name may not be greater than 80 characters.',
+            'first_name.regex' => 'The first name must only contain letters, spaces, dashes, and apostrophes.',
             'last_name.required' => 'The last name field is required.',
             'last_name.max' => 'The last name may not be greater than 80 characters.',
+            'last_name.regex' => 'The last name must only contain letters, spaces, dashes, and apostrophes.',
             'company_name.required' => 'The company name field is required.',
             'company_name.max' => 'The company name may not be greater than 80 characters.',
             'email.required' => 'The email field is required.',
             'email.email' => 'The email must be a valid email address.',
+            'email.unique' => 'The email has already been taken.', 
             'phone_number.required' => 'The phone number field is required.',
-            'phone_number.regex' => 'The phone number format is invalid.',
+            'phone_number.regex' => 'The phone number format is invalid. It must be a 10-digit number without any special characters or spaces.',
         ]);
+        
+        
         
         
         // Store step 1 data in session
@@ -69,10 +89,10 @@ class ProposalController extends Controller
     public function showStep2()
     {
 
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // Debugging: Check the session data
         // dd(session()->all()); // This will dump and die, showing all session data
@@ -89,20 +109,19 @@ class ProposalController extends Controller
 
     public function storeStep2(Request $request){
         
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // Validate and store step 2 data in session
         $request->validate([
             'proposal_title' => 'required|max:100',
-            'start_date' => 'required|date|after_or_equal:today',
+            'start_date' => 'required|date',
         ],[
             'proposal_title.required' => 'The Proposal Title field is required.',
             'start_date.required' => 'The date created field is required.',
             'start_date.date' => 'The date created field must be a valid date.',
-            'start_date.after_or_equal' => 'The date created must be today or a future date.',
         ]);
         
 
@@ -118,10 +137,10 @@ class ProposalController extends Controller
 
     public function showStep3(){
 
-        // if (!Auth::check()) {
-        //     // Redirect the user to login page or show an error message
-        //     return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
-        // }
+        if (!Auth::check()) {
+            // Redirect the user to login page or show an error message
+            return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
+        }
 
         // dd(session()->all());
         // Check if step1_data is present in the session
