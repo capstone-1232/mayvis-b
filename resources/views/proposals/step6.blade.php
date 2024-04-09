@@ -16,7 +16,7 @@
                         </h2>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4 p-4 bg-white rounded-5 mt-4 shadow-sm">
+                <div class="col-md-6 col-lg-4 p-4 bg-white rounded-5 mt-4 shadow">
                     <div class="my-3">
                         <div class="d-flex justify-content-between">
                             <h3 class="fw-bold">Proposal Title</h3>
@@ -71,7 +71,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="row mt-2">
+                        <div class="row mt-3">
                             <div class="col">
                                 <a href="{{ route('proposals.step7') }}" class="btn primary-btn text-white rounded-pill fw-bold w-100">Send to Client</a>
                             </div>

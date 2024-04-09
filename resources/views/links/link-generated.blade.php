@@ -11,12 +11,16 @@
                                     Manage Access
                                 </h2>
                             </div>
-                            <p class="fs-5 ms-4 mt-2 text-secondary">By creating a custom URL for this proposal, you effectively lock it from being changed by the estimating team.
-                                The proposal's status will be set to "Pending" and feedback can be solicited from the clients via the link.</p>
+                            <p class="fs-5 ms-4 mt-2 text-secondary">By creating a custom URL for this proposal, you effectively lock it from being changed by the estimating team. The proposal's status will be set to "Pending" and feedback can be solicited from the clients via the link.</p>
                         </div>
 
-                        <div class=" bg-white rounded-xl p-4 my-5">
-                            <input type="text" class="form-control" value="{{ $link }}" aria-label="Recipient's username" aria-describedby="button-addon2" readonly>
+                        <div class="bg-white rounded-5 shadow border p-4 my-5">
+                            <div class="input-group">
+                                <input type="text" id="copyInput" class="form-control" value="{{ $link }}" aria-label="Link" aria-describedby="button-addon2" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="copyInput()">
+                                    <i class="bi bi-clipboard"></i> Copy
+                                </button>
+                            </div>
                         </div>
 
                         <div class="d-flex justify-content-end align-items-center mt-3">
@@ -29,5 +33,11 @@
     </div>
 </x-layout>
 
-
-{{-- <a href="{{ $link }}">Access your information</a> --}}
+<script>
+function copyInput() {
+    var copyText = document.getElementById("copyInput");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+}
+</script>

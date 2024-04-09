@@ -39,7 +39,7 @@
                         if (proposal.status === 'Approved' || proposal.status === 'Denied') {
                             actionColumnContent = 'Feedback Submitted';
                         } else if (proposal.view_link) { // Make sure view_link is available
-                            actionColumnContent = `<a href="${proposal.view_link}" class="btn btn-primary">Access Proposal</a>`;
+                            actionColumnContent = `<a href="${proposal.view_link}" class="btn btn-info-custom border rounded-pill w-100 fw-semibold">Access Proposal</a>`;
                         } else {
                             actionColumnContent = 'Link Unavailable'; // Provide a fallback text
                         }
@@ -101,17 +101,17 @@
     </script>
     
     <div class="content">
-        <div class="container mt-2">
+        <div class="container my-3">
                     <div class="my-4">
                         <div class="d-flex justify-content-between align-items-center">
                             <h2 class="display-6 py-2 fw-bold">
-                                <i class="fas fa-file-alt me-3"></i>Proposals
+                                <i class="bi bi-file-earmark-text me-3"></i>Proposals
                             </h2>
                             <a href="{{ route('proposals.step1') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5">Create New</a>
                         </div>
                     </div>
-                    <div class="bg-white p-4 rounded-5">
-                        <div class="container">
+                    <div class="bg-white p-4 rounded-5 shadow">
+                        <div class="container mt-1">
                             <form id="searchForm" action="{{ route('storedProposals.searchProposals') }}" method="GET">
                                 <div class="input-group mb-4 border-2 rounded-pill">
                                     <input type="text" id="search_term" name="search_term" class="form-control border-0 rounded-start-pill " placeholder="Search">
@@ -152,18 +152,18 @@
                                                     <span class="badge bg-secondary">{{ $proposal->status }}</span>
                                             @endswitch
                                         </td>
-                                        <td class="align-middle">{{ $proposal->proposal_title }}</td>
-                                        <td class="align-middle d-none d-md-table-cell">{{ $proposal->client->company_name }}</td>
-                                        <td class="align-middle d-none d-md-table-cell">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
+                                        <td class="align-middle fw-semibold">{{ $proposal->proposal_title }}</td>
+                                        <td class="align-middle d-none d-md-table-cell fw-medium">{{ $proposal->client->company_name }}</td>
+                                        <td class="align-middle d-none d-md-table-cell fst-italic">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                                         <td class="align-middle d-none d-md-table-cell">{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>
                                         <td class="align-middle d-none d-md-table-cell">
                                             @if ($proposal->status === 'Approved' || $proposal->status === 'Denied')
                                                 <div class=" text-center">
-                                                    <span class="text-success fw-bold">Feedback Submitted</span>
+                                                    <span class="text-success fw-bold text-decoration-underline">Feedback Submitted</span>
                                                 </div>
                                             @elseif ($proposal->view_link)
                                                 {{-- Use the view_link directly from the Proposal model --}}
-                                                <a href="{{ $proposal->viewLink }}" class="btn btn-outline-secondary rounded-pill w-100 fw-bold">Access Proposal</a>
+                                                <a href="{{ $proposal->viewLink }}" class="btn btn-info-custom border rounded-pill w-100 fw-semibold">Access Proposal</a>
                                             @else
                                                 Link Unavailable
                                             @endif
@@ -173,9 +173,9 @@
                                 @endforeach
                             </tbody>
                         </table>
-        </div>
-        <div id="pagination-container">
-            {{ $proposals->links() }}
+                        <div id="pagination-container" class="mt-4">
+                            {{ $proposals->links() }}
+                        </div>
         </div>
     </div>
 </x-layout>

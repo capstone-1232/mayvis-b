@@ -1,16 +1,16 @@
 <x-layout>
     <div class="content">
         <div class="container my-3">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center my-4">
                 <div class="col-lg-8">
                     <h2 class="display-6 py-2 fw-bold">
-                        <i class="bi bi-person-fill me-3"></i>Add a Client
+                        <i class="bi bi-person-plus me-3"></i>Add a Client
                     </h2>
-                    <div class="bg-white p-4 rounded-4 mt-2">
+                    <div class="bg-white p-4 rounded-5 shadow mt-4">
                         <form action="{{ route('clients.storeClient') }}" method="POST">
                             @csrf
                             <!-- Form fields for Client Creation -->
-                            <div class="form-group mb-3">
+                            <div class="form-group mb-3 mt-2">
                                 <x-input-label for="company_name" :value="__('Company Name')" />
                                 <x-text-input type="text" name="company_name" field="company_name" placeholder="Company Name" class="form-control" autocomplete="off" :value="old('company_name')"></x-text-input>
                                 <x-input-error class="mt-2 productserr" :messages="$errors->get('company_name')" />
@@ -41,9 +41,9 @@
                             </div>
             
                             <!-- Add other necessary form fields -->
-                            <div class="d-flex justify-content-end align-items-center mt-3">
+                            <div class="d-flex justify-content-end align-items-center mt-4">
                                 <a href="{{ route('index-client') }}" class="fs-7 fw-bold me-2">Cancel</a>
-                                <x-primary-button type="submit" class="btn primary-btn text-white rounded-pill">Save Client</x-primary-button>
+                                <x-primary-button type="submit" class="btn primary-btn rounded-pill">Save Client</x-primary-button>
                             </div>
                             
                         </form>
