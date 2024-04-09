@@ -63,19 +63,19 @@
             <div class="my-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <h2 class="display-6 py-2 fw-bold">
-                        <i class="bi bi-person-fill me-3"></i>All Clients
+                        <i class="bi bi-people me-3"></i>All Clients
                     </h2>
-                    <a href="{{ route('clients.createClient') }}" class="btn primary-btn text-white rounded-pill text-uppercase fw-bold px-5">Add Client</a>
+                    <a href="{{ route('clients.createClient') }}" class="btn primary-btn rounded-pill text-white fw-bold px-5">Add Client</a>
                 </div>
             </div>
 
             
 
-            <div class="bg-white p-4 rounded-4">
+            <div class="bg-white p-4 rounded-5 shadow">
                 <div class="container">
                     <form id="searchForm" action="{{ route('clients.searchClients') }}" method="GET">
-                        <div class="input-group mb-4 border-2 rounded-pill">
-                            <input type="text" id="search_term" name="search_term" class="form-control border-0 rounded-start-pill " placeholder="Search">
+                        <div class="input-group mb-4 border-2 rounded-pill mt-2">
+                            <input type="text" id="search_term" name="search_term" class="form-control border-0 rounded-start-pill " placeholder="Search by Client Name">
                             <button id="search_button" class="btn text-white primary-btn fw-bold px-5 rounded-pill" type="submit">Search</button>
                         </div>
                     </form>
@@ -107,9 +107,9 @@
                     <tbody>
                         @foreach ($clients as $client)
                             <tr>
-                                <td class="align-middle ps-5">{{ $client->company_name }}</td>
-                                <td class="align-middle ps-5">{{ $client->first_name . ' ' . $client->last_name }}</td>
-                                <td class="align-middle d-none d-lg-table-cell ps-5">{{ $client->email }}</td>
+                                <td class="align-middle ps-5 fw-medium">{{ $client->company_name }}</td>
+                                <td class="align-middle ps-5 fst-italic">{{ $client->first_name . ' ' . $client->last_name }}</td>
+                                <td class="align-middle d-none d-lg-table-cell ps-5 fw-medium">{{ $client->email }}</td>
     
                                 <td class="align-middle text-center">
                                     <form action="{{ route('clients.destroyClient', $client->id) }}" method="POST">
@@ -131,7 +131,7 @@
                 </table>
     
                 <!-- Pagination links -->
-                    <div>
+                    <div class="mt-3">
                         {{ $clients->links() }}
                     </div>
             </div>

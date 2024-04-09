@@ -1,16 +1,16 @@
 <x-layout>
     <div class="content">
         <div class="container my-3">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center my-4">
                 <div class="col-lg-8">
             <h2 class="display-6 py-2 fw-bold">
-                <i class="bi bi-boxes me-3"></i>Create New Product
+                <i class="bi bi-box-seam me-3"></i>Create New Product
             </h2>
-            <div class="bg-white p-4 rounded-5 mt-2">
+            <div class="bg-white p-4 rounded-5 shadow mt-4">
                 <form action="{{ route('services.storeProduct') }}" method="POST">
                     @csrf
                     <!-- Form fields for product creation -->
-                    <div class="form-group mb-3">
+                    <div class="form-group mb-3 mt-2">
                         <x-input-label for="product_name" :value="__('Product Name')" />
                         <x-text-input type="text" name="product_name" class="form-control" :value="old('product_name')"></x-text-input>
                         <x-input-error class="mt-2 productserr" :messages="$errors->get('product_name')" />

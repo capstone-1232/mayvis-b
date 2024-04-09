@@ -1,38 +1,32 @@
 <x-layout>
 
+    <!-- Google Charts Drawing Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('proposalsChart').getContext('2d');
-            const proposalsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    // Using the 'label' property for display on the chart
-                    labels: [@foreach ($approvedProposalsSumByWeek as $data) '{{ $data->label }}', @endforeach],
+         google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChart);
 
-                    datasets: [
-                        {
-                            label: 'Total Price of Approved Proposals',
-                            // Using 'total_price' for the data points
-                            data: [@foreach ($approvedProposalsSumByWeek as $data) {{ $data->total_price }}, @endforeach],
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Period', 'Approved Proposals', 'Denied Proposals'],
+                @foreach ($proposalsData as $data)
+                    ['{{ $data->label }}', {{ $data->total_approved_price }}, {{ $data->total_denied_price }}],
+                @endforeach
+            ]);
+
+            var options = {
+                chart: {
+                    title: 'Proposal Prices by Period',
+                    subtitle: 'Comparison of approved and denied proposal prices',
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Total Proposal Price'
-                            }
-                        }
-                    }
-                }
-            });
-        });
+                bars: 'vertical',
+                vAxis: {format: 'currency'},
+                height: 200,
+                colors: ['#1b9e77', '#d9534f']
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('proposalsChart'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
     </script>
 
     <div class="content">
@@ -48,25 +42,30 @@
             @endif
 
             <div class="col-md-8 d-flex">
-                <div class="d-flex align-items-center mb-4 bg-dark p-3 rounded-5 w-100 shadow-sm">
+                <div class="d-flex align-items-center mb-4 bg-head p-3 rounded-5 w-100 shadow-sm">
                     <div class="me-4">
-                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
+                        @if (Auth::user()->profile_image)
+                            <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
+                        @else
+                            <img src="{{ asset('storage/placeholder.jpg') }}" alt="Profile Image" class="rounded-circle profile-photo">
+                        @endif
                     </div>
+                    
                     <div>
-                        <h3 class="text-white fw-bold fs-5">Welcome back, {{ Auth::user()->first_name }}</h3>
+                        <h3 class="text-white fw-bold fs-4">Welcome back, {{ Auth::user()->first_name }}</h3>
                         <h4 class="fw-light fs-6 text-white">{{ Auth::user()->job_title }}</h4>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 d-flex">
                 <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow-sm">
-                    <a href="{{ route('servicesIndex') }}" class="text-decoration-none w-100">
-                        <div class="card-body text-center text-white">
-                            <h3 class="card-title fs-5 fw-bold"><i class="fas fa-cogs fa-lg me-2"></i>Services</h3>
+                    <a href="{{ route('servicesIndex') }}" class="text-decoration-none w-100 py-sm-3">
+                        <div class="text-center">
+                            <h3 class="fs-4 fw-bold text-white"><i class="bi bi-boxes me-2"></i>Services</h3>
                         </div>
                     </a>
                 </div>
-            </div>
+            </div>            
             
         </div>
         
@@ -82,7 +81,7 @@
                             <div>
                                 <h3 class="card-title fw-bold fs-3">Client Proposal</h3>
                                 <p class="card-text mb-4">Initiate a fresh proposal estimate with a single click.</p>
-                                <a href="{{ route('proposals.step1') }}" class="btn login-btn custom-btn fw-bold rounded-pill text-uppercase fw-bold text-white">Create New</a>
+                                <a href="{{ route('proposals.step1') }}" class="btn btn-warning-custom border rounded-pill w-75 fw-semibold text-uppercase ">Create New</a>
                             </div>
                             <div>
                                 {{-- SVG --}}
@@ -94,18 +93,15 @@
             </div>
             <div class="col-md-4 d-flex">
                 <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm p-4">
-                    <canvas id="proposalsChart" style="width:100%; height:180px;"></canvas> 
+                    <!-- Change this to a div instead of canvas -->
+                    <div id="proposalsChart" style="width:100%; height:auto;"></div>
                 </div>
             </div>
-        
         </div>
 
         <div class="row">
             <div class="col-md-12 ">
                 <div class="bg-white shadow-sm rounded-5 p-4">
-                    <h2 class="ms-1 fs-4 fw-bold">
-                        <i class="fas fa-file-alt me-3"></i>Proposals
-                    </h2>
                     <div class="">
                         <table class="table mb-0">
                             <thead class="border-bottom border-secondary-subtle">
@@ -145,17 +141,16 @@
                             </tbody>
                         </table>
                     </div>
+                    <div id="pagination-container" class="mt-3">
+                        {{ $proposals->links() }}
+                    </div>
                     <div class=" bg-white text-center mt-4">
-                        <a href="{{ route('storedProposals.storedProposalsIndex') }}" class="btn primary-btn text-white rounded-pill w-25 fw-bold">View All</a>
+                        <a href="{{ route('storedProposals.storedProposalsIndex') }}" class="btn primary-btn text-white rounded-pill w-25 fw-semibold">View All</a>
                     </div>
                 </div>
 
             </div>
 
-    </div>
-
-    <div id="pagination-container">
-        {{ $proposals->links() }}
     </div>
 </div>
 </div>

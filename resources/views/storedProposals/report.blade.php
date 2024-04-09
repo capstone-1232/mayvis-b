@@ -1,51 +1,103 @@
 <x-layout>
     <div class="content">
         <div class="container my-5">
-            <canvas id="proposalsChart"></canvas>
+            <div class="row">
+                <div class="col-md-12 py-4">
+                    <div id="proposalsChart" class="p-3 border"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('proposalsChart').getContext('2d');
-            const proposalsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    // Using the 'label' property for display on the chart
-                    labels: [@foreach ($approvedProposalsSumByWeek as $data) '{{ $data->label }}', @endforeach],
+        google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChart);
 
-                    datasets: [
-                        {
-                            label: 'Total Price of Approved Proposals',
-                            // Using 'total_price' for the data points
-                            data: [@foreach ($approvedProposalsSumByWeek as $data) {{ $data->total_price }}, @endforeach],
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }
-                    ]
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Period', 'Approved Proposals', 'Denied Proposals'],
+                @foreach ($proposalsData as $data)
+                    ['{{ $data->label }}', {{ $data->total_approved_price }}, {{ $data->total_denied_price }}],
+                @endforeach
+            ]);
+
+            var options = {
+                backgroundColor: 'transparent',
+                chart: {
+                title: 'Proposal Performance',
+                subtitle: 'Approved vs. Denied Proposals',
+                titleTextStyle: {
+                    color: '#333',
+                    fontName: 'Arial',
+                    fontSize: 20,
+                    bold: true,
+                    italic: false
                 },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Total Proposal Price'
-                            }
-                        },
-                        x: {
-                            // This will be handled by the 'labels' array
-                            title: {
-                                display: true,
-                                text: 'Weeks of the Year'
-                            }
-                        }
-                    }
+                subtitleTextStyle: {
+                    color: '#666',
+                    fontName: 'Arial',
+                    fontSize: 14
                 }
-            });
-        });
+            },
+                bars: 'vertical',
+                vAxis: {
+                    format: 'currency',
+                    title: 'Total Proposal Price',
+                    titleTextStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 16,
+                        bold: true
+                    },
+                    minValue: 0,
+                    textStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 12
+                    },
+                    gridlines: {
+                        color: '#ccc',
+                        count: -1
+                    },
+                },
+                hAxis: {
+                    title: 'Period',
+                    titleTextStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 16,
+                        bold: true
+                    },
+                    textStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 12
+                    },
+                    slantedText: true,
+                    slantedTextAngle: 45
+                },
+                legend: {
+                    position: 'top',
+                    alignment: 'center',
+                    textStyle: {
+                        color: '#333',
+                        fontName: 'Arial',
+                        fontSize: 12
+                    }
+                },
+                colors: ['#4CAF50', '#F44336'],
+                height: 500,
+                chartArea: {
+                    backgroundColor: 'transparent',
+                },
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('proposalsChart'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
+
     </script>
 </x-layout>
+    

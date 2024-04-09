@@ -22,7 +22,7 @@
                  <!-- Title should be highlighted here -->
              
                  <div class="container">
-                     <div class="p-4 bg-white rounded-5 col-lg-8 col-sm-12 mx-auto">
+                     <div class="p-4 bg-white rounded-5 shadow col-lg-8 col-sm-12 mx-auto">
                          <div class="px-4">
                          <div class="">
                              <div class="d-flex justify-content-between align-items-center">

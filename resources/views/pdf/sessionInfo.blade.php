@@ -6,14 +6,56 @@
     <!-- Bootstrap CSS -->
     <style>
         @import url('https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css');
-        /* Additional CSS styles */
-        /* Define any additional CSS styles inline */
-    </style>
+    
+        /* Ensure the content fits the paper size you expect, such as A4 */
+        @page {
+            size: A4;
+            margin: 20mm; /* Adjust based on your requirements */
+        }
+    
+        @media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .container {
+        page-break-after: always;
+        margin: 0;
+        padding: 20mm; /* Adjust based on your actual paper's printable area */
+        box-sizing: border-box;
+    }
+    
+    .container:last-child {
+        page-break-after: auto;
+    }
+    
+    .page {
+        height: auto;
+        overflow: visible;
+        page-break-inside: avoid;
+    }
+}
+
+    </style>    
+    
 </head>
 <body>
     <main>
         <div class="container">
             <!-- Display user details -->
+            <div class="page">
+                <p>Let's get
+                    together,
+                    smash your
+                    goals & drive
+                    results.</p>
+
+            </div>
+
+            <div class="page">
             <div class="mt-2">
                 <h2 class="fw-bold heading-4">Hello {{ $client->first_name }},</h2>
                 @foreach ($users as $user)
@@ -25,7 +67,9 @@
                 </div>
                 @endforeach
             </div>
+            </div>
 
+            <div class="page">
             <!-- Display user proposal message-->
             @foreach ($users as $user)
                 <div class="user-card mb-4 w-full">
@@ -47,7 +91,9 @@
                     </div>
                 </div>
             @endforeach
+        </div>
 
+            <div class="page">
             <h2 class="heading-4 fw-bold">Proposed Items</h2>
             <!-- Loop through selected products -->
             <div class="proposal-section" style="font-family: Arial, sans-serif;">
@@ -67,12 +113,13 @@
                 </ul>
                 <p class="text-end fw-normal mb-5">Proposal Total: ${{ number_format($step4Data['proposalTotal'], 2) }}</p>
             </div>
+            </div>
             
         </div>
     </main>
     <footer class="container">
         <p class="text-center">Connect with us:</p>
-        <!-- Add social media links here -->
+        <!-- Add social media links here, possibly hidden with the hide-on-print class -->
     </footer>
 </body>
 </html>
