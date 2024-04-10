@@ -23,6 +23,7 @@
              
                  <div class="container">
                      <div class="p-4 bg-white rounded-5 shadow col-lg-8 col-sm-12 mx-auto">
+                     <div class="p-4 bg-white rounded-5 shadow col-lg-8 col-sm-12 mx-auto">
                          <div class="px-4">
                          <div class="">
                              <div class="d-flex justify-content-between align-items-center">
@@ -36,12 +37,12 @@
                  <form action="{{ route('proposals.storeStep2') }}" method="post">
                      @csrf
                      <div class="mb-3">
-                     <x-input-label for="proposal_title" class="fw-bold">Proposal Title</x-input-label>
+                     <x-input-x-input-label for="proposal_title" class="fw-bold">Proposal Title</x-input-x-input-label>
                      <x-text-input type="text" name="proposal_title" field="proposal_title" placeholder="Proposal Title" class="w-100" autocomplete="off" :value="old('proposal_title', session('step2_data.proposal_title', ''))"></x-text-input>
                      </div>
  
-                     <div class="mb-3">
-                     <x-input-label for="start_date" class="fw-bold">Date Created</x-input-label>
+                     <div class="mb-3 w-25">
+                     <x-input-x-input-label for="start_date" class="fw-bold">Date Created</x-input-x-input-label>
                      <x-date-input 
                          name="start_date"
                          placeholder="YYYY-MM-DD"
@@ -50,6 +51,7 @@
                      </div>
  
                      <div class="d-flex justify-content-end align-items-center mt-3">
+                         <a href="{{ route('proposals.step1') }}" class="fs-7 fw-bold me-2 btn btn-secondary rounded-pill btn-width">Prev</a>
                          <a href="{{ route('proposals.step1') }}" class="fs-7 fw-bold me-2 btn btn-secondary rounded-pill btn-width">Prev</a>
                          <x-primary-button type="submit" class="btn primary-btn text-white rounded-pill px-4 btn-width fw-bold">Next</x-primary-button>
                      </div>

@@ -12,7 +12,7 @@
         @csrf
     </form>
 
-    <div class="bg-white container rounded-xl px-5 pt-5 pb-3">
+    <div class="bg-white container rounded-5 shadow px-5 pt-5 pb-3">
     <div class="row p-4 bg-gray mx-5 rounded-lg">
     <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
     <div>

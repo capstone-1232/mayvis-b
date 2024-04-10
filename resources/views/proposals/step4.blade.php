@@ -259,7 +259,7 @@
                     
                                                     </div>
                                                     
-                                                    <div class="bg-gray rounded-xl mt-3 p-3">
+                                                    <div class="bg-gray rounded-5 mt-3 p-3">
                                                         <div class="mb-2 border-bottom border-dark pb-2">
                                                             <h3 class="d-flex justify-content-between"><span>Project Total:</span> <div>$ <span id="totalPrice">0</span></div></h3>
                                                         </div>

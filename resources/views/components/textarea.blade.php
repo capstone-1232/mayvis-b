@@ -1,8 +1,9 @@
 @props(['disabled' => false, 'field' => '', 'value' => ''])
 
 <textarea {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'rounded']) !!}>
+<textarea {{ $disabled ? 'disabled' : '' }} {!! $attributes->merge(['class' => 'rounded']) !!}>
 {{ $value }}
 </textarea>
 @error($field)
-    <div class="text-danger text-sm"> {{ $message }}</div>
+    <div class="text-danger"> {{ $message }}</div>
 @enderror   

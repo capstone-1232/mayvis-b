@@ -8,7 +8,7 @@
         </div>
     </header>
 
-    <div class="bg-white container rounded-xl px-5 py-2">
+    <div class="bg-white container rounded-5 shadow px-5 py-2">
     <div class="d-flex justify-content-center">
         <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6 w-75">
             @csrf

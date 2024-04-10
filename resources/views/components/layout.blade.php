@@ -4,7 +4,9 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="csrf-token" content="{{ csrf_token() }}">
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <title>Mayvis</title>
+      
       
       <!-- Fonts -->
       <link rel="preconnect" href="https://fonts.bunny.net">
@@ -12,11 +14,17 @@
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
       <!-- Jquery for RTE -->
       <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
       <script src="https://cdn.tiny.cloud/1/unhfmd4g0x6ahnq0mm3hzkusbnycb4t9elw8othv9ulaq5o6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+      <script src="https://cdn.tiny.cloud/1/unhfmd4g0x6ahnq0mm3hzkusbnycb4t9elw8othv9ulaq5o6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
+      <!-- Load the Google Charts Library -->
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
       <!-- Load the Google Charts Library -->
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -222,6 +230,7 @@
           </form>
         </div>
       
+      
     </div>
         {{-- auth else --}}
         @else
@@ -237,6 +246,18 @@
 
       <!-- Bootstrap JS -->  
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+      {{-- Nav Script --}}
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleLink = document.querySelector('[data-bs-target="#proposalsSubmenu"]');
+            var caretIcon = toggleLink.querySelector('.bi-caret-down-fill');
+        
+            toggleLink.addEventListener('click', function () {
+                caretIcon.classList.toggle('rotated');
+            });
+        });
+      </script>
 
       {{-- Nav Script --}}
       <script>

@@ -8,7 +8,7 @@
         </div>
     </header>
 
-    <div class="bg-white container rounded-xl p-4">
+    <div class="bg-white container rounded-5 shadow p-4">
 
     <p class="mt-1 text-sm">
         {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
@@ -52,7 +52,7 @@
                     {{ __('Cancel') }}
                 </x-secondary-button>
 
-                <x-danger-button>
+                <x-danger-button class="btn btn-danger mt-2 rounded-pill">
                     {{ __('Delete Account') }}
                 </x-danger-button>
             </div>
