@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PDFController extends Controller
@@ -35,9 +36,9 @@ class PDFController extends Controller
         $projectScopes = collect($step4Data['selectedProducts'])
             ->pluck('description')
             ->map(function ($description) {
-                return strip_tags($description); // Strip HTML tags if you just want the text
+                return strip_tags($description);
             })
-            ->all(); // Convert the collection to an array
+            ->all(); 
 
         // Create or update client information
         $client = Client::updateOrCreate(
@@ -48,6 +49,9 @@ class PDFController extends Controller
             ],
             $step1Data
         );
+
+        $senderName = $step3Data['sender'] ?? '';
+        $automatedMessage = $step3Data['automated_message'] ?? '';
 
         // Prepare the data for the PDF
         $pdfData = [
@@ -62,17 +66,22 @@ class PDFController extends Controller
         ];
 
         // Filter users based on sender's name
-        $senderName = $step3Data['sender'] ?? '';
         if ($senderName) {
-            $pdfData['users'] = User::where('email', 'like', '%' . $senderName . '%')
-                ->get(['job_title', 'automated_message', 'first_name', 'last_name', 'profile_image', 'proposal_message']);
+            $query = User::where('email', 'like', '%' . $senderName . '%')
+                        ->select(['job_title', 'first_name', 'last_name', 'profile_image', 'proposal_message']);
+
+            if ($automatedMessage) {
+                $pdfData['users'] = $query->selectRaw('job_title, first_name, last_name, profile_image, proposal_message, ? as automated_message', 
+                                                    [$automatedMessage])->get();
+            } else {
+                $pdfData['users'] = $query->addSelect('automated_message')->get();
+            }
         }
+
 
         // Create a new instance of mPDF
         $mpdf = new Mpdf();
 
-        // Load your view with data
-        // Note: mPDF does not have a direct loadView method like DomPDF, so you use the view() helper to get the HTML content
         $html = view('pdf.sessionInfo', $pdfData)->render();
 
         // Write the HTML content to the PDF
