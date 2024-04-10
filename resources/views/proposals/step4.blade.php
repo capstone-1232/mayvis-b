@@ -38,7 +38,7 @@
                 data.forEach(product => {
                     // Build your product card element string or element here
                     const productHTML = `
-                    <div class="bg-white rounded-xl p-4 mb-2">
+                    <div class="rounded-4 p-4 mb-3 custom-hover border">
                         <div class="product-card-title fw-bold">
                             <a class="d-flex justify-content-between" href="javascript:void(0);" onclick="addToContainer('${product.id}', '${product.product_name}', '${product.price}')">
                                 <div>${product.product_name}</div> <div>$ ${product.price}</div>
@@ -86,7 +86,7 @@
 
                     // Generate the HTML for each product and append it to the productsContainer
                     const productsHtml = data.map(product => `
-                    <div class="bg-white rounded-xl p-4 mb-2">
+                    <div class="rounded-4 p-4 mb-3 custom-hover border">
                         <div class="product-card-title fw-bold">
                             <a class="d-flex justify-content-between" href="javascript:void(0);" onclick="addToContainer('${product.id}', '${product.product_name}', '${product.price}')">
                                 <div>${product.product_name}</div> <div>$ ${product.price}</div>
@@ -196,7 +196,7 @@
                     <div class="container my-4">
                         <div class="row">
                             <div class="col-md-8 pe-md-2">
-                                <div class="bg-dgray rounded-xl p-4">
+                                <div class="bg-dgray rounded-5 shadow p-4">
                         <div class="container">
                             @csrf
                             <form id="searchForm" action="{{ route('proposals.searchProducts') }}" method="GET">
@@ -234,7 +234,7 @@
                                     <h3 class="mb-2 fs-5 py-2 fw-bold">Choose a service</h3>
                                         <div id="products-container">
                                             @foreach($products as $product)
-                                                <div class="bg-white rounded-xl p-4 mb-2">
+                                                <div class="bg-white rounded-4 p-4 mb-2 border">
                                                     <div class="product-card-title fw-bold">
                                                         <a class="d-flex justify-content-between" href="javascript:void(0);" onclick="addToContainer('{{ $product->id }}', '{{ $product->product_name }}', '{{ $product->price }}')">
                                                            <div>{{ $product->product_name }}</div> <div>$ {{ $product->price }}</div>
@@ -252,14 +252,14 @@
                         </div>
                     </div>
                     <div class="col-md-4 pt-sm-3 pt-md-0">
-                        <div class="bg-white rounded-xl p-4">
+                        <div class="bg-white rounded-5 shadow p-4">
                                                     <!-- Totals Area -->
                                                     <div id="selectedProductsContainer" class="">
                                                         <h3 class="mb-2 fs-5 py-2 fw-bold">Summary:</h3>
                     
                                                     </div>
                                                     
-                                                    <div class="bg-gray rounded-xl mt-3 p-3">
+                                                    <div class="bg-gray rounded-5 mt-3 p-3">
                                                         <div class="mb-2 border-bottom border-dark pb-2">
                                                             <h3 class="d-flex justify-content-between"><span>Project Total:</span> <div>$ <span id="totalPrice">0</span></div></h3>
                                                         </div>
@@ -278,7 +278,7 @@
                         
 
                             <div class="d-flex justify-content-end align-items-center mt-3">
-                                <a href="{{ route('proposals.step3') }}" class="fs-7 fw-bold me-2 btn btn-secondary rounded-pill btn-width">Previous</a>
+                                <a href="{{ route('proposals.step3') }}" class="fs-7 fw-bold me-2 btn btn-secondary rounded-pill btn-width">Prev</a>
                                 <x-primary-button type="submit" class="btn primary-btn text-white rounded-pill px-4 btn-width fw-bold">Next</x-primary-button>
                             </div>
 

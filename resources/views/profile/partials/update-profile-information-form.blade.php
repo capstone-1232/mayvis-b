@@ -12,7 +12,7 @@
         @csrf
     </form>
 
-    <div class="bg-white container rounded-xl px-5 pt-5 pb-3">
+    <div class="bg-white container rounded-5 shadow px-5 pt-5 pb-3">
     <div class="row p-4 bg-gray mx-5 rounded-lg">
     <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
     <div>
@@ -76,7 +76,6 @@
                 
     </div>
 </div>
-        <h2>Keep these messages as generic as possible. You will be able to personally customize your automated message during the process.</h2>
         <div class="mt-4">
             <x-input-label class="fw-bold text-black fs-5 mb-1" for="automated_message" :value="__('Automated Message')" />
             <x-textarea id="automated_message" name="automated_message" type="text" class="mt-1 block w-full" :value="old('automated_message', $user->automated_message)" required autofocus autocomplete="username" />
