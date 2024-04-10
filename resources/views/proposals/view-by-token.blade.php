@@ -3,54 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <title>Proposal Information</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Bootstrap -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link href="{{ asset('main.css') }}" rel="stylesheet" type="text/css">
+    {{-- Print styles --}}
+    <style>
+        @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css');
+        @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css');
+    
+        /* Custom CSS here */
+    
+        @media print {
+            /* Force each .page to start on a new page when printing */
+            .page {
+                display: block;
+                page-break-before: always;
+                page-break-after: always;
+                overflow: hidden;
+                width: 100%;
+                height: auto; /* Adjust based on the content, but ensuring it fits on a single page */
+            }
+            
+            /* Adjust the first page to not have a page break before it */
+            .page:first-child {
+                page-break-before: auto;
+            }
+    
+            header, footer {
+                page-break-after: avoid;
+            }
+    
+            body, html {
+                width: 100%;
+                height: auto;
+            }
+    
+            /* This sets the margins around each page. Adjust as necessary */
+            @page {
+                size: auto; /* auto is the initial value */
+                margin: 20mm; /* this affects the margin in the printer settings */
+            }
+        }
+    </style>
+    
 
 </head>
 <body>
-    <header>
+    <header class="bg-header">
         <div class="container">
-            <div class="logo-placeholder">
-                <svg aria-labelledby="svg-mayvis-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 311.5 113.4" xml:space="preserve" class="inline h-36 w-25 fill-current">
-                  <title id="svg-mayvis-logo">
-                    MAYVIS Estimate System
-                  </title>
-                  <g>
-                    <path d="M75.5,37.8v37.8h-6.7V51.5l-6.6,5.1l-5.5,4.3l-5.5-4.3l-6.6-5.1v24.1h-6.7V37.8l6.7,5.2l12.1,9.3L68.8,43L75.5,37.8z"></path>
-                    <path d="M122.6,75.6h-7.6l-3.5-6.7l-8.3-16.2l-8.3,16.2l-3.5,6.7h-7.6l3.5-6.7l15.8-31l15.8,31L122.6,75.6z"></path>
-                    <path d="M122.6,75.6h0.1l-0.1,0.1V75.6z M160.4,37.7l-14.6,18.9l-0.8,1v17.8h-6.7V57.8l-0.9-1.1l-14.6-18.9h8.5l10.4,13.4
-                    l10.4-13.4H160.4z M160.3,75.6L160.3,75.6l0.1,0.1L160.3,75.6z"></path>
-                    <path d="M204.8,37.8l-3.5,6.7l-15.8,31l-15.8-31l-3.5-6.7h7.6l3.5,6.7l8.3,16.2l8.3-16.2l3.5-6.7H204.8z"></path>
-                    <path d="M216.4,75.6V37.8h6.7v37.8H216.4z"></path>
-                    <path d="M266.9,48.3V48c0-1.9-1.6-3.5-3.5-3.5h-15.3c-1.9,0-3.5,1.6-3.5,3.5v0.2c0,1.9,1.6,3.5,3.5,3.5h13.6c3.5,0,6.6,1.5,8.8,3.9
-                    c0.2,0.2,0.3,0.3,0.4,0.5c1.7,2,2.7,4.7,2.7,7.6c0,6.6-5.3,11.9-11.9,11.9h-11.8c-6.6,0-11.9-5.3-11.9-11.9h6.7
-                    c0,2.9,2.3,5.2,5.2,5.2h11.8c2.9,0,5.2-2.3,5.2-5.2c0-2.9-2.4-5.2-5.2-5.2h-13.6c-2.8,0-5.2-1.1-7.1-2.9c-0.5-0.5-0.9-1-1.3-1.6
-                    c-1.1-1.6-1.8-3.6-1.8-5.8V48c0-5.6,4.5-10.2,10.1-10.2h15.3c5.6,0,10.2,4.6,10.2,10.2v0.2L266.9,48.3z"></path>
-                  </g>
-                </svg>
-              </div>
+            <div class="text-center py-5">
+                <img src="{{ asset('images/mayvis-logo-white.png') }}" alt="Logo" class="w-25 mx-auto">
+            </div>
         </div>
     </header>
     <main>
-        <div class="container">
-            <div class="keen-background mb-3 mt-5">
-                <div class="mb-4">
-                    <img src="{{ asset('images/keen-creatives-logo.webp') }}" alt="Logo" class="mb-4 w-25">
-                    <p class="keen-text fs-4">
-                        Let's get together, do cool stuff, and change the world.
-                    </p>
+        <div class="page">
+        <div class="keen-background">
+        <div class="container py-2">
+            <div class="py-5">
+                <div class="my-4">
+                    <div class="py-4">
+                        <img src="{{ asset('images/keen-text.png') }}" alt="Logo" class="keen-logo">
+                    </div>
+                    <div class="fs-1 fw-bolder pb-4 text-white ms-3">
+                        <p class="mb-0">
+                            Let's get together,
+                        </p>
+                        <p class="mb-0">
+                            do cool stuff,
+                        </p>
+                        <p>
+                            &amp; change the world.
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </div>        
+        </div>
+        </div>
+    </div>
 
             
             <!-- Display user details -->
+            <div class="page">
+            <div class="container py-4">
                 <div class="my-5">
-                    <h2 class="fw-bold heading-4">Hello {{ $client->first_name }},</h2>
+                    <h2 class="fw-bold heading-4 display-2 py-2">Hello {{ $client->first_name }},</h2>
 
                     <!-- User's Automated Message -->
-                    <div class="automated-message">
+                    <div class="automated-message fs-5 w-75 py-2 fw-medium">
                         @if($proposal->automated_message)
                             <p>{!! $proposal->automated_message !!}</p>
                         @else
@@ -63,95 +105,165 @@
                     
 
                     @foreach ($users as $user)
-                    <div class="user-card mb-4">
+                    <div class="user-card my-4">
 
                         <div class="user-info d-flex align-items-center">
                             <!-- User's Profile Image -->
-                            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" class="rounded-circle mb-2" style="width: 50px; height: 50px; margin-right: 10px;">
+                            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" class="rounded-circle mb-2 client-view-img">
 
                             <!-- User's Name and Job Title -->
-                            <div>
-                                <p class="user-name fw-bold mb-0">{{ $user->first_name }} {{ $user->last_name }}</p>
-                                <p class="user-job-title text-secondary" style="font-size: .875em;">{{ $user->job_title }}</p>
+                            <div class="ms-4">
+                                <p class="user-name fw-bolder mb-0 fs-4">{{ $user->first_name }} {{ $user->last_name }}</p>
+                                <p class="user-job-title text-secondary fs-6">{{ $user->job_title }}</p>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
+            </div>
+        </div>
 
                 <!-- Display user proposal message-->
-                <img src="{{ asset('images/keen-creatives-logo.webp') }}" alt="Logo" class="mb-4 w-25">
+                <div class="page">
+                <div class="bg-dark py-4">
+                <div class="container py-5">
+                <div class="pt-4">
+                    <img src="{{ asset('images/keen-text-white.png') }}" alt="Logo" class="keen-logo mt-5">
+                </div>
                 @foreach ($users as $user)
-                    <div class="user-card mb-4 w-full">
+                    <div class="user-card mb-4 w-100 text-white ms-3 pb-4">
                         <!-- User's Proposal Message -->
-                        <div class="proposal-message">
+                        <div class="proposal-message fs-5 fw-light w-75 pb-4">
                             <p>{!! $user->proposal_message !!}</p>
                         </div>
                     </div>
                 @endforeach
+                </div>
+            </div>
+        </div>
 
-                <h2 class="heading-4 fw-bold">Proposed Items</h2>
+            <div class="page">
+            <div class="container py-5">
+                <h2 class="display-3 fw-bold py-3">Proposed Items</h2>
 
                 <!-- Loop through selected products -->
-                <div class="proposal-section" style="font-family: Arial, sans-serif;">
+                <div class="">
                     <ul class="list-group mb-4">
                         @foreach ($products as $index => $product)
-                        <li class="list-group-item d-block py-3 border-0 border-bottom border-gray-200">
+                        <li class="list-group-item d-block p-3 border-0 mb-3 rounded-4 bg-dark shadow-sm">
                             <div class="d-flex justify-content-between">
-                                <span class="item-name fw-bold">{{ $product->product_name }}</span>
-                                <span class="item-price fw-bold">${{ number_format($product->price, 2) }}</span>
+                                <span class="item-name fs-4 text-white fw-lighter">{{ $product->product_name }}</span>
+                                <span class="item-price fw-bold fs-4">${{ number_format($product->price, 2) }}</span>
                             </div>
                             <!-- Display the corresponding project scope -->
                             @if (isset($projectScopes[$index]))
-                                <p class="project-scope mt-1">{{ $projectScopes[$index] }}</p>
+                                <p class="project-scope mt-3 text-white">{{ $projectScopes[$index] }}</p>
                             @endif
                         </li>
                         @endforeach
                     </ul>
-                    <p class="text-end fw-normal mb-5">Proposal Total: ${{ number_format($proposal->proposal_price, 2) }}</p>
+                    <p class="text-end fw-bold fs-4 mb-5">Proposal Total: ${{ number_format($proposal->proposal_price, 2) }}</p>
                 </div>
-                
+            </div>
+        </div>
                 
 
             
 
             <!-- Feedback form -->
-            <form action="{{ route('link.feedback') }}" method="POST" class="mb-5">
-                @csrf
-                <input type="hidden" name="proposalId" value="{{ $proposal->id }}">
+            <div class="page">
+            <div class="keen-background">
+            <div class="container py-4">
+                <form action="{{ route('link.feedback') }}" method="POST" class="mb-3">
+                    @csrf
+                    <input type="hidden" name="proposalId" value="{{ $proposal->id }}">
             
-                <h2 class="mb-3">Ready to Get Started</h2>
+                    <h2 class="display-3 fw-bold py-3 text-black">Ready to Get Started</h2>
             
-                <div class="mb-3">
-                    <label for="clientMessage" class="form-label">Tell us if you have any comments about this proposal.</label>
-                    <textarea name="clientMessage" id="clientMessage" class="form-control" placeholder="Are there any comments or questions about this proposal?" rows="4"></textarea>
-                </div>
-            
-                <!-- Radio button options -->
-                <div class="mb-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="updateStatus" id="option1" value="1">
-                        <label class="form-check-label" for="option1">
-                            These look good to me.
-                        </label>
+                    <div class="mb-3 fs-5">
+                        <label for="clientMessage" class="form-label text-white fw-medium">We warmly invite everyone to actively participate in reviewing this proposal by providing your valuable comments and recommendations. Please don't hesitate to share what you believe requires improvement or could be refined to make this proposal more effective.</label>
+                        <textarea name="clientMessage" id="clientMessage" class="form-control rounded-4 border my-4" placeholder="Tell us if you have any comments about his proposal." rows="6"></textarea>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="updateStatus" id="option2" value="2">
-                        <label class="form-check-label" for="option2">
-                            I am unsure, let's talk.
-                        </label>
-                    </div>
-                </div>
             
-                <button type="submit" class="btn btn-primary">SUBMIT</button>
-            </form>
+                    <!-- Radio button options -->
+                    <div class="mb-4">
+                        <fieldset class="w-25">
+                            <legend class="mb-3 text-white fs-5">Please select one option:</legend>
+                            <div class="mb-2">
+                                <div class="p-2 d-flex align-items-center bg-dark rounded-pill">
+                                    <div class="form-check fs-6">
+                                        <input class="form-check-input" type="radio" name="updateStatus" id="option1" value="1">
+                                        <label class="form-check-label ms-3 text-info fw-medium" for="option1">
+                                            These look good to me.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="p-2 d-flex align-items-center bg-dark rounded-pill">
+                                    <div class="form-check text-white fs-6">
+                                        <input class="form-check-input" type="radio" name="updateStatus" id="option2" value="2">
+                                        <label class="form-check-label ms-3 text-warning fw-medium" for="option2">
+                                            I am unsure, let's talk.
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    
+                    <!-- Terms and conditions checkbox -->
+                    <div class="mb-3 fs-6 text-white">
+                        <input type="checkbox" id="termsChk" name="termsChk" class="form-check-input">
+                        <label for="termsChk" class="ms-2">I agree to the <a href="{{ route('privacy-policy') }}" target="_blank" class="link-btn">Terms and Conditions</a></label>
+                    </div>                    
+            
+                    <button type="submit" class="btn btn-info-custom rounded-pill w-25 fw-semibold text-uppercase" id="submitBtn" disabled>Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
         </div>
     </main>
-    <footer class="container">
-        <p class="text-center">Connect with us:</p>
-        <!-- Add social media links here -->
+    <footer class="text-center bg-dark">
+        <div class="container py-4">
+            <div class="d-flex justify-content-center">
+                <a href="https://www.instagram.com/keencreative/" target="_blank" class="me-4">
+                    <i class="bi bi-instagram fs-1"></i>
+                </a>
+                <a href="https://www.youtube.com/user/PureVisionInc/videos" target="_blank" class="me-4">
+                    <i class="bi bi-youtube fs-1"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/keen-creative/?originalSubdomain=ca" target="_blank" class="e">
+                    <i class="bi bi-linkedin fs-1"></i>
+                </a>
+            </div>
+            <p id="copyYear" class="text-white fs-4 fw-bold mt-2">&copy; </p>
+        </div>
     </footer>
+    
+
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    {{-- JS --}}
+    <script>
+        function updateSubmitButtonState() {
+            const isTermsChecked = document.getElementById('termsChk').checked;
+            const isAnyRadioSelected = document.querySelector('input[name="updateStatus"]:checked') !== null;
+            document.getElementById('submitBtn').disabled = !(isTermsChecked && isAnyRadioSelected);
+        }
+    
+        document.getElementById('termsChk').addEventListener('change', updateSubmitButtonState);
+    
+        const radioButtons = document.querySelectorAll('input[name="updateStatus"]');
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updateSubmitButtonState);
+        });
+    
+        window.onload = updateSubmitButtonState;
+
+        document.getElementById('copyYear').textContent += new Date().getFullYear();
+    </script>
+    
 </body>
 </html>
