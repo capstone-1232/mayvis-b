@@ -40,6 +40,11 @@
             });
 
             searchForm.addEventListener('submit', function(e) {
+   
+
+            // Search Function
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+
                 e.preventDefault();
                 togglePaginationVisibility();
 

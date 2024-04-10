@@ -4,7 +4,9 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="csrf-token" content="{{ csrf_token() }}">
+      <meta name="csrf-token" content="{{ csrf_token() }}">
       <title>Mayvis</title>
+      
       
       <!-- Fonts -->
       <link rel="preconnect" href="https://fonts.bunny.net">
@@ -12,11 +14,17 @@
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
       <!-- Jquery for RTE -->
       <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
       <script src="https://cdn.tiny.cloud/1/unhfmd4g0x6ahnq0mm3hzkusbnycb4t9elw8othv9ulaq5o6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+      <script src="https://cdn.tiny.cloud/1/unhfmd4g0x6ahnq0mm3hzkusbnycb4t9elw8othv9ulaq5o6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
+      <!-- Load the Google Charts Library -->
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
       <!-- Load the Google Charts Library -->
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -57,7 +65,7 @@
                 return;
             }
     
-            
+            // Now proceed with the fetch call
             fetch('/notifications/' + notificationId, {
                 method: 'DELETE',
                 headers: {
@@ -66,7 +74,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    location.reload(); 
+                    location.reload(); // Or handle the DOM manipulation to remove the notification
                 } else {
                     console.error('Server responded with a non-ok status:', response.status);
                 }
@@ -95,12 +103,12 @@
         {{-- If the user is logged in --}}
         <div class="top-nav d-flex align-items-center justify-content-between px-sm-4 px-md-4">
             <!-- Menu Button for Small Screens -->
-            <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"><i class="bi bi-list fs-2"></i></span>
+            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"><i class="bi bi-list fs-2"></i></span>
             </button>
 
             <!-- Placeholder for medium and up screens if needed -->
-            <div class=" d-lg-none flex-grow-1 text-center">
+            <div class=" d-md-none flex-grow-1 text-center">
               <img src="{{ asset('images/mayvis-logo-white.png') }}" alt="Logo" class="w-25 mx-auto">
             </div>
           
@@ -150,7 +158,7 @@
           </div>
         </div>
 
-      <div class="collapse navbar-collapse d-lg-none drop-menu" id="navbarToggleExternalContent">
+      <div class="collapse d-md-none drop-menu" id="navbarToggleExternalContent">
         <div class="mobile-menu ">
             <nav class="nav flex-column">
                 <!-- Place your menu items here -->
@@ -222,6 +230,7 @@
           </form>
         </div>
       
+      
     </div>
         {{-- auth else --}}
         @else
@@ -237,6 +246,18 @@
 
       <!-- Bootstrap JS -->  
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+      {{-- Nav Script --}}
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggleLink = document.querySelector('[data-bs-target="#proposalsSubmenu"]');
+            var caretIcon = toggleLink.querySelector('.bi-caret-down-fill');
+        
+            toggleLink.addEventListener('click', function () {
+                caretIcon.classList.toggle('rotated');
+            });
+        });
+      </script>
 
       {{-- Nav Script --}}
       <script>

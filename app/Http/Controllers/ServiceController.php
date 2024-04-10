@@ -49,7 +49,7 @@ class ServiceController extends Controller
             'product_description' => 'required',
             'category_id' => 'required|exists:categories,id',
             'product_notes' => 'nullable',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0|max:99999',
             'created_by' => 'required|max:30',
         ], [
             'product_name.required' => 'The product name field is required.',
@@ -59,6 +59,7 @@ class ServiceController extends Controller
             'category_id.exists' => 'The selected category does not exist.',
             'price.required' => 'The price field is required.',
             'price.numeric' => 'The price must be a number.',
+            'price.max' => 'The price cannot be higher than 99999.',
             'created_by.required' => 'This field cannot be left empty.',
             'created_by.max' => 'Name is too long.'
         ]);
@@ -86,6 +87,9 @@ class ServiceController extends Controller
                     'product_name' => $product->product_name,
                     'price' => $product->price,
                     'description' => $product->product_description,
+                    'created_at' => $product->created_at,
+                    'updated_at' => $product->updated_at,
+                    'created_by' => $product->created_by,
                 ];
             }));
         }
@@ -105,10 +109,10 @@ class ServiceController extends Controller
     public function updateProduct(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'product_name' => 'min:1|max:30',
-            'product_description' => 'min:1|max:600',
-            'price' => 'min:1|numeric',
-            'product_notes' => 'max:600'
+            'product_name' => 'required|min:1|max:30',
+            'product_description' => 'required|min:1|max:600',
+            'price' => 'required|numeric|min:0|max:99999',
+            'product_notes' => 'nullable|max:600'
         ], [       
             'product_name.min' => 'The product name cannot be empty.',
             'product_name.max' => 'The product name must not be greater than 30 characters.',        
@@ -116,16 +120,20 @@ class ServiceController extends Controller
             'product_description.max' => 'The product description must not be greater than 600 characters.',
             'price.min' => 'The product must have a price.',
             'price.numeric' => 'The price must be a number.',
+            'price.max' => 'The price cannot be higher than 99999.',
             'product_notes.max' => 'The product notes must not be greater than 600 characters.',
         ]);
 
         $product = Product::findOrFail($id);
-        $product->fill($validatedData); // This will fill all the validated fields in the product
 
+        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; 
+
+        $product->fill($validatedData);
         $product->save();
 
         return redirect()->route('servicesIndex')->with('success', 'Product updated successfully.');
     }
+
 
     public function searchProducts(Request $request) {
         $searchTerm = $request->input('search_term');

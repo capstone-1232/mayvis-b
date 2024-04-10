@@ -36,6 +36,7 @@
 
                     // Proposal Feedback Link in the template
                     let actionColumnContent;
+
                     if (proposal.status === 'Approved' || proposal.status === 'Denied') {
                         actionColumnContent = 'Feedback Submitted';
                     } else if (proposal.view_link) { // Make sure view_link is available
