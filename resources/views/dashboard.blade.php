@@ -33,24 +33,23 @@
     <div class="container my-3">
         <div class="row">
             @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if (session('debug'))
-                <div class="alert alert-info">{{ session('debug') }}</div>
-            @endif
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        @if (session('debug'))
+            <div class="alert alert-info" role="alert">
+                {{ session('debug') }}
+            </div>
+        @endif
+        
 
             <div class="col-md-8 d-flex">
-                <div class="d-flex align-items-center mb-4 bg-head p-3 rounded-5 w-100 shadow-sm">
+                <div class="d-flex align-items-center mb-4 bg-head p-3 rounded-5 w-100 shadow">
                     <div class="me-4">
-                        @if (Auth::user()->profile_image)
-                            <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
-                        @else
-                            <img src="{{ asset('storage/placeholder.jpg') }}" alt="Profile Image" class="rounded-circle profile-photo">
-                        @endif
+                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
-                    
                     <div>
                         <h3 class="text-white fw-bold fs-4">Welcome back, {{ Auth::user()->first_name }}</h3>
                         <h4 class="fw-light fs-6 text-white">{{ Auth::user()->job_title }}</h4>
@@ -58,7 +57,7 @@
                 </div>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow-sm">
+                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow">
                     <a href="{{ route('servicesIndex') }}" class="text-decoration-none w-100 py-sm-3">
                         <div class="text-center">
                             <h3 class="fs-4 fw-bold text-white"><i class="bi bi-boxes me-2"></i>Services</h3>
@@ -71,7 +70,7 @@
         
         <div class="row">
             <div class="col-md-8">
-                <div class="card mb-4 rounded-5 client-proposal shadow-sm p-4">
+                <div class="card mb-4 rounded-5 client-proposal shadow p-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between ">
                             <div class="me-3">
@@ -92,7 +91,7 @@
                 </div>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow-sm p-4">
+                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column shadow p-4">
                     <!-- Change this to a div instead of canvas -->
                     <div id="proposalsChart" style="width:100%; height:auto;"></div>
                 </div>
@@ -103,19 +102,24 @@
             <div class="col-md-12 ">
                 <div class="bg-white shadow-sm rounded-5 p-4">
                     <div class="">
+                        <h3 class="card-title fw-bold fs-3">My Proposals</h3>
                         <table class="table mb-0">
                             <thead class="border-bottom border-secondary-subtle">
                                 <tr class="fs-5 text-center text-dark">
-                                    <th scope="col">Proposal Name <i class="fas fa-sort ms-2"></i></th>
-                                    <th scope="col">Client Name <i class="fas fa-sort ms-2"></i></th>
-                                    <th scope="col">Status <i class="fas fa-sort ms-2"></i></th>
-                                    <th scope="col">Date <i class="fas fa-sort ms-2"></i></th>
+                                    <th scope="col">Proposal Name</th>
+                                    <th scope="col">Client Name</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Date</th>
                                 </tr>
                             </thead>
                             <tbody class="">
                                 @foreach ($proposals as $proposal)
                                     <tr>
-                                        <td class="ps-md-5 fs-6">{{ $proposal->proposal_title }}</td>
+                                        <td class="ps-md-5 fs-6 btn-link">
+                                            <a href="{{ route('storedProposals.show', $proposal->id) }}">
+                                            {{ $proposal->proposal_title }}
+                                            </a>
+                                        </td>
                                         <td class="ps-md-5 fs-6">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                                         <td class="text-center fs-6">
                                             @switch($proposal->status)

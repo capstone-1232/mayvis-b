@@ -108,40 +108,49 @@
     
         // This function will be run everytime a product is added to the products-container
         function addToContainer(productId, productName, productPrice) {
-            // Check if the product has already been selected
-            if (selectedProducts.includes(productId)) {
-                alert('This product has already been selected.'); // Alert the user or handle as you wish
-                return; // Exit the function to prevent adding the product again
-            }
-            
-            const price = Number(productPrice);
-            totalPrice += price;
-            document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
-            document.getElementById('formTotalPrice').value = totalPrice; // Update hidden field
+    // Check if the product has already been selected
+    if (selectedProducts.includes(productId)) {
+        showToast('This product has already been selected.'); // Use toast instead of alert
+        return; // Exit the function to prevent adding the product again
+    }
+    
+    const price = Number(productPrice);
+    totalPrice += price;
+    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+    document.getElementById('formTotalPrice').value = totalPrice;
 
-            const container = document.getElementById('selectedProductsContainer');
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('selected-product');
-            productDiv.dataset.productId = productId; // Use data attributes to store product ID
-            productDiv.innerHTML = `
-                <div class="p-2 fs-6">
-                    <div class="d-flex justify-content-between">
-                        <div><p class="align-items-center fw-bold"><i class="bi bi-circle-fill me-2"></i>${productName}</p></div> 
-                        <div><p class="align-items-center">$ ${price.toFixed(2)}
-                            <button class="no-style" onclick="deleteSelectedProduct('${productId}', ${price})"><i class="bi bi-trash3-fill ms-2"></i></button> </p>
-                        </div>
-                    </div>
+    const container = document.getElementById('selectedProductsContainer');
+    const productDiv = document.createElement('div');
+    productDiv.classList.add('selected-product');
+    productDiv.dataset.productId = productId;
+    productDiv.innerHTML = `
+        <div class="p-2 fs-6">
+            <div class="d-flex justify-content-between">
+                <div><p class="align-items-center fw-bold"><i class="bi bi-circle-fill me-2"></i>${productName}</p></div> 
+                <div><p class="align-items-center">$ ${price.toFixed(2)}
+                    <button class="no-style" onclick="deleteSelectedProduct('${productId}', ${price})"><i class="bi bi-trash3-fill ms-2"></i></button> </p>
                 </div>
-            `;
+            </div>
+        </div>
+    `;
 
-            container.appendChild(productDiv);
+    container.appendChild(productDiv);
+    selectedProducts.push(productId);
+    document.getElementById('selectedProducts').value = selectedProducts.join(',');
+    updateProposalTotal();
+    showToast('Product added successfully!');
+}
 
-            // Store selected product IDs
-            selectedProducts.push(productId);
-            document.getElementById('selectedProducts').value = selectedProducts.join(','); // Update hidden field
+// Function to show toast message
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message; // Set the text to show in the toast
+    toast.className = "toast show"; // Make the toast visible
 
-            updateProposalTotal();
-        }
+    // Automatically hide the toast after 3 seconds
+    setTimeout(function() { toast.className = toast.className.replace("show", ""); }, 3000);
+}
+
 
         // This needs to be called everytime something happens within the container so our prices update.
         function updateProposalTotal() {
@@ -176,6 +185,7 @@
     <div class="content">
         <div class="my-4">
             <div class="container my-4">
+                <div id="toast" class="toast">Added to Proposal List</div>
                 <div class="d-flex justify-content-between align-items-center">
                     <h2 class="fs-2 py-2 fw-bold mb-2">
                         <i class="bi bi-file-earmark-plus-fill"></i>
@@ -231,7 +241,7 @@
                                 @endif
                                 <!-- Products Result Area -->
                                 <div class="container mt-4">
-                                    <h3 class="mb-2 fs-5 py-2 fw-bold">Choose a service</h3>
+                                    <h3 class="mb-2 fs-5 py-2 fw-bold">Scope of Work</h3>
                                         <div id="products-container">
                                             @foreach($products as $product)
                                                 <div class="bg-white rounded-4 p-4 mb-2 border">
@@ -259,7 +269,7 @@
                     
                                                     </div>
                                                     
-                                                    <div class="bg-gray rounded-xl mt-3 p-3">
+                                                    <div class="bg-gray rounded-5 mt-3 p-3">
                                                         <div class="mb-2 border-bottom border-dark pb-2">
                                                             <h3 class="d-flex justify-content-between"><span>Project Total:</span> <div>$ <span id="totalPrice">0</span></div></h3>
                                                         </div>

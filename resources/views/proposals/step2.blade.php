@@ -32,7 +32,6 @@
                              </div>
                          </div>
                  
-                 <!-- This form will be routed to the storeStep2 function inside 'ProposalController.php' -->
                  <form action="{{ route('proposals.storeStep2') }}" method="post">
                      @csrf
                      <div class="mb-3">
@@ -40,7 +39,7 @@
                      <x-text-input type="text" name="proposal_title" field="proposal_title" placeholder="Proposal Title" class="w-100" autocomplete="off" :value="old('proposal_title', session('step2_data.proposal_title', ''))"></x-text-input>
                      </div>
  
-                     <div class="mb-3">
+                     <div class="mb-3 w-25">
                      <x-input-label for="start_date" class="fw-bold">Date Created</x-input-label>
                      <x-date-input 
                          name="start_date"
