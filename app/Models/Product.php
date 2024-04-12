@@ -12,7 +12,7 @@ class Product extends Model
     protected $fillable = [
         'product_name',
         'product_description',
-        'product_notes' => 'No notes were created.',
+        'product_notes',
         'price',
         'created_by',
         'category_id' // foreign key

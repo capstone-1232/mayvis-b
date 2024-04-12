@@ -1,6 +1,7 @@
 <x-layout>
 
     <!-- Google Charts Drawing Script -->
+    <!-- Google Charts Drawing Script -->
     <script>
          google.charts.load('current', {'packages':['bar']});
         google.charts.setOnLoadCallback(drawChart);
@@ -64,7 +65,7 @@
                         </div>
                     </a>
                 </div>
-            </div>            
+            </div>                        
             
         </div>
         
@@ -152,6 +153,8 @@
                         <a href="{{ route('storedProposals.storedProposalsIndex') }}" class="btn primary-btn text-white rounded-pill w-25 fw-semibold">View All</a>
                     </div>
                 </div>
+
+            </div>
 
             </div>
 

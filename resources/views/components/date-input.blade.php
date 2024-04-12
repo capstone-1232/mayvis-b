@@ -15,5 +15,5 @@
 >
 
 @error($name) {{-- Assuming $name is used as the field name for validation --}}
-       <div class="text-red-600 text-sm">{{ $message }}</div>
+       <div class="text-danger fs-6">{{ $message }}</div>
 @enderror

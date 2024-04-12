@@ -3,10 +3,21 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
-            // Category Filter Dropdown
+            const paginationContainer = document.getElementById('pagination-container');
             const categorySelect = document.getElementById('category');
+            const searchForm = document.getElementById('searchForm');
+
+            function togglePaginationVisibility() {
+                if (categorySelect.value || searchForm.search_term.value) {
+                    paginationContainer.style.display = 'none';
+                } else {
+                    paginationContainer.style.display = 'block';
+                }
+            }
+
             categorySelect.addEventListener('change', function() {
-                
+                togglePaginationVisibility();
+
                 const categoryId = this.value;
                 const filterProductsUrl = "{{ route('services.filterProducts') }}"; 
 
@@ -27,11 +38,16 @@
                     console.error('Error:', error);
                 });
             });
+
+            searchForm.addEventListener('submit', function(e) {
    
 
             // Search Function
             document.getElementById('searchForm').addEventListener('submit', function(e) {
+
                 e.preventDefault();
+                togglePaginationVisibility();
+
                 let searchTerm = document.getElementById('search_term').value;
                 fetch("{{ route('services.searchProducts') }}?search_term=" + searchTerm)
                     .then(response => response.json())
@@ -87,6 +103,7 @@
             productsContainer.innerHTML = productsHtml;
 
         }
+        togglePaginationVisibility();
     });
     </script>
 
@@ -181,9 +198,11 @@
                 
                 @endforeach
             </div>
-            <div id="pagination-container">
-                {{ $products->appends(['category_id' => request()->category_id])->links() }}
-            </div>
+                @if(!request()->has('category_id') && !request()->has('search_term'))
+                    <div id="pagination-container">
+                        {{ $products->appends(['category_id' => request()->category_id])->links() }}
+                    </div>
+                @endif
         </div>
         
             </div>

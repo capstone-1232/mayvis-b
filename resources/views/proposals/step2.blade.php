@@ -32,6 +32,7 @@
                              </div>
                          </div>
                  
+                 <!-- This form will be routed to the storeStep2 function inside 'ProposalController.php' -->
                  <form action="{{ route('proposals.storeStep2') }}" method="post">
                      @csrf
                      <div class="mb-3">

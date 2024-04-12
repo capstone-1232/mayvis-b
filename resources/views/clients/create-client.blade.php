@@ -13,7 +13,7 @@
                             <div class="form-group mb-3 mt-2">
                                 <x-input-label for="company_name" :value="__('Company Name')" />
                                 <x-text-input type="text" name="company_name" field="company_name" placeholder="Company Name" class="form-control" autocomplete="off" :value="old('company_name')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('company_name')" />
+                                
                             </div>
     
                             <div class="form-group mb-3">
@@ -31,13 +31,13 @@
                             <div class="form-group mb-3">
                                 <x-input-label for="email" :value="__('Email')" />
                                 <x-text-input type="email" name="email" placeholder="johndoe@email.com" field="email" class="form-control" autocomplete="off" :value="old('email')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('email')" />
+                                
                             </div>
             
                             <div class="form-group mb-3">
                                 <x-input-label for="phone_number" :value="__('Phone Number')" />
                                 <x-text-input type="tel" name="phone_number" placeholder="123-456-7891" field="phone_number" class="form-control" autocomplete="off" :value="old('phone_number')"></x-text-input>
-                                <x-input-error class="mt-2 productserr" :messages="$errors->get('phone_number')" />
+                                
                             </div>
             
                             <!-- Add other necessary form fields -->

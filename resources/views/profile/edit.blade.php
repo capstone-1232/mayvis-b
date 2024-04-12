@@ -1,13 +1,13 @@
 <x-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="fw-semibold">
             {{ __('Profile') }}
         </h2>
     </x-slot>
 
     <div class="content">
         <div class="container my-5">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="max-w-7xl mx-auto">
                 <div class="">
                     <div>
                         @include('profile.partials.update-profile-information-form')
@@ -16,15 +16,21 @@
     <div class="row mt-4">
         <div class="col">
             <div>
-                @include('profile.partials.update-password-form')
+                @if (empty($user->google_id))
+                    @include('profile.partials.update-password-form')
+                @endif
             </div>
         </div>
+        
 
         <div class="col">
             <div>
-                @include('profile.partials.delete-user-form')
+                @if (empty($user->google_id))
+                    @include('profile.partials.delete-user-form')
+                @endif
             </div>
         </div>
+        
     </div>
 
             </div>

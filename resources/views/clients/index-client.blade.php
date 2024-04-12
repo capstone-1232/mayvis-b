@@ -2,21 +2,34 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent the form from submitting traditionally
+
+        const paginationContainer = document.getElementById('pagination-container');
+        const searchForm = document.getElementById('searchForm');
+
+        function togglePaginationVisibility() {
+            if (searchForm.search_term.value) {
+                paginationContainer.style.display = 'none';
+            } else {
+                paginationContainer.style.display = 'block';
+            }
+        }
+
+        // Function to handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
 
             let searchTerm = document.getElementById('search_term').value;
-            let tableBody = document.querySelector('.table tbody'); // Select the table body directly
+            let tableBody = document.querySelector('.table tbody');
 
             fetch(`{{ route('clients.searchClients') }}?search_term=${encodeURIComponent(searchTerm)}`, {
                 headers: {
                     'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest', // Ensures Laravel treats the request as AJAX
+                    'X-Requested-With': 'XMLHttpRequest',
                 }
             })
             .then(response => response.json())
             .then(data => {
-                tableBody.innerHTML = ''; // Clear current table rows
+                tableBody.innerHTML = ''; 
 
                 if(data.length > 0) {
                     data.forEach(client => {
@@ -42,18 +55,24 @@
                             </tr>
 
                         `;
-                    // Dynamically set the action attribute of the delete form
                      document.getElementById(`deleteClientForm_${client.id}`).action = `/clients/${client.id}`;
                     });
                 } else {
                     tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No clients found.</td></tr>';
                 }
+
+                // After search, toggle pagination visibility
+                togglePaginationVisibility();
             })
             .catch(error => {
                 console.error('Error:', error);
                 tableBody.innerHTML = '<tr><td colspan="5" class="text-center">An error occurred while searching. Please try again later.</td></tr>';
             });
-        });
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', handleFormSubmit);
+
+        togglePaginationVisibility();
     });
 
     </script>
@@ -131,9 +150,11 @@
                 </table>
     
                 <!-- Pagination links -->
-                    <div class="mt-3">
+                @if(!request()->has('search_term'))
+                    <div id="pagination-container" class="mt-3 pagination-container">
                         {{ $clients->links() }}
                     </div>
+                @endif
             </div>
 
         </div>
