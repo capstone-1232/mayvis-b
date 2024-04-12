@@ -36,13 +36,12 @@
 
                     // Proposal Feedback Link in the template
                     let actionColumnContent;
-
                     if (proposal.status === 'Approved' || proposal.status === 'Denied') {
                         actionColumnContent = 'Feedback Submitted';
-                    } else if (proposal.view_link) { // Make sure view_link is available
+                    } else if (proposal.view_link) {
                         actionColumnContent = `<a href="${proposal.view_link}" class="btn btn-info-custom border rounded-pill w-100 fw-semibold">Access Proposal</a>`;
                     } else {
-                        actionColumnContent = 'Link Unavailable'; // Provide a fallback text
+                        actionColumnContent = 'Link Unavailable'; 
                     }
 
                     // Format the date in 'F j, Y' format
@@ -79,7 +78,11 @@
                     rowsHtml += `
                         <tr>
                             <td class="align-middle">${statusBadge}</td>
-                            <td class="align-middle">${proposal.proposal_title}</td>
+                            <td class="align-middle fw-semibold">
+                                <a href="/proposals/${proposal.id}">
+                                    ${proposal.proposal_title}
+                                </a>
+                            </td>
                             <td class="align-middle d-none d-md-table-cell">${companyName}</td>
                             <td class="align-middle d-none d-md-table-cell">${clientName}</td> 
                             <td class="align-middle d-none d-md-table-cell">${formattedDate}</td>
@@ -152,7 +155,11 @@
                                 <span class="badge bg-secondary">{{ $proposal->status }}</span>
                                 @endswitch
                             </td>
-                            <td class="align-middle fw-semibold">{{ $proposal->proposal_title }}</td>
+                            <td class="align-middle fw-semibold btn-link">
+                                <a href="{{ route('storedProposals.show', $proposal->id) }}">
+                                {{ $proposal->proposal_title }}
+                                </a>
+                            </td>
                             <td class="align-middle d-none d-md-table-cell fw-medium">{{ $proposal->client->company_name }}</td>
                             <td class="align-middle d-none d-md-table-cell fst-italic">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                             <td class="align-middle d-none d-md-table-cell">{{ \Carbon\Carbon::parse($proposal->start_date)->format('F j, Y') }}</td>

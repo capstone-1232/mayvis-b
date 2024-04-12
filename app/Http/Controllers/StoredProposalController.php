@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 
 use App\Models\Proposal;
+use App\Models\Product;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +40,21 @@ class StoredProposalController extends Controller
     
         // Return JSON response
         return response()->json($searchResults);
+    }
+
+    public function showProposal($proposalId)
+    {
+        $proposal = Proposal::findOrFail($proposalId);
+
+        // Explode the CSVs into an array
+        $productIds = explode(',', $proposal->product_id);
+        $projectScopes = explode(',', $proposal->project_scope);
+
+        // Fetch the products using the array of IDs
+        $products = Product::findMany($productIds);
+
+        // Now you can pass both the proposal and the products to your view
+        return view('storedProposals.show', compact('proposal', 'products', 'projectScopes'));
     }
 
     

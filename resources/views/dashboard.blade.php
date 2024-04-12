@@ -47,15 +47,10 @@
         
 
             <div class="col-md-8 d-flex">
-                <div class="d-flex align-items-center mb-4 bg-head p-3 rounded-5 w-100 shadow-sm">
+                <div class="d-flex align-items-center mb-4 bg-head p-3 rounded-5 w-100 shadow">
                     <div class="me-4">
-                        @if (Auth::user()->profile_image)
-                            <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
-                        @else
-                            <img src="{{ asset('storage/placeholder.jpg') }}" alt="Profile Image" class="rounded-circle profile-photo">
-                        @endif
+                        <img src="{{ asset('storage/' . Auth::user()->profile_image) }}" alt="Profile Image" class="rounded-circle profile-photo">
                     </div>
-                    
                     <div>
                         <h3 class="text-white fw-bold fs-4">Welcome back, {{ Auth::user()->first_name }}</h3>
                         <h4 class="fw-light fs-6 text-white">{{ Auth::user()->job_title }}</h4>
@@ -63,7 +58,7 @@
                 </div>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow-sm">
+                <div class="card mb-4 rounded-5 w-100 d-flex align-items-center justify-content-center flex-column quick-link shadow">
                     <a href="{{ route('servicesIndex') }}" class="text-decoration-none w-100 py-sm-3">
                         <div class="text-center">
                             <h3 class="fs-4 fw-bold text-white"><i class="bi bi-boxes me-2"></i>Services</h3>
@@ -76,7 +71,7 @@
         
         <div class="row">
             <div class="col-md-8">
-                <div class="card mb-4 rounded-5 client-proposal shadow-sm p-4">
+                <div class="card mb-4 rounded-5 client-proposal shadow p-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between ">
                             <div class="me-3">
@@ -121,7 +116,11 @@
                             <tbody class="">
                                 @foreach ($proposals as $proposal)
                                     <tr>
-                                        <td class="ps-md-5 fs-6">{{ $proposal->proposal_title }}</td>
+                                        <td class="ps-md-5 fs-6 btn-link">
+                                            <a href="{{ route('storedProposals.show', $proposal->id) }}">
+                                            {{ $proposal->proposal_title }}
+                                            </a>
+                                        </td>
                                         <td class="ps-md-5 fs-6">{{ $proposal->client->first_name . ' ' . $proposal->client->last_name ?? 'No Client' }}</td>
                                         <td class="text-center fs-6">
                                             @switch($proposal->status)
