@@ -42,20 +42,23 @@ class StoredProposalController extends Controller
         return response()->json($searchResults);
     }
 
+    // Show the Proposal Method
     public function showProposal($proposalId)
     {
         $proposal = Proposal::findOrFail($proposalId);
 
         // Explode the CSVs into an array
         $productIds = explode(',', $proposal->product_id);
-        $projectScopes = explode(',', $proposal->project_scope);
+        // Use the unique delimiter '|||' to explode project scopes
+        $projectScopes = explode('|||', $proposal->project_scope);
 
         // Fetch the products using the array of IDs
         $products = Product::findMany($productIds);
 
-        // Now you can pass both the proposal and the products to your view
         return view('storedProposals.show', compact('proposal', 'products', 'projectScopes'));
     }
+
+
 
     
 

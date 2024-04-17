@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use DOMDocument;
 
 
 class LinkGenerationController extends Controller
@@ -38,10 +39,9 @@ class LinkGenerationController extends Controller
         $selectedProductsDescriptions = collect($stepData['step4_data']['selectedProducts'] ?? [])
         ->pluck('description')
         ->map(function ($description) {
-            // Strip HTML tags if you just want the text
-            return strip_tags($description);
+            return strip_tags($description, '<p><h1><h2><h3><h4><h5><h6><br><strong><em><ul><li><ol><u><b><i>');
         })
-        ->implode(', ');
+        ->implode('|||');
 
 
         $client = Client::updateOrCreate(
@@ -148,12 +148,11 @@ class LinkGenerationController extends Controller
 
             // Handle the draft based on the proposal's new status
             if ($updateStatus == '1') {
-                // Fetch the formatted start date
                 $formattedStartDate = $proposal->start_date instanceof \Carbon\Carbon ? 
                                       $proposal->start_date->format('Y-m-d') : 
                                       $proposal->start_date;
     
-                // Identify and delete the draft based on composite keys
+                
                 $draft = Draft::where([
                     'user_id' => $proposal->user_id,
                     'client_id' => $proposal->client_id,
@@ -167,7 +166,7 @@ class LinkGenerationController extends Controller
             } elseif ($updateStatus == '2') {
                 $formattedStartDate = $proposal->start_date;
 
-                // If $proposal->start_date is an instance of Carbon, then format it.
+                
                 if ($proposal->start_date instanceof \Carbon\Carbon) {
                     $formattedStartDate = $proposal->start_date->format('Y-m-d');
                 }
@@ -187,6 +186,9 @@ class LinkGenerationController extends Controller
 
             // Send feedback email
             $user = User::findOrFail($proposal->user_id);
+
+            // We no longer want to use Mail because our Laravel Notifier will cover it and more! Exciting.
+
             // Mail::to($user->email)->send(new FeedbackSubmitted(
             //     $proposal->proposal_title,
             //     $proposal->status,
@@ -226,7 +228,7 @@ class LinkGenerationController extends Controller
         $selectedProductsDescriptions = collect($stepData['step4_data']['selectedProducts'] ?? [])
         ->pluck('description')
         ->map(function ($description) {
-            // Strip HTML tags if you just want the text
+
             return strip_tags($description);
         })
         ->implode(', ');
@@ -270,44 +272,73 @@ class LinkGenerationController extends Controller
 
         // Select the user id from proposals so we can use it to grab the owner's email to email them, display their data on the client view without using session.
         $user_id = $proposal->user_id;
-
         $ownerEmail = User::where('id', $user_id)->firstOrFail()->email;
 
-        // Split the project_scope into an array
-        $projectScopes = explode(',', $proposal->project_scope);
+        // Split the project_scope into an array (Very important to remember as we will be parallel looping it during client view.)
+        // $projectScopes = explode(',', $proposal->project_scope);
+
+        // Split the project_scope into an array using the unique delimiter '|||'
+        $projectScopes = explode('|||', $proposal->project_scope);
+
+
+        // Process each project scope
+        foreach ($projectScopes as $index => $scope) {
+            $projectScopes[$index] = $this->processDescription($scope);
+        }
 
 
 
         // Decode the 'data' field from the proposal
         $data = json_decode($proposal->data, true);
 
-        // Check if the proposal was denied and we have 'selectedProducts' in the 'data' field
+        // Determine how to fetch products based on proposal status
         if ($proposal->status === 'Denied' && isset($data['step4_data']['selectedProducts'])) {
-            $products = collect($data['step4_data']['selectedProducts']); // Convert array to collection
+            $products = collect($data['step4_data']['selectedProducts']);
         } else {
-            // Fetch the products based on product_id or an alternative method
             $productIds = explode(',', $proposal->product_id);
             $products = Product::whereIn('id', $productIds)->get();
         }
 
-        // Fetch the client and user data associated with the proposal
-        $client = $proposal->client; 
+        // Fetch client and user data
+        $client = $proposal->client;
         $user = User::select('profile_image', 'automated_message', 'proposal_message', 'first_name', 'last_name', 'job_title')
-                ->where('email', $ownerEmail)
-                ->first(); 
+                    ->where('email', $ownerEmail)
+                    ->first();
 
-        Log::debug($data);
+        // Prevent repeated access to the proposal link after feedback
+        if ($proposal->status == 'Approved' || $proposal->status == 'Denied') {
+            abort(404);
+        }
 
-        // Pass the necessary data to the view
+        // Return it into our client view
         return view('proposals.view-by-token', [
             'client' => $client,
             'proposal' => $proposal,
-            'products' => $products, 
-            'users' => $user ? [$user] : [], 
+            'products' => $products,
+            'users' => $user ? [$user] : [],
             'projectScopes' => $projectScopes,
             'selectedProducts' => $products,
             'proposalTotal' => $proposal->status === 'Denied' ? $data['step4_data']['proposalTotal'] : null,
         ]);
     }
+
+    private function processDescription($html)
+    {
+        $dom = new DOMDocument();
+        @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        $headerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        foreach ($headerTags as $tag) {
+            $headers = $dom->getElementsByTagName($tag);
+            foreach (iterator_to_array($headers) as $header) {
+                $br = $dom->createElement('br');
+                $header->parentNode->insertBefore($br, $header);
+            }
+        }
+
+        return $dom->saveHTML();
+    }
+
+
 
 }
