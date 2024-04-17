@@ -22,7 +22,7 @@ class ServiceController extends Controller
         }
 
         $products = $query->paginate(3);
-        $categories = Category::all(); // No need to paginate categories
+        $categories = Category::all(); 
 
         return view('services.servicesIndex', compact('products', 'categories'));
     }
@@ -46,7 +46,7 @@ class ServiceController extends Controller
          // Validate the request
          $validatedData = $request->validate([
             'product_name' => 'required|max:255',
-            'product_description' => 'required',
+            'product_description' => 'required|min:1|max:5000',
             'category_id' => 'required|exists:categories,id',
             'product_notes' => 'nullable',
             'price' => 'required|numeric|min:0|max:99999',
@@ -55,6 +55,7 @@ class ServiceController extends Controller
             'product_name.required' => 'The product name field is required.',
             'product_name.max' => 'The product name must not be greater than 255 characters.',
             'product_description.required' => 'The product description field is required.',
+            'product_description.max' => 'The product description must not be greater than 5000 characters.',
             'category_id.required' => 'The category field is required.',
             'category_id.exists' => 'The selected category does not exist.',
             'price.required' => 'The price field is required.',
@@ -70,7 +71,6 @@ class ServiceController extends Controller
          // Create a new Product instance and save it to the database
          Product::create($validatedData);
      
-         // Redirect to the services index with a success message
          return redirect()->route('servicesIndex')->with('success', 'Product created successfully.');
      }
 
@@ -80,7 +80,6 @@ class ServiceController extends Controller
             $categoryId = $request->input('category_id');
             $products = Product::where('category_id', $categoryId)->get();
             
-            // Assuming you have the product_name and description fields on your products
             return response()->json($products->map(function ($product) {
                 return [
                     'id' => $product->id,
@@ -102,8 +101,8 @@ class ServiceController extends Controller
      */
     public function editProduct($id)
     {
-        $product = Product::findOrFail($id); // Eloquent will retrieve the product or fail if not found
-        return view('services.edit', compact('product')); // Pass the product to the view
+        $product = Product::findOrFail($id); 
+        return view('services.edit', compact('product')); 
     }
 
     public function updateProduct(Request $request, $id)

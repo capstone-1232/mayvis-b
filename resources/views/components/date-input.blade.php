@@ -1,19 +1,17 @@
 @props([
     'disabled' => false,
     'name',
-    'placeholder' => 'YYYY-MM-DD', // Default placeholder if none provided
-    'value' => '' // Default value if none provided
+    'placeholder' => 'YYYY-MM-DD',
+    'value' => ''
 ])
-
 <input type="date"
        name="{{ $name }}"
        placeholder="{{ $placeholder }}"
        class="w-100 rounded-pill shadow-sm py-2 px-3 border"
        autocomplete="off"
-       :value="old($name, $value)" {{-- Use the old input value if available, otherwise use the provided $value --}}
-       @if($disabled) disabled @endif {{-- Conditionally add the disabled attribute --}}
+       :value="old($name, $value)"
+       @if($disabled) disabled @endif
 >
-
-@error($name) {{-- Assuming $name is used as the field name for validation --}}
+@error($name)
        <div class="text-danger fs-6">{{ $message }}</div>
 @enderror

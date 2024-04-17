@@ -4,86 +4,62 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="csrf-token" content="{{ csrf_token() }}">
-      <meta name="csrf-token" content="{{ csrf_token() }}">
       <title>Mayvis</title>
-      
-      
       <!-- Fonts -->
       <link rel="preconnect" href="https://fonts.bunny.net">
       <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
-      <!-- Jquery for RTE -->
+      <!-- Jquery-->
       <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
       <script src="https://cdn.tiny.cloud/1/unhfmd4g0x6ahnq0mm3hzkusbnycb4t9elw8othv9ulaq5o6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-      <script src="https://cdn.tiny.cloud/1/unhfmd4g0x6ahnq0mm3hzkusbnycb4t9elw8othv9ulaq5o6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-
       <!-- Load the Google Charts Library -->
       <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-      <!-- Load the Google Charts Library -->
-      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
       <!-- Alpine.js -->
       <script src="//unpkg.com/alpinejs" defer></script>
-
-
       <script>
-        tinymce.init({
-          selector: 'textarea',
-          plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-          tinycomments_mode: 'embedded',
-          tinycomments_author: 'Author name',
-          mergetags_list: [
-            { value: 'First.Name', title: 'First Name' },
-            { value: 'Email', title: 'Email' },
-          ],
-          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
-        });
+         tinymce.init({
+           selector: 'textarea',
+           plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+           toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+           tinycomments_mode: 'embedded',
+           tinycomments_author: 'Author name',
+           mergetags_list: [
+             { value: 'First.Name', title: 'First Name' },
+             { value: 'Email', title: 'Email' },
+           ],
+           ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+         });
       </script> 
-
-      <!-- Delete Notification Using Fetch Request -->
-
       <script>
-        function deleteNotification(notificationId) {
-            // Check if the CSRF token meta tag exists
-            const csrfTokenMetaTag = document.querySelector('meta[name="csrf-token"]');
-            
-            if (!csrfTokenMetaTag) {
-                console.error('CSRF token meta tag not found.');
-                return;
-            }
-    
-            const csrfToken = csrfTokenMetaTag.getAttribute('content');
-            if (!csrfToken) {
-                console.error('CSRF token is not available.');
-                return;
-            }
-    
-            // Now proceed with the fetch call
-            fetch('/notifications/' + notificationId, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    location.reload(); // Or handle the DOM manipulation to remove the notification
-                } else {
-                    console.error('Server responded with a non-ok status:', response.status);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
-
-
+         function deleteNotification(notificationId) {
+             const csrfTokenMetaTag = document.querySelector('meta[name="csrf-token"]');
+             if (!csrfTokenMetaTag) {
+                 console.error('CSRF token meta tag not found.');
+                 return;
+             }
+             const csrfToken = csrfTokenMetaTag.getAttribute('content');
+             if (!csrfToken) {
+                 console.error('CSRF token is not available.');
+                 return;
+             }
+             fetch('/notifications/' + notificationId, {
+                 method: 'DELETE',
+                 headers: {
+                     'X-CSRF-TOKEN': csrfToken
+                 }
+             })
+             .then(response => {
+                 if (response.ok) {
+                     location.reload(); 
+                 } else {
+                     console.error('Server responded with a non-ok status:', response.status);
+                 }
+             })
+             .catch(error => console.error('Error:', error));
+         }
+      </script>
       <!-- Font Awesome -->
       <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
       <!-- Bootstrap Icons -->
@@ -98,178 +74,132 @@
       </style>
    </head>
    <body>
-        {{-- start auth --}}
-        @auth
-        {{-- If the user is logged in --}}
-        <div class="top-nav d-flex align-items-center justify-content-between px-sm-4 px-md-4">
-            <!-- Menu Button for Small Screens -->
-            <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"><i class="bi bi-list fs-2"></i></span>
-            </button>
-
-            <!-- Placeholder for medium and up screens if needed -->
-            <div class=" d-md-none flex-grow-1 text-center">
-              <img src="{{ asset('images/mayvis-logo-white.png') }}" alt="Logo" class="w-25 mx-auto">
-            </div>
-          
-            <div class="icons d-flex align-items-center ms-md-auto">
-              <!-- Notification bell with badge -->
-              <i class="bi bi-bell fs-3 me-4" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <!-- Badge showing the notification count -->
-                  {{-- <span class="badge rounded-pill bg-danger fs-5" style="position: absolute; top: -10px; right: -15px;">
-                      {{ auth()->user()->unreadNotifications->count() }}
-                  </span> --}}
-              </i>
-
-              <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
-                <li class="dropdown-header fs-6 fw-bold border-bottom">Proposal Feedbacks</li>
-                @if(auth()->user()->unreadNotifications->isEmpty())
-                  <li class="dropdown-item text-muted text-center">You currently have no notifications</li>
-                @else
-                  @foreach(auth()->user()->unreadNotifications as $notification)
-                    <li class="dropdown-item d-flex justify-content-between align-items-start border-bottom">
-                      <div>
-                        <div class="d-flex align-items-baseline">
-                          <span class="text-muted me-2">Title:</span>
-                          <strong>{{ $notification->data['proposal_title'] ?? 'You have a notification' }}</strong>
-                        </div>
-                        <div class="d-flex align-items-baseline mt-1">
-                          <span class="text-muted me-2">Status:</span>
-                          <strong class="{{ $notification->data['status'] == 'Denied' ? 'text-danger' : 'text-success' }}">
-                            {{ $notification->data['status'] ?? 'No status' }}
-                          </strong>
-                        </div>
-                      </div>
-                      <button class="btn btn-outline-danger" onclick="deleteNotification('{{ $notification->id }}')">
-                        <i class="bi bi-x-lg"></i>
-                      </button>
-                    </li>
-                  @endforeach
-                @endif
-                <li class="dropdown-item text-center text-muted fst-italic">
-                  Client Messages are sent to your email.
-                </li>
-              </ul>
-              
-              <!-- Profile icon -->
-              <a href="{{ route('profile.edit') }}">
-                <i class="bi bi-person-circle fs-3"></i>
-              </a>
-          </div>
-        </div>
-
-      <div class="collapse d-md-none drop-menu" id="navbarToggleExternalContent">
-        <div class="mobile-menu ">
-            <nav class="nav flex-column">
-                <!-- Place your menu items here -->
-                <a class="nav-link fs-5 w-100 pt-4 py-3" href="{{ route('dashboard') }}"><i class="bi bi-house-door-fill me-4"></i>Home</a>
-                <!-- Proposals Dropdown Toggle -->
-                <a class="nav-link dropdown-toggle fs-5 w-100 py-3" href="#" id="proposalsDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#proposalsMenu" aria-expanded="false" aria-controls="proposalsMenu">
-                  <i class="bi bi-file-earmark-fill me-4"></i>Proposals
-                </a>
-                  <!-- Proposals Dropdown Menu -->
-                  <div class="collapse" id="proposalsMenu" aria-labelledby="proposalsDropdown" data-bs-parent="#navbarToggleExternalContent">
-                      <nav class="nav flex-column ms-3">
-                          <a class="nav-link fs-5 w-100 ps-5 py-2" href="{{ route('storedProposals.storedProposalsIndex') }}">All Proposals</a>
-                          <a class="nav-link fs-5 w-100 ps-5 py-2" href="{{ route('proposals.listDrafts') }}">Drafts</a>
-                      </nav>
+      @auth
+      <div class="top-nav d-flex align-items-center justify-content-between px-sm-4 px-md-4">
+         <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"><i class="bi bi-list fs-2"></i></span>
+         </button>
+         <div class=" d-lg-none flex-grow-1 text-center">
+            <img src="{{ asset('images/mayvis-logo-white.png') }}" alt="Logo" class="w-25 mx-auto">
+         </div>
+         <div class="icons d-flex align-items-center ms-md-auto">
+            <i class="bi bi-bell fs-3 me-4" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></i>
+            <ul class="dropdown-menu" aria-labelledby="notificationDropdown">
+               <li class="dropdown-header fs-6 fw-bold border-bottom">Proposal Feedbacks</li>
+               @if(auth()->user()->unreadNotifications->isEmpty())
+               <li class="dropdown-item text-muted text-center">You currently have no notifications</li>
+               @else
+               @foreach(auth()->user()->unreadNotifications as $notification)
+               <li class="dropdown-item d-flex justify-content-between align-items-start border-bottom">
+                  <div>
+                     <div class="d-flex align-items-baseline">
+                        <span class="text-muted me-2">Title:</span>
+                        <strong>{{ $notification->data['proposal_title'] ?? 'You have a notification' }}</strong>
+                     </div>
+                     <div class="d-flex align-items-baseline mt-1">
+                        <span class="text-muted me-2">Status:</span>
+                        <strong class="{{ $notification->data['status'] == 'Denied' ? 'text-danger' : 'text-success' }}">
+                        {{ $notification->data['status'] ?? 'No status' }}
+                        </strong>
+                     </div>
                   </div>
-                <a class="nav-link fs-5 w-100 py-3" href="{{ route('servicesIndex') }}"><i class="bi bi-boxes me-4"></i>Services</a>
-                <a class="nav-link fs-5 w-100 py-3" href="{{ route('index-client') }}"><i class="bi bi-people-fill me-4"></i>Clients</a>
-                <a class="nav-link fs-5 w-100 py-3" href="{{ route('storedProposals.report') }}"><i class="bi bi-bar-chart-fill me-4"></i><span>Reports</a>
-                <div class="w-100 text-start">
+                  <button class="btn btn-outline-danger" onclick="deleteNotification('{{ $notification->id }}')">
+                  <i class="bi bi-x-lg"></i>
+                  </button>
+               </li>
+               @endforeach
+               @endif
+               <li class="dropdown-item text-center text-muted fst-italic">
+                  Client Messages are sent to your email.
+               </li>
+            </ul>
+            <a href="{{ route('profile.edit') }}">
+            <i class="bi bi-person-circle fs-3"></i>
+            </a>
+         </div>
+      </div>
+      <div class="collapse navbar-collapse d-lg-none drop-menu" id="navbarToggleExternalContent">
+         <div class="mobile-menu ">
+            <nav class="nav flex-column">
+               <a class="nav-link fs-5 w-100 pt-4 py-3" href="{{ route('dashboard') }}"><i class="bi bi-house-door-fill me-4"></i>Home</a>
+               <a class="nav-link dropdown-toggle fs-5 w-100 py-3" href="#" id="proposalsDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#proposalsMenu" aria-expanded="false" aria-controls="proposalsMenu">
+               <i class="bi bi-file-earmark-fill me-4"></i>Proposals
+               </a>
+               <div class="collapse" id="proposalsMenu" aria-labelledby="proposalsDropdown" data-bs-parent="#navbarToggleExternalContent">
+                  <nav class="nav flex-column ms-3">
+                     <a class="nav-link fs-5 w-100 ps-5 py-2" href="{{ route('storedProposals.storedProposalsIndex') }}">All Proposals</a>
+                     <a class="nav-link fs-5 w-100 ps-5 py-2" href="{{ route('proposals.listDrafts') }}">Drafts</a>
+                  </nav>
+               </div>
+               <a class="nav-link fs-5 w-100 py-3" href="{{ route('servicesIndex') }}"><i class="bi bi-boxes me-4"></i>Services</a>
+               <a class="nav-link fs-5 w-100 py-3" href="{{ route('index-client') }}"><i class="bi bi-people-fill me-4"></i>Clients</a>
+               <a class="nav-link fs-5 w-100 py-3" href="{{ route('storedProposals.report') }}"><i class="bi bi-bar-chart-fill me-4"></i><span>Reports</a>
+               <div class="w-100 text-start">
                   <form action="{{ route('logout') }}" method="POST" class="">
-                      @csrf
-                      <button class="nav-link fs-5 w-100 text-start py-3"><i class="bi bi-arrow-left-square-fill me-4"></i><span>Log Out</span></button>
+                     @csrf
+                     <button class="nav-link fs-5 w-100 text-start py-3"><i class="bi bi-arrow-left-square-fill me-4"></i><span>Log Out</span></button>
                   </form>
-                </div>
+               </div>
             </nav>
-        </div>
-    </div>
-    
-
-    
-      
-        <div class="sidebar sidebar-icon-only d-flex flex-column" id="sidebar">
-          <div class="logo-placeholder">
+         </div>
+      </div>
+      <div class="sidebar sidebar-icon-only d-flex flex-column" id="sidebar">
+         <div class="logo-placeholder">
             <svg aria-labelledby="svg-mayvis-logo" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 311.5 113.4" xml:space="preserve" class="inline h-36 w-auto fill-current">
-              <title id="svg-mayvis-logo">
-                MAYVIS Estimate System
-              </title>
-              <g>
-                <path d="M75.5,37.8v37.8h-6.7V51.5l-6.6,5.1l-5.5,4.3l-5.5-4.3l-6.6-5.1v24.1h-6.7V37.8l6.7,5.2l12.1,9.3L68.8,43L75.5,37.8z"></path>
-                <path d="M122.6,75.6h-7.6l-3.5-6.7l-8.3-16.2l-8.3,16.2l-3.5,6.7h-7.6l3.5-6.7l15.8-31l15.8,31L122.6,75.6z"></path>
-                <path d="M122.6,75.6h0.1l-0.1,0.1V75.6z M160.4,37.7l-14.6,18.9l-0.8,1v17.8h-6.7V57.8l-0.9-1.1l-14.6-18.9h8.5l10.4,13.4
-                l10.4-13.4H160.4z M160.3,75.6L160.3,75.6l0.1,0.1L160.3,75.6z"></path>
-                <path d="M204.8,37.8l-3.5,6.7l-15.8,31l-15.8-31l-3.5-6.7h7.6l3.5,6.7l8.3,16.2l8.3-16.2l3.5-6.7H204.8z"></path>
-                <path d="M216.4,75.6V37.8h6.7v37.8H216.4z"></path>
-                <path d="M266.9,48.3V48c0-1.9-1.6-3.5-3.5-3.5h-15.3c-1.9,0-3.5,1.6-3.5,3.5v0.2c0,1.9,1.6,3.5,3.5,3.5h13.6c3.5,0,6.6,1.5,8.8,3.9
-                c0.2,0.2,0.3,0.3,0.4,0.5c1.7,2,2.7,4.7,2.7,7.6c0,6.6-5.3,11.9-11.9,11.9h-11.8c-6.6,0-11.9-5.3-11.9-11.9h6.7
-                c0,2.9,2.3,5.2,5.2,5.2h11.8c2.9,0,5.2-2.3,5.2-5.2c0-2.9-2.4-5.2-5.2-5.2h-13.6c-2.8,0-5.2-1.1-7.1-2.9c-0.5-0.5-0.9-1-1.3-1.6
-                c-1.1-1.6-1.8-3.6-1.8-5.8V48c0-5.6,4.5-10.2,10.1-10.2h15.3c5.6,0,10.2,4.6,10.2,10.2v0.2L266.9,48.3z"></path>
-              </g>
+               <title id="svg-mayvis-logo">
+                  MAYVIS Estimate System
+               </title>
+               <g>
+                  <path d="M75.5,37.8v37.8h-6.7V51.5l-6.6,5.1l-5.5,4.3l-5.5-4.3l-6.6-5.1v24.1h-6.7V37.8l6.7,5.2l12.1,9.3L68.8,43L75.5,37.8z"></path>
+                  <path d="M122.6,75.6h-7.6l-3.5-6.7l-8.3-16.2l-8.3,16.2l-3.5,6.7h-7.6l3.5-6.7l15.8-31l15.8,31L122.6,75.6z"></path>
+                  <path d="M122.6,75.6h0.1l-0.1,0.1V75.6z M160.4,37.7l-14.6,18.9l-0.8,1v17.8h-6.7V57.8l-0.9-1.1l-14.6-18.9h8.5l10.4,13.4
+                     l10.4-13.4H160.4z M160.3,75.6L160.3,75.6l0.1,0.1L160.3,75.6z"></path>
+                  <path d="M204.8,37.8l-3.5,6.7l-15.8,31l-15.8-31l-3.5-6.7h7.6l3.5,6.7l8.3,16.2l8.3-16.2l3.5-6.7H204.8z"></path>
+                  <path d="M216.4,75.6V37.8h6.7v37.8H216.4z"></path>
+                  <path d="M266.9,48.3V48c0-1.9-1.6-3.5-3.5-3.5h-15.3c-1.9,0-3.5,1.6-3.5,3.5v0.2c0,1.9,1.6,3.5,3.5,3.5h13.6c3.5,0,6.6,1.5,8.8,3.9
+                     c0.2,0.2,0.3,0.3,0.4,0.5c1.7,2,2.7,4.7,2.7,7.6c0,6.6-5.3,11.9-11.9,11.9h-11.8c-6.6,0-11.9-5.3-11.9-11.9h6.7
+                     c0,2.9,2.3,5.2,5.2,5.2h11.8c2.9,0,5.2-2.3,5.2-5.2c0-2.9-2.4-5.2-5.2-5.2h-13.6c-2.8,0-5.2-1.1-7.1-2.9c-0.5-0.5-0.9-1-1.3-1.6
+                     c-1.1-1.6-1.8-3.6-1.8-5.8V48c0-5.6,4.5-10.2,10.1-10.2h15.3c5.6,0,10.2,4.6,10.2,10.2v0.2L266.9,48.3z"></path>
+               </g>
             </svg>
-          </div>
-          <nav class="nav flex-column flex-grow-1">
+         </div>
+         <nav class="nav flex-column flex-grow-1">
             <a class="nav-link active fs-5 w-100 d-flex justify-content-center align-items-center" href="{{ route('dashboard') }}"><i class="bi bi-house-door-fill fs-4 me-auto"></i><span class="me-auto"> Home</span></a>
             <a class="nav-link fs-5 w-100 d-flex justify-content-center align-items-center" href="#" data-bs-toggle="collapse" data-bs-target="#proposalsSubmenu" aria-expanded="false" aria-controls="proposalsSubmenu">
-                <i class="bi bi-file-earmark-fill fs-4 me-auto"></i><span class="me-auto"> Proposals</span><i class="bi bi-caret-down-fill fs-4 me-auto"></i>
+            <i class="bi bi-file-earmark-fill fs-4 me-auto"></i><span class="me-auto"> Proposals</span><i class="bi bi-caret-down-fill fs-4 me-auto"></i>
             </a>
             <div class="collapse" id="proposalsSubmenu">
-                <a class="nav-link fs-5" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ms-5"> All Proposals</span></a>
-                <a class="nav-link fs-5" href="{{ route('proposals.listDrafts') }}"><span class="ms-5"> Drafts</span></a>
+               <a class="nav-link fs-5" href="{{ route('storedProposals.storedProposalsIndex') }}"><span class="ms-5"> All Proposals</span></a>
+               <a class="nav-link fs-5" href="{{ route('proposals.listDrafts') }}"><span class="ms-5"> Drafts</span></a>
             </div>
             <a class="nav-link fs-5 w-100 d-flex justify-content-center align-items-center" href="{{ route('servicesIndex') }}"><i class="bi bi-boxes fs-4 me-auto"></i><span class="me-auto"> Services</span></a>
             <a class="nav-link fs-5 w-100 d-flex justify-content-center align-items-center" href="{{ route('index-client') }}"><i class="bi bi-people-fill fs-4 me-auto"></i><span class="me-auto"> Clients</span></a>
             <a class="nav-link fs-5 w-100 d-flex justify-content-center align-items-center" href="{{ route('storedProposals.report') }}"><i class="bi bi-bar-chart-fill fs-4 me-auto"></i><span class="me-auto"> Reports</span></a>
-        </nav>
-        <div class="mt-auto">
-          <form action="{{ route('logout') }}" method="POST" class="">
-              @csrf
-              <button class="nav-link btn fs-5 py-2 rounded-0 w-100 d-flex justify-content-center align-items-center"><i class="bi bi-arrow-left-square-fill fs-4"></i><span>Log Out</span></button>
-          </form>
-        </div>
-      
-      
-    </div>
-        {{-- auth else --}}
-        @else
-
-        {{-- If the user is not yet logged in --}}
-
-        @endauth
-        {{-- end auth --}}
-
-    <!-- header ends here -->
-
+         </nav>
+         <div class="mt-auto">
+            <form action="{{ route('logout') }}" method="POST" class="">
+               @csrf
+               <button class="nav-link btn fs-5 py-2 rounded-0 w-100 d-flex justify-content-center align-items-center"><i class="bi bi-arrow-left-square-fill fs-4"></i><span>Log Out</span></button>
+            </form>
+         </div>
+      </div>
+      {{-- auth else --}}
+      @else
+      {{-- If the user is not yet logged in --}}
+      @endauth
+      {{-- end auth --}}
       {{$slot}}
-
       <!-- Bootstrap JS -->  
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-      {{-- Nav Script --}}
       <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var toggleLink = document.querySelector('[data-bs-target="#proposalsSubmenu"]');
-            var caretIcon = toggleLink.querySelector('.bi-caret-down-fill');
-        
-            toggleLink.addEventListener('click', function () {
-                caretIcon.classList.toggle('rotated');
-            });
-        });
+         document.addEventListener('DOMContentLoaded', function () {
+             var toggleLink = document.querySelector('[data-bs-target="#proposalsSubmenu"]');
+             var caretIcon = toggleLink.querySelector('.bi-caret-down-fill');
+         
+             toggleLink.addEventListener('click', function () {
+                 caretIcon.classList.toggle('rotated');
+             });
+         });
       </script>
-
-      {{-- Nav Script --}}
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var toggleLink = document.querySelector('[data-bs-target="#proposalsSubmenu"]');
-            var caretIcon = toggleLink.querySelector('.bi-caret-down-fill');
-        
-            toggleLink.addEventListener('click', function () {
-                caretIcon.classList.toggle('rotated');
-            });
-        });
-      </script>
-
    </body>
 </html>
