@@ -20,7 +20,7 @@
             </div>
     
             <div class="container">
-                <div class="p-4 bg-white rounded-xl col-lg-8 col-sm-12 mx-auto">
+                <div class="p-4 bg-white rounded-5 shadow col-lg-8 col-sm-12 mx-auto">
                     <div class="px-4">
                     <div class="">
                         <div class="d-flex justify-content-between align-items-center">
@@ -40,18 +40,18 @@
                     <form action="{{ route('proposals.storeStep3') }}" method="post">
                         @csrf
                         <div class="mb-3">
-                            <label for="sender"  class="fw-bold">Sender</label>
+                            <x-input-label for="sender"  class="fw-bold">Sender</x-input-label>
                             <x-text-input type="text" name="sender" field="sender" placeholder="Staff Sender" class="w-100 mt-1" autocomplete="off" :value="old('sender', Auth::user()->email)"></x-text-input>    
                         </div>
     
                         <div class="mb-3">
-                            <x-input-label class="fw-bold text-dark " for="automated_message" :value="__('Automated Message')" />
+                            <x-input-label class="fw-bold" for="automated_message" :value="__('Automated Message')" />
                             <x-textarea id="automated_message" name="automated_message" type="text" class="mt-1 block w-100" :value="old('automated_message', Auth::user()->automated_message)" required autofocus autocomplete="username" />
                             <x-input-error class="mt-2" :messages="$errors->get('automated_message')" />    
                         </div>
                     
                         <div class="d-flex justify-content-end align-items-center mt-3">
-                            <a href="{{ route('proposals.step2') }}" class="fs-7 fw-bold me-2 btn btn-secondary rounded-pill btn-width">Previous</a>
+                            <a href="{{ route('proposals.step2') }}" class="fs-7 fw-bold me-2 btn btn-secondary rounded-pill btn-width">Prev</a>
                             <x-primary-button type="submit" class="btn primary-btn text-white rounded-pill px-4 btn-width fw-bold">Next</x-primary-button>
                         </div>
                     </form>
