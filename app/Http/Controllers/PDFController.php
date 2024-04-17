@@ -12,6 +12,7 @@ use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use DOMDocument;
 
 class PDFController extends Controller
 {
@@ -34,11 +35,11 @@ class PDFController extends Controller
 
         // Extract descriptions (project scopes) from the selected products
         $projectScopes = collect($step4Data['selectedProducts'])
-            ->pluck('description')
-            ->map(function ($description) {
-                return strip_tags($description);
-            })
-            ->all(); 
+        ->pluck('description')
+        ->map(function ($description) {
+            return $this->processDescription($description);
+        })
+        ->all();
 
         // Create or update client information
         $client = Client::updateOrCreate(
@@ -95,6 +96,23 @@ class PDFController extends Controller
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="' . $filename . '"',
         ]);
+    }
+
+    private function processDescription($html)
+    {
+        $dom = new DOMDocument();
+        @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        $headerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        foreach ($headerTags as $tag) {
+            $headers = $dom->getElementsByTagName($tag);
+            foreach (iterator_to_array($headers) as $header) {
+                $br = $dom->createElement('br');
+                $header->parentNode->insertBefore($br, $header);
+            }
+        }
+
+        return $dom->saveHTML();
     }
 
 }

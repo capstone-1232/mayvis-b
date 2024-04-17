@@ -8,6 +8,7 @@ use App\Http\Controllers\LinkGenerationController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StoredProposalController;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect('/dashboard');
@@ -29,9 +31,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+// show Privacy Policy
 Route::get('/privacy-policy', function () {
     return view('privacy_policy');
-});
+})->name('privacy-policy');
+
 
 Route::get('/terms-of-service', function () {
     return view('terms_of_service');
@@ -58,6 +64,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::put('/profile', [PasswordController::class, 'updatePassword'])->name('password.update');
 
 
     /************************************************************************************************************************************/
@@ -99,6 +107,9 @@ Route::middleware('auth')->group(function () {
 
     /* Edit Products */
     Route::put('/update-product/{productId}', [ProposalController::class, 'updateProduct'])->name('proposals.updateProduct');
+
+    /* Autofill Feature for Step 1 */
+    Route::get('/ajax/client-info', [ProposalController::class, 'getClientInfo'])->name('getClientInfo');
 
 
     /************************************************************************************************************************************/
@@ -181,7 +192,8 @@ Route::middleware('auth')->group(function () {
 
     /***************************************************************************************************************************************/
 
-
+    /* Delete Notifications */
+    Route::delete('/notifications/{notification}', [DashboardController::class, 'destroyNotification'])->name('notifications.destroy');
     
 
     /***************************************************************************************************************************************/
@@ -214,6 +226,9 @@ Route::middleware('auth')->group(function () {
     /* Reports Area */
 
     Route::get('/proposals/report', [StoredProposalController::class, 'proposalsReport'])->name('storedProposals.report');
+
+    /* Grab the Proposal Information */
+    Route::get('/proposals/{proposal}', [StoredProposalController::class, 'showProposal'])->name('storedProposals.show');
         
 });
 
