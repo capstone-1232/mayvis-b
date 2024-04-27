@@ -17,6 +17,7 @@ class Proposal extends Model
         'proposal_price',
         'automated_message',
         'unique_token',
+        'updated_price',
         'project_scope',
         'view_link',
         'client_id', // foreign key
@@ -31,7 +32,7 @@ class Proposal extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class); // Adjust based on your actual relationship
+        return $this->hasMany(Product::class); 
     }
 
     public function user()

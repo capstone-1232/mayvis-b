@@ -35,11 +35,11 @@ class CategoryController extends Controller
             'created_by' => 'required|max:30'
         ], [
             'created_by' => 'this field cannot be empty.',
-            'category_name.required' => 'The category name field is required.', // Corrected from product_name to category_name
-            'category_name.max' => 'The category name must not be greater than 255 characters.', // Corrected from product_name to category_name
+            'category_name.required' => 'The category name field is required.', 
+            'category_name.max' => 'The category name must not be greater than 255 characters.', 
         ]);
 
-        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; // Set the created_by directly from the authenticated user
+        $validatedData['created_by'] = Auth::user()->first_name . ' ' . Auth::user()->last_name; 
 
      
          // Create a new Category instance and save it to the database
@@ -51,7 +51,7 @@ class CategoryController extends Controller
 
     public function editCategory($id)
     {
-        $category = Category::findOrFail($id); // Eloquent will retrieve the category or fail if not found
+        $category = Category::findOrFail($id); 
         return view('categories.edit-category', compact('category')); // Pass the category to the view
     }
 

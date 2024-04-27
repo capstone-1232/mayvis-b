@@ -10,13 +10,13 @@ class ClientController extends Controller
 {
     public function indexClient()
     {
-        $clients = Client::paginate(10); // Retrieve all clients from the database
-        return view('clients.index-client', compact('clients')); // Pass the clients to the view
+        $clients = Client::paginate(10); 
+        return view('clients.index-client', compact('clients')); 
     }
 
     public function createClient()
     {
-        $clients = Client::all(); // Get all clients
+        $clients = Client::all(); 
         return view('clients.create-client', compact('clients'));
     }
 
@@ -44,18 +44,17 @@ class ClientController extends Controller
         ]);
 
      
-         // Create a new client instance and save it to the database
+         
          $client = Client::create($validatedData);
      
-         // Redirect to the client index with a success message
          return redirect()->route('index-client')->with('success', 'Client created successfully.');
      }
 
 
      public function editClient($id)
      {
-         $client = Client::findOrFail($id); // Eloquent will retrieve the client or fail if not found
-         return view('clients.edit-client', compact('client')); // Pass the client to the view
+         $client = Client::findOrFail($id); 
+         return view('clients.edit-client', compact('client')); 
      }
  
      public function updateClient(Request $request, $id)
@@ -110,10 +109,8 @@ class ClientController extends Controller
             try {
                 // If no proposals are related, proceed with delete
                 $client->delete();
-                // Redirect with a success message
                 return redirect()->route('index-client')->with('success', 'Client deleted successfully.');
             } catch (\Exception $e) {
-                // Redirect back with a general error message if an exception occurs
                 return redirect()->route('index-client')->with('error', 'An unexpected error occurred while deleting the client.');
             }
         }

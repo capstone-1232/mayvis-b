@@ -93,8 +93,6 @@ class ProfileController extends Controller
 
             return Redirect::to('/');
         } catch (\Exception $e) {
-            // Log the error or handle it as needed
-            // Log::error($e->getMessage());
 
             // Redirect back with an error message
             return back()->withErrors(['userDeletion' => 'An error occurred while attempting to delete the account. Please try again later.']);
