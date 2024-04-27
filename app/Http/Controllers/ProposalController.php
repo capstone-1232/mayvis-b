@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use DOMDocument;
 
 class ProposalController extends Controller
 {
@@ -57,7 +58,6 @@ class ProposalController extends Controller
             'last_name' => ['required', 'max:80', 'regex:/^[a-zA-Z\'\- ]+$/'],
             'company_name' => 'required|max:80',
             'email' => ['required', 'email', 'regex:/^.+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'],
-            'phone_number' => ['required', 'regex:/^\d{3}\d{3}\d{4}$/']
         ], [
             'first_name.required' => 'The first name field is required.',
             'first_name.max' => 'The first name may not be greater than 80 characters.',
@@ -70,8 +70,6 @@ class ProposalController extends Controller
             'email.required' => 'The email field is required.',
             'email.email' => 'The email must be a valid email address.',
             'email.unique' => 'The email has already been taken.', 
-            'phone_number.required' => 'The phone number field is required.',
-            'phone_number.regex' => 'The phone number format is invalid. It must be a 10-digit number without any special characters or spaces.',
         ]);
         
         
@@ -93,9 +91,6 @@ class ProposalController extends Controller
             // Redirect the user to login page or show an error message
             return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
-
-        // Debugging: Check the session data
-        // dd(session()->all()); // This will dump and die, showing all session data
 
         // Check if step1_data is present in the session
         if (!session()->has('step1_data') || empty(session()->get('step1_data'))) {
@@ -142,8 +137,7 @@ class ProposalController extends Controller
             return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
 
-        // dd(session()->all());
-        // Check if step1_data is present in the session
+        // Check if step2_data is present in the session
         if (!session()->has('step2_data') || empty(session()->get('step2_data'))) {
             // If step2_data is empty, redirect back to the Step 2 route
             return redirect()->route('proposals.step2')->with('error', 'Please complete Step 2 first.');
@@ -168,7 +162,7 @@ class ProposalController extends Controller
 
         $senderEmail = $request->input('sender');
 
-        // Check if a user with the given last name exists in the database
+        // Check if a user with the given email exists in the database
         $userExists = User::where('email', $senderEmail)->exists();
 
         if(!$userExists){
@@ -182,7 +176,6 @@ class ProposalController extends Controller
         // Redirect to step 3
         return redirect()->route('proposals.step4');
 
-        // dd(session()->all());
 
     }
 
@@ -205,9 +198,7 @@ class ProposalController extends Controller
         
 
         $categories = Category::all(); // Fetch all categories
-
-        // Assuming no category is selected yet, so no products
-        $products = collect(); // An empty collection
+        $products = collect(); // An empty collection (to be filled by the user as they pick the products)
 
         // Return the view and pass the categories and the empty products collection to it
         return view('proposals.step4', compact('categories', 'products'));
@@ -220,7 +211,6 @@ class ProposalController extends Controller
             $categoryId = $request->input('category_id');
             $products = Product::where('category_id', $categoryId)->get();
             
-            // Assuming you have the product_name and description fields on your products
             return response()->json($products->map(function ($product) {
                 return [
                     'id' => $product->id,
@@ -240,7 +230,6 @@ class ProposalController extends Controller
             $searchTerm = $request->input('search_term');
             $products = Product::where('product_name', 'like', '%' . $searchTerm . '%')->get();
             
-            // Assuming you have the product_name and description fields on your products
             return response()->json($products->map(function ($product) {
                 return [
                     'id' => $product->id,
@@ -256,7 +245,6 @@ class ProposalController extends Controller
     public function storeStep4(Request $request){
 
         if (!Auth::check()) {
-            // Redirect the user to login page or show an error message
             return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
 
@@ -306,16 +294,16 @@ class ProposalController extends Controller
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); // Retrieve the data stored in step 4
+        $step4Data = session('step4_data'); 
     
-        // Ensure selectedProducts is an array
+        // conditional statement for if selectedProducts within step4Data exists.
         if (isset($step4Data['selectedProducts']) && is_string($step4Data['selectedProducts'])) {
             $selectedProductIds = explode(',', $step4Data['selectedProducts']);
     
             // Fetch product names, prices, and descriptions from the database based on the selectedProductIds
             $products = Product::whereIn('id', $selectedProductIds)->get(['id', 'product_name', 'price', 'product_description']);
     
-            // Initialize an array to hold the product name, price, and description  
+            // We will store our product information in this array so we can maybe pluck it later
             $selectedProductsInfo = [];
     
             foreach ($products as $product) {
@@ -344,7 +332,7 @@ class ProposalController extends Controller
         $step1Data = session('step1_data');
         $step2Data = session('step2_data');
         $step3Data = session('step3_data');
-        $step4Data = session('step4_data'); // Retrieve the step 4 data from the session
+        $step4Data = session('step4_data');
 
         // Check if we have product updates in the request
         if ($request->has('products')) {
@@ -353,7 +341,7 @@ class ProposalController extends Controller
                 // Update the session data with new price, quantity, and description
                 $updatedProducts[$productId] = [
                     'price' => $productDetails['price'],
-                    'quantity' => $productDetails['quantity'], // Save the quantity here
+                    'quantity' => $productDetails['quantity'],
                     'description' => $productDetails['description'],
                 ];
             }
@@ -397,17 +385,16 @@ class ProposalController extends Controller
             $step3Data = $draftData['step3_data'] ?? [];
             $step4Data = $draftData['step4_data'] ?? [];
         } elseif (session()->has('step4_data')) {
-            // If not coming from a draft, try to get the data from the session.
+            // If there are no draft id present then we just proceed as normal with storing our data inside sessions
             $step1Data = session('step1_data');
             $step2Data = session('step2_data');
             $step3Data = session('step3_data');
             $step4Data = session('step4_data');
         } else {
-            // If no data is available, redirect to the drafts list with an error.
+            // If no data is available, redirect to the drafts list with an error. (This is just an emergency fallback. Only in RARE cases)
             return redirect()->route('proposals.listDrafts')->with('error', 'No proposal data found.');
         }
         
-
         // Proceed to the step 6 view with the data.
         return view('proposals.step6', compact('step1Data', 'step2Data', 'step3Data', 'step4Data'));
     }
@@ -416,13 +403,10 @@ class ProposalController extends Controller
 
 
     public function showStep7(Request $request){
-        // Ensure the user is authenticated
         if (!Auth::check()) {
-            // Redirect the user to login page or show an error message
             return redirect()->route('login')->with('error', 'You must be logged in to submit a proposal.');
         }
 
-        // Redirect or return view with success message
         return view('proposals.step7');
     }
 
@@ -437,7 +421,7 @@ class ProposalController extends Controller
         $step3Data = session('step3_data');
         $step4Data = session('step4_data');
 
-        // Update Existing Client or Create a new one
+        // Update Existing Client or Create a new one (updateOrCreate works nicely with composite keys. It is a bit finicky at times though)
         $client = Client::updateOrCreate(
             [
                 'first_name' => $step1Data['first_name'],
@@ -447,17 +431,20 @@ class ProposalController extends Controller
             $step1Data
         );
 
-        // Prepare the products as a string of IDs
+        // Prepare the products as a string of IDs so we can easily identify them later on
         $productIds = array_keys($step4Data['selectedProducts']);
         $productIdsString = implode(',', $productIds);
 
         $selectedProductsDescriptions = collect($step4Data['selectedProducts'] ?? [])
         ->pluck('description')
         ->map(function ($description) {
-            // Strip HTML tags if you just want the text
             return strip_tags($description);
         })
         ->implode(', ');
+
+        $updatedPrices = collect($step4Data['selectedProducts'] ?? [])
+        ->pluck('price')
+        ->implode(',');
 
         // Collect all session data related to the proposal
         $draftData = collect([
@@ -470,10 +457,10 @@ class ProposalController extends Controller
 
         $uniqueToken = Str::random(60); // Generate a unique token
 
-        // Execute the query to get the user and retrieve the first and last name
+        // get the user's first name and last name based on the email so we can present it to the client view for when someone makes a proposal for them
         $user = User::where('email', $step3Data['sender'])->first(['first_name', 'last_name', 'id']);
 
-        // Concatenate the first name and last name with a space between them
+        // string concatenation. No biggie here.
         $createdBy = $user ? $user->first_name . ' ' . $user->last_name : null;
         
         // Get the user ID
@@ -493,6 +480,7 @@ class ProposalController extends Controller
                 'proposal_price' => $step4Data['proposalTotal'] ?? null,
                 'automated_message' => $step3Data['automated_message'],
                 'project_scope' => $selectedProductsDescriptions,
+                'updated_price' => $updatedPrices,
                 'product_id' => $productIdsString,
                 'unique_token' => $uniqueToken,
                 'data' => $draftData,
@@ -532,7 +520,6 @@ class ProposalController extends Controller
         $request->session()->put('step4_data', $draftData['step4_data'] ?? []);
         $request->session()->put('draftId', $draftId);
 
-        // Now redirect to the step6 view which will utilize this session data
         return redirect()->route('proposals.step6', compact('draftId'));
     }
 
@@ -549,14 +536,16 @@ class ProposalController extends Controller
         
         try {
             $draft->delete();
-            // Redirect with a success message
+
+            // Once deleted, forget the session data just in case.
             $request->session()->forget(['step1_data', 'step2_data', 'step3_data', 'step4_data']);
             return redirect()->route('proposals.listDrafts')->with('success', 'Draft deleted successfully.');
+
         } catch (\Exception $e) {
-            // Redirect back with a general error message if an exception occurs
             return redirect()->route('proposals.listDrafts')->with('error', 'An unexpected error occurred while deleting the draft.');
         }
     }
 
+    
     
 }

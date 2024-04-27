@@ -13,18 +13,20 @@ return new class extends Migration
     {
         Schema::create('drafts', function (Blueprint $table) {
             $table->id();
-            $table->timestamps(); // created_at and updated_at are automatically handled
+            $table->timestamps(); // created_at and updated_at are automatically handled by this bad boy here
             $table->unsignedBigInteger('user_id');
-            $table->string('created_by'); // Creator's name as a string
+            $table->string('created_by'); 
             $table->string('proposal_title');
             $table->string('status')->default('draft');
             $table->date('start_date');
             $table->longText('automated_message')->nullable();
+            $table->longText('project_scope')->nullable();
+            $table->string('updated_price')->nullable();
             $table->string('unique_token')->unique()->nullable();
             $table->decimal('proposal_price', 8, 2)->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->string('product_id')->nullable(); // Storing a comma-separated list of product IDs as a string
-            $table->longText('data')->nullable(); // JSON or serialized string to store additional data
+            $table->longText('data')->nullable(); 
         
             // user_id is a foreign key linking to the users table
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

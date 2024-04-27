@@ -49,7 +49,7 @@ class StoredProposalController extends Controller
 
         // Explode the CSVs into an array
         $productIds = explode(',', $proposal->product_id);
-        // Use the unique delimiter '|||' to explode project scopes
+        // Use the unique delimiter '|||' to explode project scopes (very important because TinyMCE is a pain to deal with)
         $projectScopes = explode('|||', $proposal->project_scope);
 
         // Fetch the products using the array of IDs

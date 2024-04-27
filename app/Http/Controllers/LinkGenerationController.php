@@ -36,12 +36,22 @@ class LinkGenerationController extends Controller
             return redirect()->route('dashboard')->with('error', 'Your session has expired. Please try again.');
         }
 
+        // Edited Product Descriptions here (Please do not remove the unique delimiter. It's our only best shot at separating values)
+
         $selectedProductsDescriptions = collect($stepData['step4_data']['selectedProducts'] ?? [])
         ->pluck('description')
         ->map(function ($description) {
             return strip_tags($description, '<p><h1><h2><h3><h4><h5><h6><br><strong><em><ul><li><ol><u><b><i>');
         })
         ->implode('|||');
+
+
+        // Edited Prices will be plucked via this code
+
+        $editedPrices = collect($stepData['step4_data']['selectedProducts'] ?? [])
+        ->pluck('price')
+        ->implode(',');
+
 
 
         $client = Client::updateOrCreate(
@@ -75,6 +85,7 @@ class LinkGenerationController extends Controller
             'proposal_price' => $stepData['step4_data']['proposalTotal'] ?? "No Price",
             'status' => 'Pending',
             'project_scope' => $selectedProductsDescriptions,
+            'updated_price' => $editedPrices,
             'automated_message' => $stepData['step3_data']['automated_message'] ?? $user->automated_message,
             'client_id' => $client->id,
             'user_id' => $getUserId,
@@ -225,6 +236,7 @@ class LinkGenerationController extends Controller
             'step4_data' => session('step4_data', [])
         ];
 
+        // Pluck the descriptions from the array, the same will happens for the prices
         $selectedProductsDescriptions = collect($stepData['step4_data']['selectedProducts'] ?? [])
         ->pluck('description')
         ->map(function ($description) {
@@ -232,6 +244,11 @@ class LinkGenerationController extends Controller
             return strip_tags($description);
         })
         ->implode(', ');
+
+        // Edited Prices will be plucked via this code
+        $updatedPrices = collect($stepData['step4_data']['selectedProducts'] ?? [])
+        ->pluck('price')
+        ->implode(',');
 
         // Check if session data is empty and use data from the Proposal if needed
         foreach ($stepData as $key => $value) {
@@ -241,6 +258,7 @@ class LinkGenerationController extends Controller
         }
 
         $stepData['step4_data']['project_scope'] = $proposal->project_scope;
+        $stepData['step4_data']['updated_price'] = $proposal->updated_price;
 
         $stepDataJson = json_encode($stepData);
 
@@ -257,6 +275,7 @@ class LinkGenerationController extends Controller
                 'created_by' => $proposal->created_by,
                 'proposal_price' => $proposal->proposal_price,
                 'project_scope' => $selectedProductsDescriptions,
+                'updated_price' => $updatedPrices,
                 'product_id' => $productIdsString,
                 'automated_message' => $proposal->automated_message,
                 'unique_token' => $proposal->unique_token,
@@ -274,8 +293,6 @@ class LinkGenerationController extends Controller
         $user_id = $proposal->user_id;
         $ownerEmail = User::where('id', $user_id)->firstOrFail()->email;
 
-        // Split the project_scope into an array (Very important to remember as we will be parallel looping it during client view.)
-        // $projectScopes = explode(',', $proposal->project_scope);
 
         // Split the project_scope into an array using the unique delimiter '|||'
         $projectScopes = explode('|||', $proposal->project_scope);
@@ -285,6 +302,11 @@ class LinkGenerationController extends Controller
         foreach ($projectScopes as $index => $scope) {
             $projectScopes[$index] = $this->processDescription($scope);
         }
+        
+
+        // Declare the edited prices string then convert them to an array
+        $editedPricesString = $proposal->updated_price;
+        $editedPricesArray = explode(',', $editedPricesString);
 
 
 
@@ -317,6 +339,7 @@ class LinkGenerationController extends Controller
             'products' => $products,
             'users' => $user ? [$user] : [],
             'projectScopes' => $projectScopes,
+            'editedPricesArray' => $editedPricesArray,
             'selectedProducts' => $products,
             'proposalTotal' => $proposal->status === 'Denied' ? $data['step4_data']['proposalTotal'] : null,
         ]);

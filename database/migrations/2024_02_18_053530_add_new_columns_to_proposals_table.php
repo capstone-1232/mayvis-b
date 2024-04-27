@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('status')->default('Pending');
             $table->date('start_date');
             $table->longText('automated_message')->nullable();
+            $table->longText('project_scope')->nullable();
             $table->text('view_link')->nullable(); 
+            $table->string('updated_price')->nullable();
             $table->decimal('proposal_price', 8, 2);
             $table->foreignId('client_id')->constrained();
             $table->foreignId('user_id')->constrained();
@@ -34,9 +36,11 @@ return new class extends Migration
             $table->dropForeign(['user_id']);
 
             $table->dropColumn('automated_message');
+            $table->dropColumn('project_scope');
             $table->dropColumn('product_id');
             $table->dropColumn('view_link');
             $table->dropColumn('proposal_price');
+            $table->dropColumn('updated_price');
             $table->dropColumn('proposal_title');
             $table->dropColumn('status');
             $table->dropColumn('start_date');

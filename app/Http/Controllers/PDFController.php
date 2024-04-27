@@ -31,15 +31,20 @@ class PDFController extends Controller
 
         // Fetch product details using product IDs
         $productIds = array_keys($step4Data['selectedProducts']);
-        $products = Product::whereIn('id', $productIds)->get(); // Fetch full product objects
+        $products = Product::whereIn('id', $productIds)->get();
 
-        // Extract descriptions (project scopes) from the selected products
+        // Extract descriptions (project scopes) from the selected products <-- Project Scopes are basically descriptions just exploded in the database.
         $projectScopes = collect($step4Data['selectedProducts'])
         ->pluck('description')
         ->map(function ($description) {
             return $this->processDescription($description);
         })
         ->all();
+
+        // Edited Prices will be plucked via this code
+        $updatedPrices = collect($step4Data['selectedProducts'] ?? [])
+        ->pluck('price')
+        ->implode(',');
 
         // Create or update client information
         $client = Client::updateOrCreate(
@@ -63,6 +68,7 @@ class PDFController extends Controller
             'client' => $client,
             'users' => [],
             'projectScopes' => $projectScopes,
+            'updatedPrices' => $updatedPrices,
             'products' => $products,
         ];
 

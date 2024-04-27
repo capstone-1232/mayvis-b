@@ -22,15 +22,16 @@ class OAuthController extends Controller
             $googleUser = Socialite::driver('google')->user();
             
             // Find or create the user based on their email
+            // We can probably also grab their image here but not really necessary.
             $user = User::firstOrCreate(
                 ['email' => $googleUser->getEmail()], // Check for the user based on their email
                 [
-                    'first_name' => $googleUser->user['given_name'], // Set only on initial creation
-                    'last_name' => $googleUser->user['family_name'],  // Set only on initial creation
+                    'first_name' => $googleUser->user['given_name'], 
+                    'last_name' => $googleUser->user['family_name'], 
                     'job_title' => "No Job Title",
                     'profile_image' => "default_profile.jpg",
-                    'google_id' => $googleUser->getId(),               // Set only on initial creation
-                    'password' => Hash::make(uniqid()),                // Set only on initial creation
+                    'google_id' => $googleUser->getId(),               
+                    'password' => Hash::make(uniqid()),       
                 ]
             );
         

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -30,6 +31,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+
+        $userRemToken = Str::random(60);
+
         $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255' ],
@@ -41,6 +45,7 @@ class RegisteredUserController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'remember_token' => $userRemToken,
             'job_title' => $request->has('job_title') ? $request->job_title : 'No Job Title',
             'profile_image' => $request->has('profile_image') ? $request->profile_image : 'default_profile.jpg',
             'password' => Hash::make($request->password),

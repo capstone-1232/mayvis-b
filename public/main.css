@@ -401,6 +401,48 @@ a.sign-up-btn:hover {
     font-size: 14px;
   }
 
+  .product-card-description{
+    max-height: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .product-card-description h1 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .product-card-description h2 {
+    font-size: 19px;
+    font-weight: bold;
+  }
+
+  .product-card-description h3 {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .product-card-description h4{
+    font-weight: bold;
+  }
+
+  .product-card-description h4,
+  .product-card-description h5,
+  .product-card-description h6 {
+    font-size: 16px;
+  }
+
+  .product-card-description p {
+    font-size: 16px;
+    font-style: italic;
+    margin-left: 16px;
+  }
+
+  .product-summary p {
+    font-size: 14px;
+  }
+
   /* Total Area */
 
   .project-total, .recurring-total, .proposal-total {
@@ -570,9 +612,62 @@ a.sign-up-btn:hover {
 /* Project Scope */
 div.project-scope h1 {
   font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1.2em;
+  margin-top: 1em;
 }
 
+div.project-scope h2, div.project-scope h3, div.project-scope h4, div.project-scope h5, div.project-scope h6 {
+  font-weight: bold;
+  font-size: 1.2em;
+  line-height: 1.2em;
+}
+
+div.project-scope h3{
+  color: white;
+}
+
+div.project-scope span.text-black h3{
+  color: black;
+}
+
+
 div.project-scope p {
+  font-style: italic;
+  font-weight: normal;
+  padding: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5em;
+  margin: 0;
+}
+
+div.project-scope ul, div.project-scope ol {
+  font-size: 1rem;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  padding-left: 20px; 
+}
+
+div.project-scope li {
+  line-height: 1.5em;
+  margin-bottom: 0.3em; 
+}
+
+div.project-scope li {
+    font-weight: bold;
+}
+
+div.project-scope a {
+  text-decoration: underline;
+  color: #0000EE; 
+  font-size: 1rem;
+}
+
+div.project-scope strong, div.project-scope b {
+  font-weight: bold;
+}
+
+div.project-scope em, div.project-scope i {
   font-style: italic;
 }
 
@@ -596,8 +691,8 @@ div.project-scope p {
 
 .toast.show {
   visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 1.5s;
+  animation: fadein 0.5s, fadeout 0.5s 1.5s;
 }
 
 @-webkit-keyframes fadein {
@@ -619,7 +714,6 @@ div.project-scope p {
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
-
 
 /* Custom Styles */
 
@@ -656,6 +750,10 @@ div.bg-gray {
 
 div.bg-dgray {
   background-color: #ececec;
+}
+
+div.bg-yellow{
+  background-color: var(--button-3-color);
 }
 
 .bg-header {
